@@ -22,6 +22,7 @@ class EEChistograms(yasp.GenericObject):
 		if self.output_fname:
 			self.output = self.output_fname
 		self.fout = ROOT.TFile(self.output, 'recreate')
+		print('[i] will write to', self.fout.GetName())
 		self.fout.cd()
 
 		self.histograms = {}
@@ -73,6 +74,13 @@ class EEChistograms(yasp.GenericObject):
          			for _i in range(0, _cb.correlator(i+2).rs().size())]
     
 	def __del__(self):
-		print('[i] writing', self.fout.GetName())
-		self.fout.Write()
-		self.fout.Close()
+		if self.fout:
+			print('[i] writing', self.fout.GetName())
+			self.fout.Write()
+			self.fout.Close()
+
+	def write(self):
+		if self.fout:
+			print('[i] writing', self.fout.GetName())
+			self.fout.Write()
+			self.fout.Close()
