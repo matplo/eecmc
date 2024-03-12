@@ -60,7 +60,8 @@ def main():
 	fout = ROOT.TFile(args.output, 'recreate')
 
 	ptcuts = [0., 1.]
-	ptjetranges = [ [20, 40], [40, 60], [60, 80]]
+	# ptjetranges = [ [20, 40], [40, 60], [60, 80]]
+	ptjetranges = [ [40, 60], [60, 80], [80, 100]]
 	for nc in range(2, args.ncorrel + 1):
 		for ptcut in ptcuts:
 			for ptjet in ptjetranges:
@@ -79,7 +80,10 @@ def main():
 				h.Sumw2()
 				njets = hjet.GetEntries()
 				print(f' scale njets = {njets}')
-				h.Scale(1./njets, "width")
+				if njets > 0:
+					h.Scale(1./njets, "width")
+				else:
+					h.Reset()
 				fout.Write()
 	fout.Close()
 	print('[i] written', fout.GetName())
