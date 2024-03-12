@@ -18,6 +18,7 @@ module load yasp myheppyy
 # Run the application
 
 cd {{OUTPUT_DIR}}
-$HEPPYY_DEV/heppyy/example/test_yaspcppyy_pythia_fastjet_simple_load.py --nev 10
+# $HEPPYY_DEV/heppyy/example/test_yaspcppyy_pythia_fastjet_simple_load.py --nev 10
+{{CMND_TO_RUN}}
 
 # End of file
