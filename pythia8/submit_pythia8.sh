@@ -12,12 +12,20 @@ function thisdir()
         echo ${DIR}
 }
 THIS_DIR=$(thisdir)
-
-SYS_YASP_DIR=$(yaspenv.sh yasp -q feature yasp_dir 2>&1 | tail -n 1)
+yaspenv_shell=$(which yaspenv.sh)
+if [ -z ${yaspenv_shell} ]; then
+  echo "Error: yaspenv.sh not found"
+  exit 1
+fi
+SYS_YASP_DIR=$(${yaspenv_shell} yasp -q feature yasp_dir 2>&1 | tail -n 1)
+if [ -z ${SYS_YASP_DIR} ]; then
+  echo "Error: SYS_YASP_DIR not found"
+  exit 1
+fi
 source ${SYS_YASP_DIR}/venvyasp/bin/activate
 
 module use $SYS_YASP_DIR/software/modules
-module load moduleName >/dev/null 2>&1
+module load yasp >/dev/null 2>&1
 # module list
 
 OUTPUT_DIR=$1
@@ -26,10 +34,18 @@ if [ -z ${OUTPUT_DIR} ]; then
   exit 1
 fi
 
-skeleton_script=${THIS_DIR}/slurm_eec_pythia8.sh
-job_script=${OUTPUT_DIR}/eec_pythia8.sh
-yasprepl -f ${skeleton_script} -o ${job_script} \\
-	--define SYS_YASP_DIR=$SYS_YASP_DIR \\
-  --define OUTPUT_DIR=$OUTPUT_DIR
+mkdir -p ${OUTPUT_DIR}
+if [ ! -d ${OUTPUT_DIR} ]; then
+  echo "Error: ${OUTPUT_DIR} does not exist"
+  exit 1
+fi
 
+echo "SYS_YASP_DIR: ${SYS_YASP_DIR}"
+echo "OUTPUT_DIR: ${OUTPUT_DIR}"
+
+skeleton_script=${THIS_DIR}/slurm_eec_pythia8.sh
+job_script=${OUTPUT_DIR}/_eec_pythia8_job.sh
+yasprepl -f ${skeleton_script} -o ${job_script} --define SYS_YASP_DIR=${SYS_YASP_DIR} OUTPUT_DIR=${OUTPUT_DIR}
+
+echo "Job script: ${job_script}"
 cat ${job_script}
