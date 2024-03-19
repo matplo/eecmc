@@ -4,7 +4,7 @@
 #SBATCH --ntasks-per-node=1         # Number of tasks per node
 #SBATCH --cpus-per-task=1           # Number of CPU cores per task
 #SBATCH --mem=1G                    # Memory per node
-#SBATCH --time=02:00:00             # Walltime
+#SBATCH --time=04:00:00             # Walltime
 #SBATCH --partition=quick  			# Job partition
 #SBATCH --output={{OUTPUT_DIR}}/slurm_%j.out       # Output file
 #SBATCH --error={{OUTPUT_DIR}}/slurm_%j.err        # Output file
@@ -19,6 +19,7 @@ module load yasp myheppyy
 
 cd {{OUTPUT_DIR}}
 # $HEPPYY_DEV/heppyy/example/test_yaspcppyy_pythia_fastjet_simple_load.py --nev 10
+{{SETUP_CMND}}
 {{CMND_TO_RUN}}
-
+{{COPY_CMND}}
 # End of file

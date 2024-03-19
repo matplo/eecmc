@@ -48,7 +48,7 @@ if [ -d ${OUTPUT_DIR} ]; then
   fi
 fi
 
-JET_PT=40
+JET_PT=20
 if [ ! -z $2 ]; then
   JET_PT=$2
 fi
@@ -82,7 +82,7 @@ echo "SYS_YASP_DIR: ${SYS_YASP_DIR}"
 echo "OUTPUT_DIR: ${OUTPUT_DIR}"
 OUTPUT_FILE=${OUTPUT_DIR}/pythia8_jetreco_eec_0.root
 JOB_SCRIPT=${OUTPUT_DIR}/_eec_pythia8_job_0.sh
-COUNTER=0
+COUNTER=200
 while [ -e "${JOB_SCRIPT}" ]; do
   COUNTER=$((COUNTER+1))
   OUTPUT_FILE="${OUTPUT_DIR}/pythia8_jetreco_eec_${COUNTER}.root"
@@ -91,8 +91,12 @@ done
 
 # this is something to execute...
 skeleton_script=${THIS_DIR}/slurm_eec_pythia8.sh
-cmnd="${THIS_DIR}/pythia8_jetreco_eec.py --py-pthatmin $JET_PT --nev ${NEV} --output ${OUTPUT_FILE} --py-hardQCD --py-seed -1 ${PSHOWER}"
-yasprepl -f ${skeleton_script} -o ${JOB_SCRIPT} --define SYS_YASP_DIR=${SYS_YASP_DIR} OUTPUT_DIR=${OUTPUT_DIR} CMND_TO_RUN="${cmnd}"
+TMP_OUTPUT_DIR=/scratch/u/${OUTPUT_DIR}
+TMP_OUTPUT_FILE=$(basename ${OUTPUT_FILE})
+setup_cmnd="mkdir -p ${TMP_OUTPUT_DIR} && cd ${TMP_OUTPUT_DIR}"
+cmnd="${THIS_DIR}/pythia8_jetreco_eec.py --py-pthatmin $JET_PT --nev ${NEV} --output ${TMP_OUTPUT_FILE} --py-hardQCD --py-seed -1 ${PSHOWER}"
+cp_cmnd="cp -v ${TMP_OUTPUT_FILE} ${OUTPUT_FILE}"
+yasprepl -f ${skeleton_script} -o ${JOB_SCRIPT} --define SYS_YASP_DIR=${SYS_YASP_DIR} OUTPUT_DIR=${OUTPUT_DIR} CMND_TO_RUN="${cmnd}" COPY_CMND="${cp_cmnd}" SETUP_CMND="${setup_cmnd}"
 
 echo "Job script: ${JOB_SCRIPT}"
 # cat ${JOB_SCRIPT}

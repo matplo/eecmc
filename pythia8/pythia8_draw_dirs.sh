@@ -61,7 +61,7 @@ do
 		cmnd="${THIS_DIR}/draw_RL.py -i ${fname} --use-h "${hfname}:${hname}" --ncorrel 2 -o ${output}" 
 		if [ ! -e ${output} ]; then
 			echo "input file: ${fname} output file: ${output} jetpt: ${jetpt} hname: ${hname} pshower: ${pshower}"
-			$cmnd
+			# $cmnd
 		fi
 		# echo ${output} | tee -a ${hadd_file}
 		echo ${fname} | tee -a ${hadd_file}

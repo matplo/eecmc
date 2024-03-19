@@ -61,7 +61,7 @@ def main():
 
 	ptcuts = [0., 1.]
 	# ptjetranges = [ [20, 40], [40, 60], [60, 80]]
-	ptjetranges = [ [40, 60], [60, 80], [80, 100]]
+	ptjetranges = [ [20, 40], [40, 60], [60, 80], [80, 100]]
 	for nc in range(2, args.ncorrel + 1):
 		for ptcut in ptcuts:
 			for ptjet in ptjetranges:
