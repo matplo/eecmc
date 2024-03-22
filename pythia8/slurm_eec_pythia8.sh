@@ -4,8 +4,8 @@
 #SBATCH --ntasks-per-node=1         # Number of tasks per node
 #SBATCH --cpus-per-task=1           # Number of CPU cores per task
 #SBATCH --mem=1G                    # Memory per node
-#SBATCH --time=04:00:00             # Walltime
-#SBATCH --partition=quick  			# Job partition
+#SBATCH --time=24:00:00             # Walltime
+#SBATCH --partition=std  			# Job partition
 #SBATCH --output={{OUTPUT_DIR}}/slurm_%j.out       # Output file
 #SBATCH --error={{OUTPUT_DIR}}/slurm_%j.err        # Output file
 

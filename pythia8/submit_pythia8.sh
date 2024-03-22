@@ -93,8 +93,11 @@ done
 skeleton_script=${THIS_DIR}/slurm_eec_pythia8.sh
 TMP_OUTPUT_DIR=/scratch/u/${OUTPUT_DIR}
 TMP_OUTPUT_FILE=$(basename ${OUTPUT_FILE})
+TMP_OUTPUT_FILE=${TMP_OUTPUT_DIR}/$(basename ${OUTPUT_FILE})
 setup_cmnd="mkdir -p ${TMP_OUTPUT_DIR} && cd ${TMP_OUTPUT_DIR}"
-cmnd="${THIS_DIR}/pythia8_jetreco_eec.py --py-pthatmin $JET_PT --nev ${NEV} --output ${TMP_OUTPUT_FILE} --py-hardQCD --py-seed -1 ${PSHOWER}"
+JET_PTHAT_MAX=$((JET_PT + 150))
+#cmnd="${THIS_DIR}/pythia8_jetreco_eec.py --py-pthatmin $JET_PT                              --nev ${NEV} --output ${TMP_OUTPUT_FILE} --py-hardQCD --py-seed -1 ${PSHOWER}"
+cmnd="${THIS_DIR}/pythia8_jetreco_eec.py --py-pthatmin $JET_PT --py-pthatmax $JET_PTHAT_MAX --nev ${NEV} --output ${TMP_OUTPUT_FILE} --py-hardQCD --py-seed -1 ${PSHOWER}"
 cp_cmnd="cp -v ${TMP_OUTPUT_FILE} ${OUTPUT_FILE}"
 yasprepl -f ${skeleton_script} -o ${JOB_SCRIPT} --define SYS_YASP_DIR=${SYS_YASP_DIR} OUTPUT_DIR=${OUTPUT_DIR} CMND_TO_RUN="${cmnd}" COPY_CMND="${cp_cmnd}" SETUP_CMND="${setup_cmnd}"
 

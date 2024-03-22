@@ -50,11 +50,14 @@ def main():
 	parser.add_argument('-o','--output', help='root output filename', default='eec_pythia8.root', type=str)
 	args = parser.parse_args()	
 
-	if args.py_vincia:
-		args.output = args.output.replace('.root', '_vincia.root')
-
-	if args.py_dire:
-		args.output = args.output.replace('.root', '_dire.root')
+	if args.output == 'eec_pythia8.root':
+		if args.py_vincia:
+			args.output = args.output.replace('.root', '_vincia.root')
+		if args.py_dire:
+			args.output = args.output.replace('.root', '_dire.root')
+		print("[w] using [modified] default output file:", args.output)
+	else:
+		print("[w] using specified output file:", args.output)
 
 	pythia = Pythia8.Pythia()
 
@@ -86,9 +89,13 @@ def main():
 		jets = fj.sorted_by_pt(jet_def(fjparts))
 		jets = jet_selector(jet_def(fjparts))
 		njets += len(jets)
+		# _info = Pythia8.pythia.info
+		_info = Pythia8.getInfo(pythia)
+		sigmaGen = _info.sigmaGen()
+		ev_weight = _info.weight()
 		if jets.size() > 0:
 			for j in jets:
-				h.fill_jet(j, j.constituents(), j.perp())
+				h.fill_jet(j, j.constituents(), j.perp(), sigmaGen=sigmaGen, weight=ev_weight)
 		else:
 			continue
 		pbar.update(jets.size())

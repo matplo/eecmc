@@ -26,9 +26,9 @@ class EEChistograms(yasp.GenericObject):
 		self.fout.cd()
 
 		self.histograms = {}
-		self.tn = ROOT.TNtuple('tn', 'tneec', 'n:ptpartcut:RL:w:jetpt')
-		self.tnjet = ROOT.TNtuple('tnjet', 'tnjet', 'pt:eta:phi:nc')
-		self.tnjetFF = ROOT.TNtuple('tnjetFF', 'tnjetFF', 'pt:eta:phi:nc:z:zphi:zeta:ptcut')
+		self.tn = ROOT.TNtuple('tn', 'tneec', 'n:ptpartcut:RL:w:jetpt:sigmaGen:weight')
+		self.tnjet = ROOT.TNtuple('tnjet', 'tnjet', 'pt:eta:phi:nc:sigmaGen:weight')
+		self.tnjetFF = ROOT.TNtuple('tnjetFF', 'tnjetFF', 'pt:eta:phi:nc:z:zphi:zeta:ptcut:sigmaGen:weight')
 		self.nbins = int(18.)
 		self.lbins = logbins(1.e-3, 1., self.nbins)
 
@@ -55,8 +55,8 @@ class EEChistograms(yasp.GenericObject):
 		return self.histograms[ptcut]
 
 	# scale is the jet pt
-	def fill_jet(self, j, parts, scale, pt_cuts=[0, 1.]):
-		self.tnjet.Fill(j.perp(), j.eta(), j.phi(), len(j.constituents()))
+	def fill_jet(self, j, parts, scale, pt_cuts=[0.15, 1.], sigmaGen=1., weight=1.):
+		self.tnjet.Fill(j.perp(), j.eta(), j.phi(), len(j.constituents()), sigmaGen, weight)
 		_ = [self.tnjetFF.Fill(j.perp(), j.eta(), j.phi(), len(j.constituents()), _p.perp()/j.perp(), _p.phi(), _p.eta(), _p.perp()) for _p in j.constituents()]
 		for pt_cut in pt_cuts:
 			_parts = vector[fj.PseudoJet]()
@@ -70,7 +70,7 @@ class EEChistograms(yasp.GenericObject):
 				_ = [self.tn.Fill(	i+2, 
                       				pt_cut, 
                           			_cb.correlator(i+2).rs()[_i], 
-                             		_cb.correlator(i+2).weights()[_i], scale) 
+                             		_cb.correlator(i+2).weights()[_i], scale, sigmaGen, weight) 
          			for _i in range(0, _cb.correlator(i+2).rs().size())]
     
 	def __del__(self):
