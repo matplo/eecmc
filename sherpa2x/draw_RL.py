@@ -68,7 +68,7 @@ def main():
 				print('[i]', 'jet pt', ptjet, 'ncorrel', nc, 'ptcut', ptcut)
 				fout.cd()
 				hname = f'heec_{nc}_{ptjet[0]}_{ptjet[1]}_{ptcut}'.replace('.', 'p')
-				cond = f'w*(jetpt > {ptjet[0]} && jetpt < {ptjet[1]} && ptpartcut=={ptcut} && n=={nc})'
+				cond = f'weight*w*(jetpt > {ptjet[0]} && jetpt < {ptjet[1]} && ptpartcut=={ptcut} && n=={nc})'
 				print(' drawing with condition is', cond)
 				h = ROOT.TH1F(hname, hname, nbins, lbins)
 				tn.Draw(f"RL>>{hname}", cond, 'e')

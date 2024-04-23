@@ -86,8 +86,8 @@ def main():
 		if not pythia.next():
 			continue
 		fjparts = vector[fj.PseudoJet]([fj.PseudoJet(p.px(), p.py(), p.pz(), p.e()) for p in pythia.event if p.isFinal() and p.isCharged()])
-		jets = fj.sorted_by_pt(jet_def(fjparts))
-		jets = jet_selector(jet_def(fjparts))
+		# jets = fj.sorted_by_pt(jet_def(fjparts))
+		jets = fj.sorted_by_pt(jet_selector(jet_def(fjparts)))
 		njets += len(jets)
 		# _info = Pythia8.pythia.info
 		_info = Pythia8.getInfo(pythia)
