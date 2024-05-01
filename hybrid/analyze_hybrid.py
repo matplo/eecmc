@@ -80,10 +80,8 @@ class EEC2file:
 		_nbins = 18
 		_lbins = logbins(1.e-2, 1., _nbins)
 		self.h['z_parts_norm'] = ROOT.TH1F('z_parts_norm', 'z_parts_norm', _nbins, _lbins)
-		self.h['z_parts_negidx_norm'] = ROOT.TH1F('z_parts_negidx_norm', 'z_parts_negidx_norm', _nbins, _lbins)
 		_lbins = logbins(1.e-2, 100., _nbins)
 		self.h['pt_parts_norm'] = ROOT.TH1F('pt_parts_norm', 'pt_parts_norm', _nbins, _lbins)
-		self.h['pt_parts_negidx_norm'] = ROOT.TH1F('pt_parts_negidx_norm', 'pt_parts_negidx_norm', _nbins, _lbins)
 
 		self.h['eec2_pt_0.0'] = EEChistogram(name='eec2_pt0')
 		self.h['eec2_pt_0.15'] = EEChistogram(name='eec2_pt0.15')
@@ -100,10 +98,6 @@ class EEC2file:
 		# fill the z for the object (jet if jet passed)
 		_ = [self.h['z_parts_norm'].Fill(p.perp() / pTweight) for p in parts]
 		_ = [self.h['pt_parts_norm'].Fill(p.perp()) for p in parts]
-
-		# fill the z for the object (jet if jet passed) - negative index particles
-		_ = [self.h['z_parts_negidx_norm'].Fill(p.perp() / pTweight) for p in parts if p.user_index() < 0]
-		_ = [self.h['pt_parts_negidx_norm'].Fill(p.perp()) for p in parts if p.user_index() < 0]
  
 		_pTweight2 = pTweight * pTweight
 		_parts = parts
