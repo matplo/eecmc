@@ -15,22 +15,15 @@ THIS_DIR=$(thisdir)
 
 nev=10000
 
-# ./analyze_hybrid.py -i HYBRID_Hadrons_Vac_5020_inc_lowpt.dat -o eec_hybrid_vac.root --nev ${nev}
-# ./analyze_hybrid.py -i HYBRID_Hadrons_NoElastic_5020_inc_lowpt_05.dat --wake -o eec_hybrid_med.root --nev ${nev}
-# ./analyze_hybrid.py -i HYBRID_Hadrons_NoElastic_5020_inc_lowpt_05.dat --wake --ignore-wake -o eec_hybrid_med_nw.root --nev ${nev}
-
-
-#!/bin/bash
-
 function run_analysis {
     jptmin=$1
     nev=$2
-    # ./analyze_hybrid.py --log -i HYBRID_Hadrons_Vac_5020_inc_lowpt.dat -o eec_hybrid_vac_${jptmin}.root --nev ${nev} 																		--jet-min-pt ${jptmin}
+    ./analyze_hybrid.py --log -i HYBRID_Hadrons_Vac_5020_inc_lowpt.dat -o eec_hybrid_vac_${jptmin}.root --nev ${nev} 																		--jet-min-pt ${jptmin}
     ./analyze_hybrid.py --log -i HYBRID_Hadrons_NoElastic_5020_inc_lowpt_05.dat --wake -o eec_hybrid_med_${jptmin}.root --nev ${nev} 										--jet-min-pt ${jptmin}
     ./analyze_hybrid.py --log -i HYBRID_Hadrons_NoElastic_5020_inc_lowpt_05.dat --wake --ignore-wake -o eec_hybrid_med_nw_${jptmin}.root --nev ${nev} 	--jet-min-pt ${jptmin}
-		# ./analyze_hybrid.py --log --pythia --py-hardQCD --py-seed -1 --py-pthatmin ${jptmin} --nev ${nev} -o eec_pythia_${jptmin}.root 											--jet-min-pt ${jptmin} --py-ecm 5000.0
-		# ./analyze_hybrid.py --log --pythia --py-hardQCD --py-seed -1 --py-pthatmin ${jptmin} --nev ${nev} -o eec_vincia_${jptmin}.root 	--py-vincia 				--jet-min-pt ${jptmin} --py-ecm 5000.0
-		# ./analyze_hybrid.py --log --pythia --py-hardQCD --py-seed -1 --py-pthatmin ${jptmin} --nev ${nev} -o eec_dire_${jptmin}.root 		--py-dire 					--jet-min-pt ${jptmin} --py-ecm 5000.0
+		./analyze_hybrid.py --log --pythia --py-hardQCD --py-seed -1 --py-pthatmin ${jptmin} --nev ${nev} -o eec_pythia_${jptmin}.root 											--jet-min-pt ${jptmin} --py-ecm 5000.0
+		./analyze_hybrid.py --log --pythia --py-hardQCD --py-seed -1 --py-pthatmin ${jptmin} --nev ${nev} -o eec_vincia_${jptmin}.root 	--py-vincia 				--jet-min-pt ${jptmin} --py-ecm 5000.0
+		./analyze_hybrid.py --log --pythia --py-hardQCD --py-seed -1 --py-pthatmin ${jptmin} --nev ${nev} -o eec_dire_${jptmin}.root 		--py-dire 					--jet-min-pt ${jptmin} --py-ecm 5000.0
 }
 export -f run_analysis
 
@@ -38,7 +31,7 @@ parallel --eta --joblog run_hybrid.log --progress run_analysis ::: 20 40 60 80 1
 
 exit $?
 
-# now drawing
+# now drawing - needed for compat with pythia and sherpa2x code - otherwise not needed
 # hname="hJetE2C_norm_per_bin_ch_jetR4_2040_trk10_pythia"
 # hfname="${THIS_DIR}/wenqing_mc_output.root"
 # rfiles=$(find . -name "*.root")
