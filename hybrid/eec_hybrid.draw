@@ -1,0 +1,232 @@
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Hybrid MC anti-k_{T} R=0.4 20 < p_{T}^{jet} < 40
+#legend pos=ll title=HYBRID or PYTHIA8
+#logx 1
+#logy 1
+#xrange 1e-1, 100
+#x p_{T}^{particle}
+
+eec_hybrid_vac_20_eec2.root: pt_parts_norm : hist l +l1 +k1 +w3 : title=H-vac
+eec_pythia_20_pythia8_eec2.root: pt_parts_norm : hist l +l2 +k1 +w3 : title=PYTHIA8
+eec_hybrid_med_20_eec2.root: pt_parts_norm : hist l +l1 +k2 +w3 : title=H-med
+eec_hybrid_med_20_eec2_ww.root: pt_parts_norm : hist l +l9 +k2 +w3 : title=H-med wake only
+eec_hybrid_med_20_eec2_ww.root: pt_parts_norm : hist noleg +f1001 +a20 : title=H-med wake only
+eec_hybrid_med_20_eec2_nw.root: pt_parts_norm : hist l +l7 +k3 +w3 : title=H-med no wake
+eec_hybrid_med_20_eec2_nw.root: pt_parts_norm : hist -k noleg +f1001 +a20 : title=H-med no wake
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Hybrid MC anti-k_{T} R=0.4 60 < p_{T}^{jet} < 80
+#legend pos=ll title=HYBRID or PYTHIA8
+#logx 1
+#logy 1
+#xrange 1e-1, 100
+#x p_{T}^{particle}
+
+eec_hybrid_vac_60_eec2.root: pt_parts_norm : hist l +l1 +k1 +w3 : title=H-vac
+eec_pythia_60_pythia8_eec2.root: pt_parts_norm : hist l +l2 +k1 +w3 : title=PYTHIA8
+eec_hybrid_med_60_eec2.root: pt_parts_norm : hist l +l1 +k2 +w3 : title=H-med
+eec_hybrid_med_60_eec2_ww.root: pt_parts_norm : hist l +l9 +k2 +w3 : title=H-med wake only
+eec_hybrid_med_60_eec2_ww.root: pt_parts_norm : hist noleg +f1001 +a20 : title=H-med wake only
+eec_hybrid_med_60_eec2_nw.root: pt_parts_norm : hist l +l7 +k3 +w3 : title=H-med no wake
+eec_hybrid_med_60_eec2_nw.root: pt_parts_norm : hist -k noleg +f1001 +a20 : title=H-med no wake
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Hybrid MC anti-k_{T} R=0.4 20 < p_{T}^{jet} < 40
+#legend pos=ll title=HYBRID or PYTHIA8
+#logx 1
+#logy 1
+#xrange 1e-2, 1.1
+#x z_{T}^{particle}
+
+eec_hybrid_vac_20_eec2.root: z_parts_norm : hist l +l1 +k1 +w3 : title=H-vac
+eec_pythia_20_pythia8_eec2.root: z_parts_norm : hist l +l2 +k1 +w3 : title=PYTHIA8
+eec_hybrid_med_20_eec2.root: z_parts_norm : hist l +l1 +k2 +w3 : title=H-med
+eec_hybrid_med_20_eec2_ww.root: z_parts_norm : hist l +l9 +k2 +w3 : title=H-med wake only
+eec_hybrid_med_20_eec2_ww.root: z_parts_norm : hist noleg +f1001 +a20 : title=H-med wake only
+eec_hybrid_med_20_eec2_nw.root: z_parts_norm : hist l +l7 +k3 +w3 : title=H-med no wake
+eec_hybrid_med_20_eec2_nw.root: z_parts_norm : hist -k noleg +f1001 +a20 : title=H-med no wake
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Hybrid MC anti-k_{T} R=0.4 60 < p_{T}^{jet} < 80
+#legend pos=ll title=HYBRID or PYTHIA8
+#logx 1
+#logy 1
+#xrange 1e-2, 1.1
+#x z_{T}^{particle}
+
+eec_hybrid_vac_60_eec2.root: z_parts_norm : hist l +l1 +k1 +w3 : title=H-vac
+eec_pythia_60_pythia8_eec2.root: z_parts_norm : hist l +l2 +k1 +w3 : title=PYTHIA8
+eec_hybrid_med_60_eec2.root: z_parts_norm : hist l +l1 +k2 +w3 : title=H-med
+eec_hybrid_med_60_eec2_ww.root: z_parts_norm : hist l +l9 +k2 +w3 : title=H-med wake only
+eec_hybrid_med_60_eec2_ww.root: z_parts_norm : hist noleg +f1001 +a20 : title=H-med wake only
+eec_hybrid_med_60_eec2_nw.root: z_parts_norm : hist l +l7 +k3 +w3 : title=H-med no wake
+eec_hybrid_med_60_eec2_nw.root: z_parts_norm : hist -k noleg +f1001 +a20 : title=H-med no wake
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Hybrid MC anti-k_{T} R=0.4 20 < p_{T}^{jet} < 40
+#legend pos=ul title=p_{T}^{part} > 0.15 GeV/c
+#logx 1
+#xrange 1e-2, 1
+#x R_{L}
+#y EEC
+#maxy 8.6
+
+#scale const=1
+eec_hybrid_vac_20_eec2.root: eec2_pt0.15 : hist l +l1 +k1 +w3 : title=H-vac
+eec_pythia_20_pythia8_eec2.root: eec2_pt0.15 : hist l +l2 +k1 +w3 : title=PYTHIA8
+eec_hybrid_med_20_eec2.root: eec2_pt0.15 : hist l +l1 +k2 +w3 : title=H-med
+eec_hybrid_med_20_eec2_ww.root: eec2_pt0.15 : hist l +l9 +k2 +w3 : title=H-med wake only
+eec_hybrid_med_20_eec2_ww.root: eec2_pt0.15 : hist noleg +f1001 +a20 : title=H-med wake only
+eec_hybrid_med_20_eec2_nw.root: eec2_pt0.15 : hist l +l7 +k3 +w3 : title=H-med no wake
+eec_hybrid_med_20_eec2_nw.root: eec2_pt0.15 : hist -k noleg +f1001 +a20 : title=H-med no wake
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Hybrid MC anti-k_{T} R=0.4 20 < p_{T}^{jet} < 40
+#legend pos=ul title=p_{T}^{part} > 1 GeV/c
+#logx 1
+#xrange 1e-2, 1
+#x R_{L}
+#y EEC
+#maxy 8.6
+
+#scale const=1
+eec_hybrid_vac_20_eec2.root: eec2_pt1 : hist l +l1 +k1 +w3 : title=H-vac
+eec_pythia_20_pythia8_eec2.root: eec2_pt1 : hist l +l2 +k1 +w3 : title=PYTHIA8
+eec_hybrid_med_20_eec2.root: eec2_pt1 : hist l +l1 +k2 +w3 : title=H-med
+eec_hybrid_med_20_eec2_ww.root: eec2_pt1 : hist l +l9 +k2 +w3 : title=H-med wake only
+eec_hybrid_med_20_eec2_ww.root: eec2_pt1 : hist noleg +f1001 +a20 : title=H-med wake only
+eec_hybrid_med_20_eec2_nw.root: eec2_pt1 : hist l +l7 +k3 +w3 : title=H-med no wake
+eec_hybrid_med_20_eec2_nw.root: eec2_pt1 : hist -k noleg +f1001 +a20 : title=H-med no wake
+
+/Users/ploskon/Dropbox/2023/EEC/data_package/data_output.root 		:h1d_EEC_2040 :p +k4: title=ALICE pp data (ch. jets)
+/Users/ploskon/Dropbox/2023/EEC/data_package/data_output.root 		:g_EEC_sys_err_2040 :serror -k noleg  : title=Graph
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Hybrid MC anti-k_{T} R=0.4 40 < p_{T}^{jet} < 60
+#legend pos=ul title=p_{T}^{part} > 0.15 GeV/c
+#logx 1
+#xrange 1e-2, 1
+#x R_{L}
+#y EEC
+#maxy 8.6
+
+#scale const=1
+eec_hybrid_vac_40_eec2.root: eec2_pt0.15 : hist l +l1 +k1 +w3 : title=H-vac
+eec_pythia_40_pythia8_eec2.root: eec2_pt0.15 : hist l +l2 +k1 +w3 : title=PYTHIA8
+eec_hybrid_med_40_eec2.root: eec2_pt0.15 : hist l +l1 +k2 +w3 : title=H-med
+eec_hybrid_med_40_eec2_ww.root: eec2_pt0.15 : hist l +l9 +k2 +w3 : title=H-med wake only
+eec_hybrid_med_40_eec2_ww.root: eec2_pt0.15 : hist noleg +f1001 +a20 : title=H-med wake only
+eec_hybrid_med_40_eec2_nw.root: eec2_pt0.15 : hist l +l7 +k3 +w3 : title=H-med no wake
+eec_hybrid_med_40_eec2_nw.root: eec2_pt0.15 : hist -k noleg +f1001 +a20 : title=H-med no wake
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Hybrid MC anti-k_{T} R=0.4 40 < p_{T}^{jet} < 60
+#legend pos=ul title=p_{T}^{part} > 1 GeV/c
+#logx 1
+#xrange 1e-2, 1
+#x R_{L}
+#y EEC
+#maxy 8.6
+
+#scale const=1
+eec_hybrid_vac_40_eec2.root: eec2_pt1 : hist l +l1 +k1 +w3 : title=H-vac
+eec_pythia_40_pythia8_eec2.root: eec2_pt1 : hist l +l2 +k1 +w3 : title=PYTHIA8
+eec_hybrid_med_40_eec2.root: eec2_pt1 : hist l +l1 +k2 +w3 : title=H-med
+eec_hybrid_med_40_eec2_ww.root: eec2_pt1 : hist l +l9 +k2 +w3 : title=H-med wake only
+eec_hybrid_med_40_eec2_ww.root: eec2_pt1 : hist noleg +f1001 +a20 : title=H-med wake only
+eec_hybrid_med_40_eec2_nw.root: eec2_pt1 : hist l +l7 +k3 +w3 : title=H-med no wake
+eec_hybrid_med_40_eec2_nw.root: eec2_pt1 : hist -k noleg +f1001 +a20 : title=H-med no wake
+
+/Users/ploskon/Dropbox/2023/EEC/data_package/data_output.root 		:h1d_EEC_4060 :p +k4: title=ALICE pp data (ch. jets)
+/Users/ploskon/Dropbox/2023/EEC/data_package/data_output.root 		:g_EEC_sys_err_4060 :serror -k noleg  : title=Graph
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Hybrid MC anti-k_{T} R=0.4 60 < p_{T}^{jet} < 80
+#legend pos=ul title=p_{T}^{part} > 0.15 GeV/c
+#logx 1
+#xrange 1e-2, 1
+#x R_{L}
+#y EEC
+#maxy 8.6
+
+#scale const=1
+eec_hybrid_vac_60_eec2.root: eec2_pt0.15 : hist l +l1 +k1 +w3 : title=H-vac
+eec_pythia_60_pythia8_eec2.root: eec2_pt0.15 : hist l +l2 +k1 +w3 : title=PYTHIA8
+eec_hybrid_med_60_eec2.root: eec2_pt0.15 : hist l +l1 +k2 +w3 : title=H-med
+eec_hybrid_med_60_eec2_ww.root: eec2_pt0.15 : hist l +l9 +k2 +w3 : title=H-med wake only
+eec_hybrid_med_60_eec2_ww.root: eec2_pt0.15 : hist noleg +f1001 +a20 : title=H-med wake only
+eec_hybrid_med_60_eec2_nw.root: eec2_pt0.15 : hist l +l7 +k3 +w3 : title=H-med no wake
+eec_hybrid_med_60_eec2_nw.root: eec2_pt0.15 : hist -k noleg +f1001 +a20 : title=H-med no wake
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Hybrid MC anti-k_{T} R=0.4 60 < p_{T}^{jet} < 80
+#legend pos=ul title=p_{T}^{part} > 1 GeV/c
+#logx 1
+#xrange 1e-2, 1
+#x R_{L}
+#y EEC
+#maxy 8.6
+
+#scale const=1
+eec_hybrid_vac_60_eec2.root: eec2_pt1 : hist l +l1 +k1 +w3 : title=H-vac
+eec_pythia_60_pythia8_eec2.root: eec2_pt1 : hist l +l2 +k1 +w3 : title=PYTHIA8
+eec_hybrid_med_60_eec2.root: eec2_pt1 : hist l +l1 +k2 +w3 : title=H-med
+eec_hybrid_med_60_eec2_ww.root: eec2_pt1 : hist l +l9 +k2 +w3 : title=H-med wake only
+eec_hybrid_med_60_eec2_ww.root: eec2_pt1 : hist noleg +f1001 +a20 : title=H-med wake only
+eec_hybrid_med_60_eec2_nw.root: eec2_pt1 : hist l +l7 +k3 +w3 : title=H-med no wake
+eec_hybrid_med_60_eec2_nw.root: eec2_pt1 : hist -k noleg +f1001 +a20 : title=H-med no wake
+
+/Users/ploskon/Dropbox/2023/EEC/data_package/data_output.root 		:h1d_EEC_6080 :p +k4: title=ALICE pp data (ch. jets)
+/Users/ploskon/Dropbox/2023/EEC/data_package/data_output.root 		:g_EEC_sys_err_6080 :serror -k noleg  : title=Graph
+
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Hybrid MC anti-k_{T} R=0.4 100 < p_{T}^{jet} < 120
+#legend pos=ur title=p_{T}^{part} > 1 GeV/c
+#logx 1
+#xrange 1e-2, 1
+#x R_{L}
+#y EEC
+#maxy 8.6
+
+#scale const=1
+eec_hybrid_vac_100_eec2.root: eec2_pt1 : hist l +l1 +k1 +w3 : title=H-vac
+eec_pythia_100_pythia8_eec2.root: eec2_pt1 : hist l +l2 +k1 +w3 : title=PYTHIA8
+eec_hybrid_med_100_eec2.root: eec2_pt1 : hist l +l1 +k2 +w3 : title=H-med
+eec_hybrid_med_100_eec2_ww.root: eec2_pt1 : hist l +l9 +k2 +w3 : title=H-med wake only
+eec_hybrid_med_100_eec2_ww.root: eec2_pt1 : hist noleg +f1001 +a20 : title=H-med wake only
+eec_hybrid_med_100_eec2_nw.root: eec2_pt1 : hist l +l7 +k3 +w3 : title=H-med no wake
+eec_hybrid_med_100_eec2_nw.root: eec2_pt1 : hist -k noleg +f1001 +a20 : title=H-med no wake
