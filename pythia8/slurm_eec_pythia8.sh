@@ -14,7 +14,8 @@
 source {{SYS_YASP_DIR}}/venvyasp/bin/activate
 module use {{SYS_YASP_DIR}}/software/modules
 module load yasp myheppyy
-
+module avail
+module list
 # Run the application
 
 cd {{OUTPUT_DIR}}
