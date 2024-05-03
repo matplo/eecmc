@@ -24,14 +24,15 @@ import math
 import array
 import heec
 import hepmc_count_events
+from yasp import GenericObject
 
 from heppyy.util.logger import Logger
 log = Logger()
 
 def logbins(xmin, xmax, nbins):
-        lspace = np.logspace(np.log10(xmin), np.log10(xmax), nbins+1)
-        arr = array.array('f', lspace)
-        return arr
+		lspace = np.logspace(np.log10(xmin), np.log10(xmax), nbins+1)
+		arr = array.array('f', lspace)
+		return arr
 
 
 def find_jets_hepmc(jet_def, jet_selector, hepmc_event):
@@ -72,9 +73,16 @@ def get_final_except(hepmc_event, parts, charged_only=False):
 	for i,p in enumerate(hepmc_event.particles):
 		if p in parts:
 			continue
-		if charged_only and particle.Particle.from_pdgid(p.pid).charge == 0:
-				continue
 		if p.status == 1 and not p.end_vertex:
+			if charged_only:
+				_charge = None
+				try: 
+					_charge = particle.Particle.from_pdgid(p.pid).charge
+				except particle.particle.particle.ParticleNotFound as e:
+					print('[w] particle not found:', e)
+					continue
+				if _charge == 0:
+					continue
 			psj = fj.PseudoJet(p.momentum.px, p.momentum.py, p.momentum.pz, p.momentum.e)
 			psj.set_user_index(i)
 			fjparts.append(psj)
@@ -90,9 +98,32 @@ def print_debug(Darray, Ddaughters):
 			log.debug(f'  - check:{_pp}')
 
 
+class ConfigData(GenericObject):
+	def __init__(self, **kwargs):
+		super(ConfigData, self).__init__(**kwargs)
+		if self.args:
+			self.configure_from_dict(self.args.__dict__)
+		self.verbose = self.debug
+
+class Config(yasp.GenericObject):
+	jet_min_pt = 20.
+	jet_max_pt = -1
+	D0_min_pt = 3.
+	D0_max_pt = 100.
+	max_eta_jet = 0
+	jet_R = 0.4
+	charged_only = False
+	ncorrel = 2
+	def __init__(self, **kwargs):
+		super(ConfigData, self).__init__(**kwargs)
+
+def process_file(input_file, output_file, config, args):
+	pass
+	
+
 def main():
 	parser = argparse.ArgumentParser(description='read hepmc and analyze eecs', prog=os.path.basename(__file__))
-	parser.add_argument('-i', '--input', help='input file', default='low', type=str, required=True)
+	parser.add_argument('-i', '--input', help='input file - hepmc or yaml', default='low', type=str, required=True)
 	parser.add_argument('--hepmc', help='what format 2 or 3', default=2, type=int)
 	parser.add_argument('--nev', help='number of events', default=-1, type=int)
 	parser.add_argument('--ncorrel', help='max n correlator', type=int, default=2)
@@ -109,65 +140,69 @@ def main():
 	parser.add_argument('--charged-only', help="only charged particles", default=False, action='store_true')
 
 	args = parser.parse_args()	
+	log.critical(args)
+
+	config = ConfigData(args=args)
+	if '.yaml' == args.input[-5:] or '.yml' == args.input[-4:]:
+		config.configure_from_yaml(args.input)		
+	log.critical(config)
 
 	stdout_file = None
-	if args.log:
-		stdout_file_name = args.output.replace('.root', '.log')
+	if config.log:
+		stdout_file_name = config.output.replace('.root', '.log')
 		stdout_file = open(stdout_file_name, 'w')
 		sys.stdout = stdout_file
 		sys.stderr = stdout_file
 
 	# set up logging - this uses singleton Logger
-	log_level = 'DEBUG' if args.debug else 'WARNING'
+	log_level = 'DEBUG' if config.debug else 'WARNING'
 	log.set_level(log_level)
-	if args.verbose:
+	if config.verbose:
 		log.enable_console()
 		log.set_level('INFO')
-	if args.debug:
-		log.set_level('DEBUG')
-  
-	log.critical(args)
+	if config.debug:
+		log.set_level('DEBUG')  
 
-
-	if args.nev < 0:
-		args.nev = hepmc_count_events.get_n_per_file(args.input, args.hepmc)[0]
+	if config.nev < 0:
+		config.nev = hepmc_count_events.get_n_per_file(config.input, config.hepmc)[0]
 
 	###
 	# now lets read the HEPMC file and do some jet finding
-	if args.hepmc == 3:
-		input_hepmc = pyhepmc.io.ReaderAscii(args.input)
-	if args.hepmc == 2:
-		input_hepmc = pyhepmc.io.ReaderAsciiHepMC2(args.input)
+	if config.hepmc == 3:
+		input_hepmc = pyhepmc.io.ReaderAscii(config.input)
+	if config.hepmc == 2:
+		input_hepmc = pyhepmc.io.ReaderAsciiHepMC2(config.input)
 
 	if input_hepmc.failed():
-		print ("[error] unable to read from {}".format(args.input))
+		print ("[error] unable to read from {}".format(config.input))
 		sys.exit(1)
 
 	# jet finder
 	# print the banner first
 	fj.ClusterSequence.print_banner()
 	print()
-	jet_R0 = args.jet_R
-	if args.max_eta_jet == 0:
-		args.max_eta_jet = 0.9 - jet_R0 * 1.05
-		log.critical(f'[i] setting max eta jet to {args.max_eta_jet}')
+	jet_R0 = config.jet_R
+	if config.max_eta_jet == 0:
+		config.max_eta_jet = 0.9 - jet_R0 * 1.05
+		log.critical(f'[i] setting max eta jet to {config.max_eta_jet}')
 	jet_def = fj.JetDefinition(fj.antikt_algorithm, jet_R0)
-	# jet_selector = fj.SelectorPtMin(args.jet_min_pt) * fj.SelectorPtMax(args.jet_max_pt) * fj.SelectorAbsEtaMax(0.9 - jet_R0 * 1.05)
-	jet_selector = fj.SelectorPtMin(args.jet_min_pt) * fj.SelectorPtMax(args.jet_max_pt) * fj.SelectorAbsEtaMax(args.max_eta_jet)
-	D0_selector = fj.SelectorAbsEtaMax(0.8) * fj.SelectorPtMin(args.D0_min_pt) * fj.SelectorPtMax(args.D0_max_pt)
+	# jet_selector = fj.SelectorPtMin(config.jet_min_pt) * fj.SelectorPtMax(config.jet_max_pt) * fj.SelectorAbsEtaMax(0.9 - jet_R0 * 1.05)
+	jet_selector = fj.SelectorPtMin(config.jet_min_pt) * fj.SelectorPtMax(config.jet_max_pt) * fj.SelectorAbsEtaMax(config.max_eta_jet)
+	D0_selector = fj.SelectorAbsEtaMax(0.8) * fj.SelectorPtMin(config.D0_min_pt) * fj.SelectorPtMax(config.D0_max_pt)
 
-	# from FJ contrib - not clear how to use this
-	# eec = fj.contrib.EnergyCorrelator(2, 1) # default is measure pt_R
-	# log.debug(eec.description())
- 
-	h = heec.EEC2file(args.output, name='eec2', args=args)
+	log.critical(f'[i] jet definition: {jet_def.description()}')
+	log.critical(f'[i] jet selector: {jet_selector.description()}')
+	log.critical(f'[i] D0 selector: {D0_selector.description()}')
+
+	h = heec.EEC2file(config.output, name='eec2', args=args)
  
 	D0indexMark = 99421
 	event_hepmc = pyhepmc.GenEvent()
-	pbar = tqdm.tqdm(range(args.nev))
+	pbar = tqdm.tqdm(range(config.nev))
 	njets = 0
 	nev_count = 0
 	nD0jets_total = 0
+	pbar.set_description(f'number of D0 jets: {nD0jets_total}')
 	while not input_hepmc.failed():
 		ev = input_hepmc.read_event(event_hepmc)
 		if input_hepmc.failed():
@@ -181,7 +216,7 @@ def main():
 
 		log.debug(f'---- number of D0s: {len(Darray)}')
 		# get the final state particles except the D0s	
-		fjparts = get_final_except(event_hepmc, Ddaughters, args.charged_only)
+		fjparts = get_final_except(event_hepmc, Ddaughters, config.charged_only)
 		if len(fjparts) == 0:
 			continue
 		# check if D0's accepted
@@ -212,13 +247,16 @@ def main():
 				log.debug(f'  	- jet constituent: {_p.perp()} {_p.eta()} {_p.phi()} {_p.user_index()}')
 				nD0jets += 1
 				log.debug(f' event weight: {event_hepmc.weight()} cross section: {event_hepmc.cross_section.xsec()}')
-				h.fill(j.constituents(), j.perp(), event_hepmc.weight() * event_hepmc.cross_section.xsec())
+				h.fill(j.constituents(), j.perp(), event_hepmc.cross_section.xsec(), event_hepmc.weight())
   
 		# pbar.update(nD0jets)
 		nD0jets_total += nD0jets
 		pbar.set_description(f'number of D0 jets: {nD0jets_total}')
-		if pbar.n >= args.nev:
+
+		if config.ncounts > 0 and nD0jets_total >= config.ncounts:
 			break
+
+	pbar.close()
 
 	log.critical(f'[i] number of D0 jets accepted: {nD0jets_total}')
 	log.critical(f'[i] number of events analyzed: {nev_count}')

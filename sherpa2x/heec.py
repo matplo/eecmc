@@ -59,8 +59,14 @@ class EEC2file:
 		self.h['eec2_pt_0.0_ew'] = EEChistogram(name='eec2_pt0_ew')
 		self.h['eec2_pt_0.15_ew'] = EEChistogram(name='eec2_pt0.15_ew')
 		self.h['eec2_pt_1.0_ew'] = EEChistogram(name='eec2_pt1_ew')
+  
+		self.weights = []
+		self.xsecs = []
 
-	def fill(self, parts, pTweight, event_weight):
+	def fill(self, parts, pTweight, xsection, event_weight=1.):
+		self.weights.append(event_weight)
+		self.xsecs.append(xsection)
+  
 		self.h['counts'].Fill(pTweight)
 		self.h['counts_ew'].Fill(pTweight, event_weight)
  
@@ -86,6 +92,7 @@ class EEC2file:
 			fname = self.fout.GetName()
 			self.fout.cd()
 			norm = self.h['counts'].Integral()
+			norm = len(self.xsecs) * 1.
 			for h in self.h.values():
 				if isinstance(h, EEChistogram):
 					if norm > 0:
@@ -100,6 +107,11 @@ class EEC2file:
 								h.Sumw2()
 								h.Scale(1./norm)
 				h.Write()
+			# write the weights and xsecs
+			p_weights = ROOT.TProfile('weights', 'weights', len(self.weights), 0., len(self.weights))
+			_ = [p_weights.Fill(i, w) for i, w in enumerate(self.weights)]
+			p_xsecs = ROOT.TProfile('xsecs', 'xsecs', len(self.xsecs), 0., len(self.xsecs))
+			_ = [p_xsecs.Fill(i, x) for i, x in enumerate(self.xsecs)]
 			self.fout.Write()
 			self.fout.Close()
 			log.debug(f'[i] written {fname}.')

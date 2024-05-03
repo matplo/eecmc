@@ -14,6 +14,7 @@ R={{jet_R}}
 
   % me generator settings
   EVENT_GENERATION_MODE Weighted;
+  # EVENT_GENERATION_MODE Unweighted;
 
   % scale definitions
   CORE_SCALE VAR{0.25*H_T2}
@@ -26,6 +27,9 @@ R={{jet_R}}
 
   ME_SIGNAL_GENERATOR Comix Amegic;
   #was OpenLoops or LGEN - neither worked
+  
+  # random number gen
+  RANDOM_SEED {{random_seed}}; 
 }(run)
 
 (processes){
@@ -44,6 +48,8 @@ R={{jet_R}}
   ME_Generator Amegic;
   #Loop_Generator LOOPGEN;
   RS_ME_Generator Comix;
+
+  PTMIN {{jet_min_pt}};
 
   End process;
 }(processes)

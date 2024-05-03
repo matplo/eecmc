@@ -16,8 +16,8 @@ THISD=$(thisdir)
 cd ${THISD}
 
 savedir=${PWD}
-# nev=1000000
-nev=1000
+nev=100000
+# nev=1000
 
 #datfile_default=${HEPPYY_DIR}/lib/heppyy/sherpa_util/configs/basic_LHC_jets_bootstrap.dat
 #datfile_default=${PWD}/jetsLHC.dat
@@ -39,8 +39,9 @@ fi
 # for jetpt in 20
 # for jetpt in 20 40 60
 # for jetpt in 7 10 15 30
+# for jetpt in 30
 # for jetpt in 7 10 15 30
-for jetpt in 30
+for jetpt in 15
 do
 	dname="charm_jetpt${jetpt}${dirmod}"
 	if [ -d ${dname} ]; then
@@ -54,6 +55,7 @@ do
 		    jet_eta_max=0.5 \
 		    jet_R=0.4 \
 		    p_beam_energy=2510 \
+			random_seed=12345 \
 			-o Run.dat
 		echo "Sherpa -f Run.dat" > ./run_sherpa.sh
 		echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/Process/Amegic/lib" >> ./run_sherpa.sh
