@@ -43,8 +43,8 @@ def find_jets_hepmc(jet_def, jet_selector, hepmc_event):
 			# psj.set_user_index(i)
 			fjparts.append(psj)
 	fjparts = vector[fj.PseudoJet](fjparts)
-	print('- number of particles in the event:', fjparts.size())
-	print('  leading particle pT:', fj.sorted_by_pt(fjparts)[0].perp())
+	log.debug('- number of particles in the event:', fjparts.size())
+	log.debug('  leading particle pT:', fj.sorted_by_pt(fjparts)[0].perp())
 	jets = jet_selector(jet_def(fjparts))
 	return jets
 
@@ -83,12 +83,11 @@ def get_final_except(hepmc_event, parts, charged_only=False):
 
 def print_debug(Darray, Ddaughters):
 	for _p in Darray:
-		print()
-		print('D0 is:', _p)
+		log.debug(f'D0 is: {_p}')
 		for _pp in _p.end_vertex.particles_out:
-			print('          ', _pp)
+			log.debug(f'          {_pp}')
 		for _pp in Ddaughters:
-			print('  - check:', _pp)
+			log.debug(f'  - check:{_pp}')
 
 
 def main():
@@ -105,7 +104,7 @@ def main():
 	parser.add_argument('--jet-max-pt', help="max pT jet to accept", default=-1, type=float)	
 	parser.add_argument('--D0-min-pt', help="minimum pT D0", default=3., type=float)	
 	parser.add_argument('--D0-max-pt', help="max pT D0", default=100, type=float)	
-	parser.add_argument('--max-eta-jet', help="max eta of a jet to accept", default=2.5, type=float)	
+	parser.add_argument('--max-eta-jet', help="max eta of a jet to accept", default=0, type=float)	
 	parser.add_argument('--jet-R', help="jet R", default=0.4, type=float)	
 	parser.add_argument('--charged-only', help="only charged particles", default=False, action='store_true')
 
@@ -149,13 +148,17 @@ def main():
 	fj.ClusterSequence.print_banner()
 	print()
 	jet_R0 = args.jet_R
+	if args.max_eta_jet == 0:
+		args.max_eta_jet = 0.9 - jet_R0 * 1.05
+		log.critical(f'[i] setting max eta jet to {args.max_eta_jet}')
 	jet_def = fj.JetDefinition(fj.antikt_algorithm, jet_R0)
-	jet_selector = fj.SelectorPtMin(args.jet_min_pt) * fj.SelectorPtMax(args.jet_max_pt) * fj.SelectorAbsEtaMax(0.9 - jet_R0 * 1.05)
+	# jet_selector = fj.SelectorPtMin(args.jet_min_pt) * fj.SelectorPtMax(args.jet_max_pt) * fj.SelectorAbsEtaMax(0.9 - jet_R0 * 1.05)
+	jet_selector = fj.SelectorPtMin(args.jet_min_pt) * fj.SelectorPtMax(args.jet_max_pt) * fj.SelectorAbsEtaMax(args.max_eta_jet)
 	D0_selector = fj.SelectorAbsEtaMax(0.8) * fj.SelectorPtMin(args.D0_min_pt) * fj.SelectorPtMax(args.D0_max_pt)
 
 	# from FJ contrib - not clear how to use this
 	# eec = fj.contrib.EnergyCorrelator(2, 1) # default is measure pt_R
-	# print(eec.description())
+	# log.debug(eec.description())
  
 	h = heec.EEC2file(args.output, name='eec2', args=args)
  
@@ -174,7 +177,7 @@ def main():
 		if len(Darray) == 0:
 			continue
 
-		print('---- number of D0s:', len(Darray))
+		log.debug(f'---- number of D0s: {len(Darray)}')
 		# get the final state particles except the D0s	
 		fjparts = get_final_except(event_hepmc, Ddaughters, args.charged_only)
 		if len(fjparts) == 0:
@@ -187,7 +190,7 @@ def main():
 				continue
 			D0accept = True
 			psjD0.set_user_index(D0indexMark)
-			print(f'  - D0 accepted: pT={psjD0.perp()} eta={psjD0.eta()}')
+			log.debug(f'  - D0 accepted: pT={psjD0.perp()} eta={psjD0.eta()}')
 			fjparts.push_back(psjD0)
    
 		if not D0accept:
@@ -203,18 +206,18 @@ def main():
 				if _p.user_index() != D0indexMark:
 					continue
 				print_debug(Darray, Ddaughters)
-				print('  - jet:', j.perp(), j.eta(), j.phi())
-				print('  	- jet constituent:', _p.perp(), _p.eta(), _p.phi(), _p.user_index())
+				log.debug(f'  - jet: {j.perp()} {j.eta()} {j.phi()}')
+				log.debug(f'  	- jet constituent: {_p.perp()} {_p.eta()} {_p.phi()} {_p.user_index()}')
 				nD0jets += 1
-				print(' event weight:', event_hepmc.weight(), 'cross section:', event_hepmc.cross_section.xsec())
+				log.debug(f' event weight: {event_hepmc.weight()} cross section: {event_hepmc.cross_section.xsec()}')
 				h.fill(j.constituents(), j.perp(), event_hepmc.weight() * event_hepmc.cross_section.xsec())
   
 		pbar.update(nD0jets)
 		if pbar.n >= args.nev:
 			break
 
-	print('[i] number of D0 jets accepted:', pbar.n)
-	print('[i] number of events analyzed:', nev_count)
+	log.critical(f'[i] number of D0 jets accepted: {pbar.n}')
+	log.critical(f'[i] number of events analyzed: {nev_count}')
 
 if __name__ == '__main__':
 	main()
