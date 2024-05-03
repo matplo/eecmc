@@ -31,8 +31,10 @@ R={{jet_R}}
 (processes){
   #Process 93 93 -> 93 93;
   #Process 93 93 -> 93 93 93{0}
-  Process 93 93 -> 4 X;
-  Process 93 93 -> -4 X;
+  Process 93 93 -> -4 4;
+  # need to add these below? - gluon anti-quark annihilation
+  Process 21 93 -> 4 93;
+  Process 21 93 -> -4 93;
   Order (*,0);
   #CKKW sqr(20/E_CMS)
   CKKW sqrtnS;            # Regularization scale choice for CKKW
@@ -49,5 +51,9 @@ R={{jet_R}}
 (selector){
   ## from docs: FastjetFinder <algorithm> <n> <ptmin> <etmin> <dr> [<f(siscone)>=0.75] [<eta-max>] [<y-max>] [<nb>] [<nb2>]
   ## https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.9.html#Examples
-  FastjetFinder antikt 1 {{jet_min_pt}} 0.0 {{jet_R}} 0.75 {{jet_eta_max}}
+  FastjetFinder antikt 1 {{jet_min_pt}} 0.0 {{jet_R}} 0.75 {{jet_eta_max}};
 }(selector)
+
+#(analysis){
+#  Histogram FJ1_InvariantMass 50 0.0 10.0 "PDG_ID == 421";
+#}(analysis)

@@ -16,7 +16,8 @@ THISD=$(thisdir)
 cd ${THISD}
 
 savedir=${PWD}
-nev=1000000
+# nev=1000000
+nev=1000
 
 #datfile_default=${HEPPYY_DIR}/lib/heppyy/sherpa_util/configs/basic_LHC_jets_bootstrap.dat
 #datfile_default=${PWD}/jetsLHC.dat
@@ -38,7 +39,8 @@ fi
 # for jetpt in 20
 # for jetpt in 20 40 60
 # for jetpt in 7 10 15 30
-for jetpt in 7 10 15 30
+# for jetpt in 7 10 15 30
+for jetpt in 30
 do
 	dname="charm_jetpt${jetpt}${dirmod}"
 	if [ -d ${dname} ]; then
