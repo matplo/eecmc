@@ -1,0 +1,16 @@
+# jet_min_pt: 15
+# jet_max_pt: 30
+# D0_min_pt: 5
+# D0_max_pt: 6
+
+jet_min_pt: 10
+jet_max_pt: 15
+D0_min_pt: 5
+D0_max_pt: 15
+nev: -1
+# ncounts: 10
+ncounts: -1
+input: /software/users/ploskon/eecmc/sherpa2x/charm_jetpt10_lund/sherpa_LHC_jets_10.0.hepmc
+hepmc: 3
+output: eec_D_10_15_lund.root
+charged_only: True
