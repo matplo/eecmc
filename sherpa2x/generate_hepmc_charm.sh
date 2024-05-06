@@ -36,6 +36,16 @@ if [ "$1" == "lund" ]; then
 	dirmod="_lund"
 fi
 
+if [ "$1" == "cmass" ]; then
+	datfile="${THISD}/charmRun_qmass.dat"
+	charm_mass=$2
+	dirmod="_cmass_${charm_mass}"
+	if [ -z ${charm_mass} ]; then
+		echo "[e] charm mass not set"
+		exit 1
+	fi
+fi
+
 # for jetpt in 20
 # for jetpt in 20 40 60
 # for jetpt in 7 10 15 30
@@ -55,7 +65,8 @@ do
 		    jet_eta_max=0.5 \
 		    jet_R=0.4 \
 		    p_beam_energy=2510 \
-			random_seed=12345 \
+				random_seed=12345 \
+				c_mass=${charm_mass} \
 			-o Run.dat
 		echo "Sherpa -f Run.dat" > ./run_sherpa.sh
 		echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/Process/Amegic/lib" >> ./run_sherpa.sh

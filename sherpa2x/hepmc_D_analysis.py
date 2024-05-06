@@ -50,23 +50,71 @@ def find_jets_hepmc(jet_def, jet_selector, hepmc_event):
 	return jets
 
 
-def get_D0s(hepmc_event):
-	Darray = []
-	Ddaughters = []
-	for i,p in enumerate(hepmc_event.particles):
-		if abs(p.pid) != 421:
-			continue
-		if len(p.end_vertex.particles_out) != 2:
-			continue
-		_daughters_status = [_p.status for _p in p.end_vertex.particles_out]
-		if [1, 1] != _daughters_status:
-			continue
-		_daughters_pids = [_p.pid for _p in p.end_vertex.particles_out]
-		if 211 in _daughters_pids and -321 in _daughters_pids:
-				for _p in p.end_vertex.particles_out:
-					Ddaughters.append(_p)
-				Darray.append(p)
-	return Darray, Ddaughters
+def get_D0s_skipDstar(hepmc_event, noDstar=False):
+		Darray = []
+		Ddaughters = []
+		for i,p in enumerate(hepmc_event.particles):
+				if abs(p.pid) != 421:
+						continue
+				if len(p.end_vertex.particles_out) != 2:
+						continue
+				_daughters_status = [_p.status for _p in p.end_vertex.particles_out]
+				if [1, 1] != _daughters_status:
+						continue
+				log.debug(f'  - D0 found: {p}')
+				log.debug(f'    - mothers: {p.end_vertex.particles_in}')
+				log.debug(f'    - daughters: {p.end_vertex.particles_out}')
+				_daughters_pids = [_p.pid for _p in p.end_vertex.particles_out]
+				# Check if D0 is a result of a D* decay
+				_mothers_pids = [_p.pid for _p in p.production_vertex.particles_in]
+				if 413 in _mothers_pids or -413 in _mothers_pids:
+						log.debug(f'  - D0 is a result of a D* decay - skipping')
+						for _p in p.production_vertex.particles_in:
+							log.debug(f' 	- D* daughter: {_p} {_p.pid} {_p.status}')
+						continue
+				if (_daughters_pids[0] == 211 and _daughters_pids[1] == -321) or (_daughters_pids[0] == -321 and _daughters_pids[1] == 211):
+						for _p in p.end_vertex.particles_out:
+								Ddaughters.append(_p)
+								Darray.append(p)
+		return Darray, Ddaughters
+	
+
+def get_D0s(hepmc_event, noDstar=False):
+		Darray = []
+		Ddaughters = []
+		for i,p in enumerate(hepmc_event.particles):
+				# Check if D*
+				if abs(p.pid) == 413:
+						log.debug(f'  - D* found {p.pid} {p.status}')
+						_Dstar_daughters_pids = [_p.pid for _p in p.end_vertex.particles_out]
+						# if D0 decay is D* -> D0 pi
+						if 421 == abs(_Dstar_daughters_pids[0]) or 421 == abs(_Dstar_daughters_pids[1]):
+							# skip the pion
+							if 421 == abs(_Dstar_daughters_pids[0]):
+								Ddaughters.append(p.end_vertex.particles_out[1])
+							if 421 == abs(_Dstar_daughters_pids[1]):
+								Ddaughters.append(p.end_vertex.particles_out[0])
+							for _p in p.end_vertex.particles_out:
+								log.debug(f' 	- D* daughter: {_p} {_p.pid} {_p.status}')
+							log.debug(f' 	- D* daughter to be skipped: {Ddaughters[-1].pid} {Ddaughters[-1].status}')
+						continue
+				if abs(p.pid) != 421:
+						continue
+				if len(p.end_vertex.particles_out) != 2:
+						continue
+				_daughters_status = [_p.status for _p in p.end_vertex.particles_out]
+				if [1, 1] != _daughters_status:
+						continue
+				log.debug(f'  - D0 found: {p}')
+				log.debug(f'    - mothers: {p.end_vertex.particles_in}')
+				log.debug(f'    - daughters: {p.end_vertex.particles_out}')
+				_daughters_pids = [_p.pid for _p in p.end_vertex.particles_out]
+				if (_daughters_pids[0] == 211 and _daughters_pids[1] == -321) or (_daughters_pids[0] == -321 and _daughters_pids[1] == 211):
+						for _p in p.end_vertex.particles_out:
+								Ddaughters.append(_p)
+								Darray.append(p)
+		return Darray, Ddaughters
+
 
 def get_final_except(hepmc_event, parts, charged_only=False):
 	fjparts = []
@@ -123,29 +171,47 @@ def process_file(input_file, output_file, config, args):
 
 def main():
 	parser = argparse.ArgumentParser(description='read hepmc and analyze eecs', prog=os.path.basename(__file__))
-	parser.add_argument('-i', '--input', help='input file - hepmc or yaml', default='low', type=str, required=True)
+	parser.add_argument('--input', help='input file - hepmc', type=str)
+	parser.add_argument('--config', help='configure from yaml', type=str)
 	parser.add_argument('--hepmc', help='what format 2 or 3', default=2, type=int)
 	parser.add_argument('--nev', help='number of events', default=-1, type=int)
+	parser.add_argument('--ncounts', help='number of D0-jet counts', default=-1, type=int)
 	parser.add_argument('--ncorrel', help='max n correlator', type=int, default=2)
-	parser.add_argument('-o','--output', help='root output filename', default='eec.root', type=str)
-	parser.add_argument('-v', '--verbose', help="be verbose", default=False, action='store_true')
-	parser.add_argument('-g', '--debug', help="write debug things", default=False, action='store_true')
+	parser.add_argument('--output', help='root output filename', default='eec.root', type=str)
+	parser.add_argument('--verbose', help="be verbose", default=False, action='store_true')
+	parser.add_argument('--debug', help="write debug things", default=False, action='store_true')
 	parser.add_argument('--log', help="write stdout to a log file - output file will be same as -o but .log instead of .root", default=False, action='store_true')
 	parser.add_argument('--jet-min-pt', help="minimum pT jet to accept", default=20., type=float)	
 	parser.add_argument('--jet-max-pt', help="max pT jet to accept", default=-1, type=float)	
 	parser.add_argument('--D0-min-pt', help="minimum pT D0", default=3., type=float)	
 	parser.add_argument('--D0-max-pt', help="max pT D0", default=100, type=float)	
-	parser.add_argument('--max-eta-jet', help="max eta of a jet to accept", default=0, type=float)	
+	parser.add_argument('--max-eta-jet', help="max eta of a jet to accept", default=0.5, type=float)	
 	parser.add_argument('--jet-R', help="jet R", default=0.4, type=float)	
 	parser.add_argument('--charged-only', help="only charged particles", default=False, action='store_true')
 
 	args = parser.parse_args()	
+    # Check that at least one of --input or --config is provided
+	if args.input is None and args.config is None:
+		parser.error('One of --input or --config arguments is required')
+        
 	log.critical(args)
 
 	config = ConfigData(args=args)
-	if '.yaml' == args.input[-5:] or '.yml' == args.input[-4:]:
-		config.configure_from_yaml(args.input)		
+	if args.config is not None:
+		config.configure_from_yaml(args.config)		
+		log.critical(config)
+		for s in sys.argv:
+			if s.startswith('--'):
+				s = s[2:]
+			for k, v in args.__dict__.items():
+				if s != k:
+					continue
+				config.__setattr__(k, v)
 	log.critical(config)
+ 
+	if config.input is None:
+		log.critical('no input file provided')
+		return 1
 
 	stdout_file = None
 	if config.log:
@@ -229,7 +295,7 @@ def main():
 			psjD0.set_user_index(D0indexMark)
 			log.debug(f'  - D0 accepted: pT={psjD0.perp()} eta={psjD0.eta()}')
 			fjparts.push_back(psjD0)
-   
+	 
 		if not D0accept:
 			continue
 
@@ -248,7 +314,7 @@ def main():
 				nD0jets += 1
 				log.debug(f' event weight: {event_hepmc.weight()} cross section: {event_hepmc.cross_section.xsec()}')
 				h.fill(j.constituents(), j.perp(), event_hepmc.cross_section.xsec(), event_hepmc.weight())
-  
+	
 		# pbar.update(nD0jets)
 		nD0jets_total += nD0jets
 		pbar.set_description(f'number of D0 jets: {nD0jets_total}')
