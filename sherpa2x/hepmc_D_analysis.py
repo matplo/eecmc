@@ -75,44 +75,44 @@ def get_D0s_skipDstar(hepmc_event, noDstar=False):
 				if (_daughters_pids[0] == 211 and _daughters_pids[1] == -321) or (_daughters_pids[0] == -321 and _daughters_pids[1] == 211):
 						for _p in p.end_vertex.particles_out:
 								Ddaughters.append(_p)
-								Darray.append(p)
+						Darray.append(p)
 		return Darray, Ddaughters
 	
 
 def get_D0s(hepmc_event, noDstar=False):
 		Darray = []
 		Ddaughters = []
-		for i,p in enumerate(hepmc_event.particles):
-				# Check if D*
-				if abs(p.pid) == 413:
-						log.debug(f'  - D* found {p.pid} {p.status}')
-						_Dstar_daughters_pids = [_p.pid for _p in p.end_vertex.particles_out]
-						# if D0 decay is D* -> D0 pi
-						if 421 == abs(_Dstar_daughters_pids[0]) or 421 == abs(_Dstar_daughters_pids[1]):
-							# skip the pion
-							if 421 == abs(_Dstar_daughters_pids[0]):
-								Ddaughters.append(p.end_vertex.particles_out[1])
-							if 421 == abs(_Dstar_daughters_pids[1]):
-								Ddaughters.append(p.end_vertex.particles_out[0])
-							for _p in p.end_vertex.particles_out:
-								log.debug(f' 	- D* daughter: {_p} {_p.pid} {_p.status}')
-							log.debug(f' 	- D* daughter to be skipped: {Ddaughters[-1].pid} {Ddaughters[-1].status}')
-						continue
-				if abs(p.pid) != 421:
-						continue
-				if len(p.end_vertex.particles_out) != 2:
-						continue
-				_daughters_status = [_p.status for _p in p.end_vertex.particles_out]
-				if [1, 1] != _daughters_status:
-						continue
-				log.debug(f'  - D0 found: {p}')
-				log.debug(f'    - mothers: {p.end_vertex.particles_in}')
-				log.debug(f'    - daughters: {p.end_vertex.particles_out}')
-				_daughters_pids = [_p.pid for _p in p.end_vertex.particles_out]
-				if (_daughters_pids[0] == 211 and _daughters_pids[1] == -321) or (_daughters_pids[0] == -321 and _daughters_pids[1] == 211):
-						for _p in p.end_vertex.particles_out:
-								Ddaughters.append(_p)
-								Darray.append(p)
+		for i, p in enumerate(hepmc_event.particles):
+			# Check if D*
+			if abs(p.pid) == 413:
+				log.debug(f'  - D* found {p.pid} {p.status}')
+				_Dstar_daughters_pids = [_p.pid for _p in p.end_vertex.particles_out]
+				# if D0 decay is D* -> D0 pi
+				if 421 == abs(_Dstar_daughters_pids[0]) or 421 == abs(_Dstar_daughters_pids[1]):
+					# skip the pion
+					if 421 == abs(_Dstar_daughters_pids[0]):
+						Ddaughters.append(p.end_vertex.particles_out[1])
+					if 421 == abs(_Dstar_daughters_pids[1]):
+						Ddaughters.append(p.end_vertex.particles_out[0])
+					for _p in p.end_vertex.particles_out:
+						log.debug(f' 	- D* daughter: {_p} {_p.pid} {_p.status}')
+					log.debug(f' 	- D* daughter to be skipped: {Ddaughters[-1].pid} {Ddaughters[-1].status}')
+				continue
+			if abs(p.pid) != 421:
+				continue
+			if len(p.end_vertex.particles_out) != 2:
+				continue
+			_daughters_status = [_p.status for _p in p.end_vertex.particles_out]
+			if [1, 1] != _daughters_status:
+				continue
+			log.debug(f'  - D0 found: {p}')
+			log.debug(f'    - mothers: {p.end_vertex.particles_in}')
+			log.debug(f'    - daughters: {p.end_vertex.particles_out}')
+			_daughters_pids = [_p.pid for _p in p.end_vertex.particles_out]
+			if (_daughters_pids[0] == 211 and _daughters_pids[1] == -321) or (_daughters_pids[0] == -321 and _daughters_pids[1] == 211):
+				for _p in p.end_vertex.particles_out:
+					Ddaughters.append(_p)
+				Darray.append(p)
 		return Darray, Ddaughters
 
 
@@ -188,6 +188,7 @@ def main():
 	parser.add_argument('--max-eta-jet', help="max eta of a jet to accept", default=0.5, type=float)	
 	parser.add_argument('--jet-R', help="jet R", default=0.4, type=float)	
 	parser.add_argument('--charged-only', help="only charged particles", default=False, action='store_true')
+	parser.add_argument('--use-h', help='syntax f:h - use a histogram h from file f for binning', default='', type=str)
 
 	args = parser.parse_args()	
     # Check that at least one of --input or --config is provided
@@ -260,15 +261,17 @@ def main():
 	log.critical(f'[i] jet selector: {jet_selector.description()}')
 	log.critical(f'[i] D0 selector: {D0_selector.description()}')
 
-	h = heec.EEC2file(config.output, name='eec2', args=args)
+	h = heec.EEC2file(config.output, name='eec2', load=False, use_h_binning=config.use_h, args=args)
  
 	D0indexMark = 99421
 	event_hepmc = pyhepmc.GenEvent()
 	pbar = tqdm.tqdm(range(config.nev))
+	pbar.set_description('[i] events processed')
+	pbarD0 = tqdm.tqdm(range(config.ncounts))
+	pbarD0.set_description('[i]   D-jet accepted')
 	njets = 0
 	nev_count = 0
 	nD0jets_total = 0
-	pbar.set_description(f'number of D0 jets: {nD0jets_total}')
 	while not input_hepmc.failed():
 		ev = input_hepmc.read_event(event_hepmc)
 		if input_hepmc.failed():
@@ -317,15 +320,18 @@ def main():
 	
 		# pbar.update(nD0jets)
 		nD0jets_total += nD0jets
-		pbar.set_description(f'number of D0 jets: {nD0jets_total}')
-
+		pbarD0.update(nD0jets)
 		if config.ncounts > 0 and nD0jets_total >= config.ncounts:
 			break
 
 	pbar.close()
+	pbarD0.close()
 
 	log.critical(f'[i] number of D0 jets accepted: {nD0jets_total}')
 	log.critical(f'[i] number of events analyzed: {nev_count}')
+ 
+	h.Write()
+	h.Close()
 
 if __name__ == '__main__':
 	main()

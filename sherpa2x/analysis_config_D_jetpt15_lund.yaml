@@ -14,3 +14,4 @@ input: /software/users/ploskon/eecmc/sherpa2x/charm_jetpt15_lund/sherpa_LHC_jets
 hepmc: 3
 output: eec_D_15_30_lund.root
 charged_only: True
+use_h: /software/users/ploskon/eecmc/sherpa2x/D0jet_15_30_EEC_wPYTHIA.root:h_EEC_JetPt_Djet_R0.4_pt15-30_Data

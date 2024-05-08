@@ -1,6 +1,17 @@
-- jet-min-pt: {{jet_min_pt}} 
-- jet-max-pt: {{jet_max_pt}} 
-- D0-min-pt: {{D0_min_pt}} 
-- D0-max-pt: {{D0_max_pt}}
-- nev: -1 
-- output: {{output_file}}
+# jet_min_pt: 15
+# jet_max_pt: 30
+# D0_min_pt: 5
+# D0_max_pt: 6
+
+jet_min_pt: 15
+jet_max_pt: 30
+D0_min_pt: 5
+D0_max_pt: 30
+nev: -1
+# ncounts: 10
+ncounts: -1
+input: /software/users/ploskon/eecmc/sherpa2x/charm_jetpt15/sherpa_LHC_jets_15.0.hepmc
+hepmc: 3
+output: eec_D_15_30.root
+charged_only: True
+use_h: /software/users/ploskon/eecmc/sherpa2x/D0jet_15_30_EEC_wPYTHIA.root:h_EEC_JetPt_Djet_R0.4_pt15-30_Data

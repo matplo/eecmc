@@ -1,19 +1,20 @@
 (defaults)
 {
-min_jet_pt={{jet_min_pt}}
+min_jet_pt=15.0
 n_events=1k
-eta_max={{jet_eta_max}}
-R={{jet_R}}
+eta_max=0.5
+R=0.4
 }(defaults)
 
 (run){
-  EVENT_OUTPUT=HepMC3_GenEvent[sherpa_LHC_jets_{{jet_min_pt}}.hepmc];
+  EVENT_OUTPUT=HepMC3_GenEvent[sherpa_LHC_jets_15.0.hepmc];
   EVENTS 100000; 
-  BEAM_1 2212; BEAM_ENERGY_1 {{p_beam_energy}};
-  BEAM_2 2212; BEAM_ENERGY_2 {{p_beam_energy}};
+  BEAM_1 2212; BEAM_ENERGY_1 2510;
+  BEAM_2 2212; BEAM_ENERGY_2 2510;
 
   % me generator settings
   EVENT_GENERATION_MODE Weighted;
+  # EVENT_GENERATION_MODE Unweighted;
 
   % scale definitions
   CORE_SCALE VAR{0.25*H_T2}
@@ -26,11 +27,23 @@ R={{jet_R}}
 
   ME_SIGNAL_GENERATOR Comix Amegic;
   #was OpenLoops or LGEN - neither worked
+
+  # hadronization tune from ./share/SHERPA-MC/Examples/Jets_in_DIS/HERA/Run.dat
+  PARJ(21) 0.432; PARJ(41) 1.05; PARJ(42) 1.0;
+  PARJ(47) 0.65; MSTJ(11) 5;
+  FRAGMENTATION Lund; DECAYMODEL Lund; 
+
+  # random number gen
+  RANDOM_SEED 1000000; 
 }(run)
 
 (processes){
-  Process 93 93 -> 93 93;
+  #Process 93 93 -> 93 93;
   #Process 93 93 -> 93 93 93{0}
+  Process 93 93 -> -4 4;
+  # need to add these below? - gluon anti-quark annihilation
+  Process 21 93 -> 4 93;
+  Process 21 93 -> -4 93;
   Order (*,0);
   #CKKW sqr(20/E_CMS)
   CKKW sqrtnS;            # Regularization scale choice for CKKW
@@ -41,11 +54,13 @@ R={{jet_R}}
   #Loop_Generator LOOPGEN;
   RS_ME_Generator Comix;
 
+  PTMIN 15.0;
+
   End process;
 }(processes)
 
 (selector){
   ## from docs: FastjetFinder <algorithm> <n> <ptmin> <etmin> <dr> [<f(siscone)>=0.75] [<eta-max>] [<y-max>] [<nb>] [<nb2>]
   ## https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.9.html#Examples
-  FastjetFinder antikt 1 {{jet_min_pt}} 0.0 {{jet_R}} 0.75 {{jet_eta_max}}
+  FastjetFinder antikt 1 15.0 0.0 0.4 0.75 0.5;
 }(selector)
