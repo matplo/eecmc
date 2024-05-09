@@ -256,6 +256,9 @@ class JetAnalysis(AnalysisBase):
 				else:
 					ijet = ijet[0]
 				self.tn_parts.Fill(self._nev, ijet, p.pt(), p.eta(), p.phi(), py_p[2], py_p[3], self.pythia_info.sigmaGen(), self.pythia_info.weight())
+		if len(self.jets) < 1:
+			return False
+		return True
 	
 class EECAnalysis(JetAnalysis):
   
@@ -267,8 +270,9 @@ class EECAnalysis(JetAnalysis):
 	def analyze_pythia_event(self, pythia):
 		super(EECAnalysis, self).analyze_pythia_event(pythia)
 		# add the EEC analysis here
-		for ptcut in self.pt_cuts:
-			self.analyze_eec(pythia, ptcut)
+		rvs = [self.analyze_eec(pythia, ptcut) for ptcut in self.pt_cuts]
+		return any(rvs)
+	
    
 	def analyze_eec(self, pythia, ptcut):
 		# Generate all pairs from parts, excluding pairs of the same element
@@ -284,7 +288,7 @@ class EECAnalysis(JetAnalysis):
 				dr = first.delta_R(second)
 				eec = first.perp() * second.perp() / pow(j.perp(), 2.)
 				self.tn_eec.Fill(self._nev, ij, dr, first.perp(), second.perp(), eec, j.perp(), self.pythia_info.sigmaGen(), self.pythia_info.weight(), ptcut)
-
+		return True
 
 
 def main():
@@ -309,6 +313,17 @@ def main():
 	parser.add_argument('--', dest='remainder', nargs=argparse.REMAINDER)
  
 	args = parser.parse_args()	
+
+	if args.remainder:
+		log.critical(f'[i] remainder: {args.remainder}')
+  
+	if args.nev < args.ncounts:
+		args.nev = -1
+		log.info(f'[w] setting nev to -1 as nev < ncounts')
+
+	if args.nev <= 0 and args.ncounts <= 0:
+		args.nev = 1000
+		log.info(f'[w] setting nev to 1000')
  
 	config = ConfigData(args=args)
 	if args.write_config:
@@ -339,7 +354,7 @@ def main():
 		print("[e] pythia initialization failed.")
 		return
 
-	jet_all = JetAnalysis(config, name='jet_all')
+	# jet_all = JetAnalysis(config, name='jet_all')
 
 	eec_all = EECAnalysis(config, name='eec_all')
 	eec_all.select_final(True)
@@ -352,15 +367,18 @@ def main():
 	pbar = tqdm.tqdm(range(config.nev))
 	pbar.set_description('[i] events processed')
 	pbar_counts = tqdm.tqdm(range(config.ncounts))
-	pbar_counts.set_description('[i]   counts accepted')
+	pbar_counts.set_description('[i]  counts accepted')
 	n_count = 0
 	while not _stop:
 		if not pythia.next():
 			continue
-		jet_all.analyze_event(pythia=pythia)
-		eec_all.analyze_event(pythia=pythia)
-		eec_ch.analyze_event(pythia=pythia)
+		rv = True
+		# rv = rv and jet_all.analyze_event(pythia=pythia)
+		rv = rv and eec_all.analyze_event(pythia=pythia)
+		rv = rv and eec_ch.analyze_event(pythia=pythia)
 		pbar.update(1)
+		if rv:
+			pbar_counts.update(1)
 		if pbar.n >= config.nev and config.nev > 0:
 			_stop = True
 		if pbar_counts.n >= config.ncounts and config.ncounts > 0:
