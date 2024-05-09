@@ -64,9 +64,9 @@ class EEChistograms(yasp.GenericObject):
 			_cb = EnergyCorrelators.CorrelatorBuilder(_parts, scale, self.ncorrel)
 			for i in range(self.ncorrel - 1):
 				_hl = self.get_histograms(pt_cut)
-				_hl[i].FillN(_cb.correlator(i+2).rs().size(), 
-							array.array('d', _cb.correlator(i+2).rs()), 
-							array.array('d', _cb.correlator(i+2).weights()) )
+				#_hl[i].FillN(_cb.correlator(i+2).rs().size(), 
+				#			array.array('d', _cb.correlator(i+2).rs()), 
+				#			array.array('d', _cb.correlator(i+2).weights()) )
 				_ = [self.tn.Fill(	i+2, 
                       				pt_cut, 
                           			_cb.correlator(i+2).rs()[_i], 

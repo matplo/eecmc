@@ -21,6 +21,9 @@ from cppyy.gbl.std import vector
 # from cppyy.gbl import pythiaext
 
 from heppyy.pythia_util import configuration as pyconf
+import logging
+from heppyy.util.logger import Logger
+log = Logger()
 
 import ROOT
 import math
@@ -43,12 +46,41 @@ def find_jets_pythia(jet_def, jet_selector, pythia):
 	return jets
 
 
+def get_D0s(pythia, skipDstar = True):
+	D0s = []
+	D0daughters = []
+	for i in range(pythia.event.size()):
+		if abs(pythia.event[i].id()) == 421:
+			Dstar = False
+			# check if D* is a mother
+			for j in range(pythia.event.size()):
+				if pythia.event[j].mother1() == i or pythia.event[j].mother2() == i:
+					if abs(pythia.event[j].id()) == 413:
+						Dstar = True
+						break
+			if Dstar and skipDstar:
+				continue
+			D0s.append(i)
+			for j in range(pythia.event.size()):
+				if pythia.event[j].mother1() == i or pythia.event[j].mother2() == i:
+					if abs(pythia.event[j].id()) == 211 or abs(pythia.event[j].id()) == 321:
+						D0daughters.append(j)
+	log.debug(f'D0s: {D0s}')
+	log.debug(f'D0 daughters: {D0daughters}')
+	return D0s, D0daughters
+
+
 def main():
 	parser = argparse.ArgumentParser(description='read hepmc and analyze eecs', prog=os.path.basename(__file__))
 	pyconf.add_standard_pythia_args(parser)
 	parser.add_argument('--ncorrel', help='max n correlator', type=int, default=2)
 	parser.add_argument('-o','--output', help='root output filename', default='eec_pythia8.root', type=str)
+	parser.add_argument('--D0mode', help='set D0 mode', default=0, type=int)
+	parser.add_argument('--debug', help='debug', action='store_true')
 	args = parser.parse_args()	
+ 
+	if args.debug:
+		log.set_level(logging.DEBUG)
 
 	if args.output == 'eec_pythia8.root':
 		if args.py_vincia:
@@ -85,6 +117,10 @@ def main():
 	while not _stop:
 		if not pythia.next():
 			continue
+		if args.D0mode:
+			D0s, D0daughters = get_D0s(pythia)
+			if len(D0s) == 0:
+				continue
 		fjparts = vector[fj.PseudoJet]([fj.PseudoJet(p.px(), p.py(), p.pz(), p.e()) for p in pythia.event if p.isFinal() and p.isCharged()])
 		# jets = fj.sorted_by_pt(jet_def(fjparts))
 		jets = fj.sorted_by_pt(jet_selector(jet_def(fjparts)))
