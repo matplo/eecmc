@@ -163,7 +163,7 @@ class Config(yasp.GenericObject):
 	charged_only = False
 	ncorrel = 2
 	def __init__(self, **kwargs):
-		super(ConfigData, self).__init__(**kwargs)
+		super(Config, self).__init__(**kwargs)
 
 def process_file(input_file, output_file, config, args):
 	pass
