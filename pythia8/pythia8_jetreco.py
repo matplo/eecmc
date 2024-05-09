@@ -8,7 +8,12 @@ import numpy as np
 import sys
 import yasp
 import cppyy
-
+import yaml
+import math
+import array
+import ROOT
+import logging
+import itertools
 
 import heppyy.util.fastjet_cppyy
 import heppyy.util.pythia8_cppyy
@@ -18,18 +23,10 @@ from cppyy.gbl import fastjet as fj
 from cppyy.gbl import Pythia8
 from cppyy.gbl.std import vector
 
-# from cppyy.gbl import pythiaext
-
+from yasp import GenericObject
 from heppyy.pythia_util import configuration as pyconf
-import logging
 from heppyy.util.logger import Logger
 log = Logger()
-
-import ROOT
-import math
-import array
-
-from yasp import GenericObject
 
 
 def logbins(xmin, xmax, nbins):
@@ -73,6 +70,7 @@ def get_D0s(pythia, skipDstar = True):
 
 
 class ConfigData(GenericObject):
+
 	def __init__(self, **kwargs):
 		super(ConfigData, self).__init__(**kwargs)
 		# configure from the arparse (including defaults)
@@ -92,11 +90,206 @@ class ConfigData(GenericObject):
 					self.__setattr__(k, v)
 		self.verbose = self.debug
 
+	def write_to_yaml(self, filename):
+		with open(filename, 'w') as f:	
+			_out_dict = {}
+			for k, v in self.__dict__.items():
+				if k == 'args':
+					continue
+				_out_dict[k] = v
+			yaml.dump(_out_dict, f, default_flow_style=False)
+
+
+# singleton class for storing unique analysis names
+class NamesStore(object):
+
+	__instance = None
+
+	def __new__(cls):
+		if NamesStore.__instance is None:
+			NamesStore.__instance = object.__new__(cls)
+			NamesStore.__instance.names = []
+		return NamesStore.__instance
+
+	def add_unique(self, name):
+		if name in self.names:
+			raise ValueError(f'name {name} already exists')
+		self.names.append(name)
+		return name
+
+	def add(self, name):
+		requested_name = name
+		while name in self.names:
+			name += '_'
+		self.names.append(name)
+		if requested_name != name:
+			log.warning(f'name {requested_name} already exists, using {name} instead')
+		return name
+
+
+class AnalysisBase(GenericObject):
+
+	def __init__(self, config, **kwargs):
+		if isinstance(config, str):
+			self.configure_from_yaml(config)
+		if isinstance(config, dict):
+			self.configure_from_dict(config)
+		if isinstance(config, ConfigData):
+			self.configure_from_dict(config.__dict__)
+		super(AnalysisBase, self).__init__(**kwargs)
+		if self.name is None:
+			self.name = 'AnalysisBase'
+		self.name = NamesStore().add_unique(self.name)
+		self._log = Logger()
+		self._nev = 0
+		self.init()
+
+	def open_root_file(self):
+		# open a root file if needed
+		if self.root_file is None:
+			self.objects = []
+			if self.output is None:
+				self.output = 'analysis_output.root'
+				self.output.replace('.root', f'_{self.name}.root')
+			if self.output.endswith('.root'):
+				self.output = self.output.replace('.root', f'_{self.name}.root')
+			self.output = NamesStore().add_unique(self.output)
+			if self.root_file is None:
+				self.root_file = ROOT.TFile(self.output, 'RECREATE')
+				self._log.info(f'opened root file {self.root_file.GetName()}')
+		self.root_file.cd()
+   
+	def init(self):
+		self._log.debug('AnalysisBase::init()')
+
+	def analyze_event(self, pythia=None, hepmc=None):
+		rv = True
+		if pythia:
+			rv = rv and self.analyze_pythia_event(pythia)
+		if hepmc:
+			rv = rv and self.analyze_hepmc_event(hepmc)
+		self._nev += 1
+		return rv
+
+	def analyze_pythia_event(self, pythia):
+		pass
+
+	def analyze_hepmc_event(self, hepmc):
+		pass
+
+	def __del__(self):
+		if self.root_file:
+			self.root_file.Write()
+			self.root_file.Close()
+			self._log.info(f'wrote {self.root_file.GetName()}')
+		else:
+			self._log.debug('no root file to write')
+		self.root_file = None
+
+class JetAnalysis(AnalysisBase):
+  
+	def init(self):
+		super(JetAnalysis, self).init()
+		self.open_root_file()
+		self.root_file.cd() # done already in the base class but just to be sure
+		self.tn_events 	= ROOT.TNtuple(f'tn_events_{self.name}', 	'tn_events', 	'nev:xsec:ev_weight:njets:nparts')
+		self.tn_jet 		= ROOT.TNtuple(f'tn_jet_{self.name}', 		'tn_jet', 		'nev:ij:pt:eta:phi:xsec:ev_weight')
+		self.tn_parts 	= ROOT.TNtuple(f'tn_parts_{self.name}', 	'tn_parts', 	'nev:ij:pt:eta:phi:pid:xsec:ev_weight')	
+		# jet finder
+		self.jet_def 			= fj.JetDefinition(fj.antikt_algorithm, self.jet_R)
+		self.jet_selector = fj.SelectorPtMin(self.jet_pt_min)
+		if self.part_abs_eta_max:
+			self.part_selector = fj.SelectorAbsEtaMax(self.part_abs_eta_max)
+		if self.jet_abs_eta_max > 0:
+			if self.part_abs_eta_max and self.jet_abs_eta_max > self.part_abs_eta_max - self.jet_R:
+				self.jet_abs_eta_max = self.part_abs_eta_max - self.jet_R
+				self._log.warning(f'jet_abs_eta_max adjusted to {self.jet_abs_eta_max}')
+			self.jet_selector = self.jet_selector * fj.SelectorAbsEtaMax(self.jet_abs_eta_max)
+		if self.jet_eta_max is not None:
+			self.jet_selector = self.jet_selector * fj.SelectorEtaMax(self.jet_eta_max)
+		if self.jet_eta_min is not None:
+			self.jet_selector = self.jet_selector * fj.SelectorEtaMin(self.jet_eta_min)
+		if self.jet_pt_max > 0:
+			self.jet_selector = self.jet_selector * fj.SelectorPtMax(self.jet_pt_max)
+		self._log.critical(f'jet definition: {self.jet_def.description()}')
+		self._log.critical(f'jet selector: {self.jet_selector.description()}')
+
+	def select_final(self, select=True):
+		self.parts_select_final = select
+
+	def select_charged(self, select=True):
+		self.parts_select_charged = select
+
+	def analyze_pythia_event(self, pythia):
+		# self.py_parts = []
+		if self.parts_select_final:
+			if self.parts_select_charged:
+				self.parts = vector[fj.PseudoJet]([fj.PseudoJet(p.px(), p.py(), p.pz(), p.e()) for p in pythia.event if p.isFinal() and p.isCharged()])
+				self.parts_indexes = [i for i,p in enumerate(pythia.event) if p.isFinal() and p.isCharged()]
+				_ = [p.set_user_index(i) for i, p in zip(self.parts_indexes, self.parts)]
+				self.parts_pids = [p.id() for p in pythia.event if p.isFinal() and p.isCharged()]
+			else:
+				self.parts = vector[fj.PseudoJet]([fj.PseudoJet(p.px(), p.py(), p.pz(), p.e()) for p in pythia.event if p.isFinal()])
+				self.parts_indexes = [i for i,p in enumerate(pythia.event) if p.isFinal()]
+				_ = [p.set_user_index(i) for i, p in zip(self.parts_indexes, self.parts)]
+				self.parts_pids = [p.id() for p in pythia.event if p.isFinal()]
+		if self.parts is None:
+			self._log.error(f'no particles to analyze self.parts_select_final={self.parts_select_final} self.parts_select_charged={self.parts_select_charged}')
+			return False
+		if self.part_selector:
+			self.parts = self.part_selector(self.parts)
+		if len(self.parts) < 1:
+			self._log.debug(f'no particles to analyze len(self.parts)={len(self.parts)}')
+			return False
+		self.jets = fj.sorted_by_pt(self.jet_selector(self.jet_def(self.parts)))
+		self.pythia_info = Pythia8.getInfo(pythia)
+		self.tn_events.Fill(self._nev, self.pythia_info.sigmaGen(), self.pythia_info.weight(), len(self.jets), len(self.parts))
+		for ij, j in enumerate(self.jets):
+			self.tn_jet.Fill(self._nev, ij, j.pt(), j.eta(), j.phi(), self.pythia_info.sigmaGen(), self.pythia_info.weight())
+		if self.write_parts:
+			for ip, p in enumerate(self.parts):
+				ijet = [i for i, j in enumerate(self.jets) if p.user_index() in [x.user_index() for x in j.constituents()]]
+				if len(ijet) < 1:
+					ijet = -1
+				else:
+					ijet = ijet[0]
+				self.tn_parts.Fill(self._nev, ijet, p.pt(), p.eta(), p.phi(), self.parts_pids[ip], self.pythia_info.sigmaGen(), self.pythia_info.weight())
+	
+class EECAnalysis(JetAnalysis):
+  
+	def init(self):
+		super(EECAnalysis, self).init()
+		self.tn_eec = ROOT.TNtuple(f'tn_eec_{self.name}', 'tn_eec', 'nev:ij:dr:pt1:pt2:eec:ptjet:xsec:ev_weight:ptcut')
+		self.pt_cuts = [0, 0.15, 1, 2]
+
+	def analyze_pythia_event(self, pythia):
+		super(EECAnalysis, self).analyze_pythia_event(pythia)
+		# add the EEC analysis here
+		for ptcut in self.pt_cuts:
+			self.analyze_eec(pythia, ptcut)
+   
+	def analyze_eec(self, pythia, ptcut):
+		# Generate all pairs from parts, excluding pairs of the same element
+		# self.pairs = list(itertools.combinations(parts, 2))
+		# Generate all pairs from parts, including pairs of the same element
+		for ij, j in enumerate(self.jets):
+			_parts_cut = [p for p in j.constituents() if p.perp() > ptcut]
+			_pairs = list(itertools.product(_parts_cut, repeat=2))
+			log.debug(f'number of pairs: {len(_pairs)} with ptcut: {ptcut}')
+			if len(_pairs) < 1:
+				continue
+			for first, second in _pairs:
+				dr = first.delta_R(second)
+				eec = first.perp() * second.perp() / pow(j.perp(), 2.)
+				self.tn_eec.Fill(self._nev, ij, dr, first.perp(), second.perp(), eec, j.perp(), self.pythia_info.sigmaGen(), self.pythia_info.weight(), ptcut)
+
+
 
 def main():
 	parser = argparse.ArgumentParser(description='read hepmc and analyze eecs', prog=os.path.basename(__file__))
 	pyconf.add_standard_pythia_args(parser)
 	parser.add_argument('--config', help='configure from yaml', type=str)
+	parser.add_argument('--write-config', help='write config to yaml and quit', type=str, default='')
 	parser.add_argument('-o','--output', help='root output filename', default='eec_pythia8.root', type=str)
 	parser.add_argument('--D0mode', help='set D0 mode', default=0, type=int)
 	parser.add_argument('--ncounts', help='number of D0-jet counts', default=-1, type=int)
@@ -107,13 +300,18 @@ def main():
 	parser.add_argument('--jet-max-pt', help="max pT jet to accept", default=-1, type=float)	
 	parser.add_argument('--D0-min-pt', help="minimum pT D0", default=3., type=float)	
 	parser.add_argument('--D0-max-pt', help="max pT D0", default=100, type=float)	
-	parser.add_argument('--max-eta-jet', help="max eta of a jet to accept", default=0.5, type=float)	
+	parser.add_argument('--jet-abs-eta-max', help="max eta of a jet to accept", default=0.5, type=float)	
+	parser.add_argument('--part-abs-eta-max', help="max eta of a particle to accept", default=1.0, type=float)	
 	parser.add_argument('--jet-R', help="jet R", default=0.4, type=float)	
 	parser.add_argument('--charged-only', help="only charged particles", default=False, action='store_true')
-
+	parser.add_argument('--', dest='remainder', nargs=argparse.REMAINDER)
+ 
 	args = parser.parse_args()	
  
 	config = ConfigData(args=args)
+	if args.write_config:
+		config.write_to_yaml(args.write_config)
+		return
 	log.critical(f'config: {config}')
 
 	if args.debug:
@@ -128,55 +326,44 @@ def main():
 	else:
 		print("[w] using specified output file:", args.output)
 
-	pythia = Pythia8.Pythia()
-
-	# jet finder
-	# print the banner first
-	fj.ClusterSequence.print_banner()
-	print()
-	jet_R0 = 0.4
-	jet_def = fj.JetDefinition(fj.antikt_algorithm, jet_R0)
-	jet_selector = fj.SelectorPtMin(args.py_pthatmin)
-	jet_selector = fj.SelectorPtMin(args.py_pthatmin) * fj.SelectorPtMax(args.py_pthatmin+20) * fj.SelectorAbsEtaMax(1 - jet_R0 * 1.05)
+	D0_selector = fj.SelectorAbsEtaMax(0.8) * fj.SelectorPtMin(config.D0_min_pt) * fj.SelectorPtMax(config.D0_max_pt)
+	if config.D0mode:
+		log.critical(f'[i] D0 selector: {D0_selector.description()}')
  
 	mycfg = []
-	pythia = pyconf.create_and_init_pythia_from_args(args, mycfg)
+	# pythia = pyconf.create_and_init_pythia_from_args(args, mycfg)
+	pythia = pyconf.create_and_init_pythia_from_args(config, mycfg)
 	if not pythia:
 		print("[e] pythia initialization failed.")
 		return
 
-	log.critical(f'[i] jet definition: {jet_def.description()}')
-	log.critical(f'[i] jet selector: {jet_selector.description()}')
-	log.critical(f'[i] D0 selector: {D0_selector.description()}')
+	eec_all = EECAnalysis(config, name='eec_all')
+	eec_all.select_final(True)
+
+	eec_ch = EECAnalysis(config, name='eec_ch')
+	eec_ch.select_final(True)
+	eec_ch.select_charged(True)
 
 	_stop = False 
-	pbar = tqdm.tqdm(range(args.nev))
-	njets = 0
+	pbar = tqdm.tqdm(range(config.nev))
+	pbar.set_description('[i] events processed')
+	pbar_counts = tqdm.tqdm(range(config.ncounts))
+	pbar_counts.set_description('[i]   counts accepted')
+	n_count = 0
 	while not _stop:
 		if not pythia.next():
 			continue
-		if args.D0mode:
-			D0s, D0daughters = get_D0s(pythia)
-			if len(D0s) == 0:
-				continue
-		fjparts = vector[fj.PseudoJet]([fj.PseudoJet(p.px(), p.py(), p.pz(), p.e()) for p in pythia.event if p.isFinal() and p.isCharged()])
-		# jets = fj.sorted_by_pt(jet_def(fjparts))
-		jets = fj.sorted_by_pt(jet_selector(jet_def(fjparts)))
-		njets += len(jets)
-		# _info = Pythia8.pythia.info
-		_info = Pythia8.getInfo(pythia)
-		sigmaGen = _info.sigmaGen()
-		ev_weight = _info.weight()
-		if jets.size() > 0:
-			for j in jets:
-				pass
-		else:
-			continue
-		pbar.update(jets.size())
-		if pbar.n >= args.nev:
+		eec_all.analyze_event(pythia=pythia)
+		eec_ch.analyze_event(pythia=pythia)
+		pbar.update(1)
+		if pbar.n >= config.nev and config.nev > 0:
 			_stop = True
-
-	print('[i] number of jets:', njets)
-
+		if pbar_counts.n >= config.ncounts and config.ncounts > 0:
+			_stop = True
+	pbar.close()
+	pbar_counts.close()
+	pythia.stat()
+	del pythia
+ 
 if __name__ == '__main__':
 	main()

@@ -189,7 +189,8 @@ def main():
 	parser.add_argument('--jet-R', help="jet R", default=0.4, type=float)	
 	parser.add_argument('--charged-only', help="only charged particles", default=False, action='store_true')
 	parser.add_argument('--use-h', help='syntax f:h - use a histogram h from file f for binning', default='', type=str)
-
+	parser.add_argument('--', dest='remainder', nargs=argparse.REMAINDER)
+ 
 	args = parser.parse_args()	
     # Check that at least one of --input or --config is provided
 	if args.input is None and args.config is None:
