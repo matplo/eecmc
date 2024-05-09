@@ -1,0 +1,1 @@
+./pythia8_jetreco.py --config example_config.yaml --py-hardQCD --py-pthatmin 5. --py-ecms 13000.  --jet-abs-eta-max 0.5 --jet-pt-min 5. --jet-pt-max 30. --part-abs-eta-max 0.9 --ncounts 1000 --parton-hadron --debug
