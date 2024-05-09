@@ -194,7 +194,7 @@ class JetAnalysis(AnalysisBase):
 		self.root_file.cd() # done already in the base class but just to be sure
 		self.tn_events 	= ROOT.TNtuple(f'tn_events_{self.name}', 	'tn_events', 	'nev:xsec:ev_weight:njets:nparts')
 		self.tn_jet 		= ROOT.TNtuple(f'tn_jet_{self.name}', 		'tn_jet', 		'nev:ij:pt:eta:phi:xsec:ev_weight')
-		self.tn_parts 	= ROOT.TNtuple(f'tn_parts_{self.name}', 	'tn_parts', 	'nev:ij:pt:eta:phi:pid:xsec:ev_weight')	
+		self.tn_parts 	= ROOT.TNtuple(f'tn_parts_{self.name}', 	'tn_parts', 	'nev:ij:pt:eta:phi:pid:status:xsec:ev_weight')	
 		# jet finder
 		self.jet_def 			= fj.JetDefinition(fj.antikt_algorithm, self.jet_R)
 		self.jet_selector = fj.SelectorPtMin(self.jet_pt_min)
@@ -213,6 +213,7 @@ class JetAnalysis(AnalysisBase):
 			self.jet_selector = self.jet_selector * fj.SelectorPtMax(self.jet_pt_max)
 		self._log.critical(f'jet definition: {self.jet_def.description()}')
 		self._log.critical(f'jet selector: {self.jet_selector.description()}')
+		self._log.info(f'particle selection check: self.parts_select_final={self.parts_select_final} self.parts_select_charged={self.parts_select_charged}')
 
 	def select_final(self, select=True):
 		self.parts_select_final = select
@@ -221,24 +222,25 @@ class JetAnalysis(AnalysisBase):
 		self.parts_select_charged = select
 
 	def analyze_pythia_event(self, pythia):
-		# self.py_parts = []
+		self.py_parts = []
+		self.parts = vector[fj.PseudoJet]()
 		if self.parts_select_final:
 			if self.parts_select_charged:
-				self.parts = vector[fj.PseudoJet]([fj.PseudoJet(p.px(), p.py(), p.pz(), p.e()) for p in pythia.event if p.isFinal() and p.isCharged()])
-				self.parts_indexes = [i for i,p in enumerate(pythia.event) if p.isFinal() and p.isCharged()]
-				_ = [p.set_user_index(i) for i, p in zip(self.parts_indexes, self.parts)]
-				self.parts_pids = [p.id() for p in pythia.event if p.isFinal() and p.isCharged()]
+				self.py_parts = [(i, p, p.id(), p.status()) for i, p in enumerate(pythia.event) if p.isFinal() and p.isCharged()]
 			else:
-				self.parts = vector[fj.PseudoJet]([fj.PseudoJet(p.px(), p.py(), p.pz(), p.e()) for p in pythia.event if p.isFinal()])
-				self.parts_indexes = [i for i,p in enumerate(pythia.event) if p.isFinal()]
-				_ = [p.set_user_index(i) for i, p in zip(self.parts_indexes, self.parts)]
-				self.parts_pids = [p.id() for p in pythia.event if p.isFinal()]
-		if self.parts is None:
-			self._log.error(f'no particles to analyze self.parts_select_final={self.parts_select_final} self.parts_select_charged={self.parts_select_charged}')
-			return False
+				self.py_parts = [(i, p, p.id(), p.status()) for i, p in enumerate(pythia.event) if p.isFinal()]
+		else:
+			self.py_parts = [(i, p, p.id(), p.status()) for i, p in enumerate(pythia.event)]
+			if self._nev < 1:
+				self._log.warning(f'selecting all particles final and not final state!')
+		for xp in self.py_parts:
+			_psj = fj.PseudoJet(xp[1].px(), xp[1].py(), xp[1].pz(), xp[1].e())
+			_psj.set_user_index(xp[0])
+			self.parts.push_back(_psj)
 		if self.part_selector:
 			self.parts = self.part_selector(self.parts)
 		if len(self.parts) < 1:
+			self._log.debug(f'no particles to analyze ? self.parts_select_final={self.parts_select_final} self.parts_select_charged={self.parts_select_charged}')
 			self._log.debug(f'no particles to analyze len(self.parts)={len(self.parts)}')
 			return False
 		self.jets = fj.sorted_by_pt(self.jet_selector(self.jet_def(self.parts)))
@@ -247,13 +249,13 @@ class JetAnalysis(AnalysisBase):
 		for ij, j in enumerate(self.jets):
 			self.tn_jet.Fill(self._nev, ij, j.pt(), j.eta(), j.phi(), self.pythia_info.sigmaGen(), self.pythia_info.weight())
 		if self.write_parts:
-			for ip, p in enumerate(self.parts):
+			for p, py_p in zip(self.parts, self.py_parts):
 				ijet = [i for i, j in enumerate(self.jets) if p.user_index() in [x.user_index() for x in j.constituents()]]
 				if len(ijet) < 1:
 					ijet = -1
 				else:
 					ijet = ijet[0]
-				self.tn_parts.Fill(self._nev, ijet, p.pt(), p.eta(), p.phi(), self.parts_pids[ip], self.pythia_info.sigmaGen(), self.pythia_info.weight())
+				self.tn_parts.Fill(self._nev, ijet, p.pt(), p.eta(), p.phi(), py_p[2], py_p[3], self.pythia_info.sigmaGen(), self.pythia_info.weight())
 	
 class EECAnalysis(JetAnalysis):
   
@@ -303,7 +305,7 @@ def main():
 	parser.add_argument('--jet-abs-eta-max', help="max eta of a jet to accept", default=0.5, type=float)	
 	parser.add_argument('--part-abs-eta-max', help="max eta of a particle to accept", default=1.0, type=float)	
 	parser.add_argument('--jet-R', help="jet R", default=0.4, type=float)	
-	parser.add_argument('--charged-only', help="only charged particles", default=False, action='store_true')
+	parser.add_argument('--parts-select-charged', help="only charged particles", default=False, action='store_true')
 	parser.add_argument('--', dest='remainder', nargs=argparse.REMAINDER)
  
 	args = parser.parse_args()	
@@ -337,6 +339,8 @@ def main():
 		print("[e] pythia initialization failed.")
 		return
 
+	jet_all = JetAnalysis(config, name='jet_all')
+
 	eec_all = EECAnalysis(config, name='eec_all')
 	eec_all.select_final(True)
 
@@ -353,6 +357,7 @@ def main():
 	while not _stop:
 		if not pythia.next():
 			continue
+		jet_all.analyze_event(pythia=pythia)
 		eec_all.analyze_event(pythia=pythia)
 		eec_ch.analyze_event(pythia=pythia)
 		pbar.update(1)
