@@ -78,7 +78,7 @@ class ConfigData(GenericObject):
             self.configure_from_dict(self.args.__dict__)
         # configure from the scpeficied yaml file
         if self.config is not None:
-            self.configure_from_yaml(self.config)		
+            self.configure_from_yaml(self.config)
         # configure from the command line - override values that are actually specified
         if self.args:
             log.warning('overriding values from command line')
@@ -93,7 +93,7 @@ class ConfigData(GenericObject):
         self.verbose = self.debug
 
     def write_to_yaml(self, filename):
-        with open(filename, 'w') as f:	
+        with open(filename, 'w') as f:
             _out_dict = {}
             for k, v in self.__dict__.items():
                 if k == 'args':
@@ -168,13 +168,16 @@ class AnalysisBase(GenericObject):
     def init(self):
         self._log.debug('AnalysisBase::init()')
 
-    def analyze_event(self, pythia=None, hepmc=None):
+    def analyze_event(self, pythia=None, hepmc=None, nev=None):
+        if nev is not None:
+            self._nev = nev
+        else:
+            self._nev += 1
         rv = True
         if pythia:
             rv = rv and self.analyze_pythia_event(pythia)
         if hepmc:
             rv = rv and self.analyze_hepmc_event(hepmc)
-        self._nev += 1
         return rv
 
     def analyze_pythia_event(self, pythia):
@@ -200,7 +203,7 @@ class JetAnalysis(AnalysisBase):
         self.root_file.cd() # done already in the base class but just to be sure
         self.tn_events 	= ROOT.TNtuple(f'tn_events_{self.name}', 	'tn_events', 	'nev:xsec:ev_weight:njets:nparts')
         self.tn_jet 	= ROOT.TNtuple(f'tn_jet_{self.name}', 		'tn_jet', 		'nev:ij:pt:eta:phi:xsec:ev_weight')
-        self.tn_parts 	= ROOT.TNtuple(f'tn_parts_{self.name}', 	'tn_parts', 	'nev:ij:pt:eta:phi:pid:status:xsec:ev_weight')	
+        self.tn_parts 	= ROOT.TNtuple(f'tn_parts_{self.name}', 	'tn_parts', 	'nev:ij:pt:eta:phi:pid:status:xsec:ev_weight')
         # jet finder
         self.jet_def 			= fj.JetDefinition(fj.antikt_algorithm, self.cfg.jet_R)
         self.jet_selector = fj.SelectorPtMin(self.cfg.jet_pt_min)
@@ -311,7 +314,7 @@ class JetChargedFullAnalysis(AnalysisBase):
         super(JetChargedFullAnalysis, self).init()
         self.open_root_file()
         self.root_file.cd()  # done already in the base class but just to be sure
-        self.tn_events = ROOT.TNtuple(f"tn_events_{self.name}", "tn_events", "nev:xsec:ev_weight:njets:njets_ch:nparts:nparts_ch") 
+        self.tn_events = ROOT.TNtuple(f"tn_events_{self.name}", "tn_events", "nev:xsec:ev_weight:njets:njets_ch:nparts:nparts_ch")
         self.tn_correl = ROOT.TNtuple(
             f"tn_correl_{self.name}",
             "tn_correl",
@@ -341,19 +344,18 @@ class JetChargedFullAnalysis(AnalysisBase):
     def analyze_pythia_event(self, pythia):
         rv = True
         if self.cfg.parton_hadron:
-            rv = rv and self.j_parton_ana.analyze_pythia_event(pythia)
+            rv = rv and self.j_parton_ana.analyze_event(pythia=pythia, nev=self._nev)
         if not rv:
             return False
-        rv = rv and self.j_ch_ana.analyze_pythia_event(pythia)
+        rv = rv and self.j_ch_ana.analyze_event(pythia=pythia, nev=self._nev)
         if not rv:
             return False
-        rv = rv and self.j_full_ana.analyze_pythia_event(pythia)
+        rv = rv and self.j_full_ana.analyze_event(pythia=pythia, nev=self._nev)
         if not rv:
             return False
-        self.tn_events.Fill(self._nev, self.j_full_ana.xsec, self.j_full_ana.ev_weight, 
+        self.tn_events.Fill(self._nev, self.j_full_ana.xsec, self.j_full_ana.ev_weight,
                             len(self.j_full_ana.jets), len(self.j_ch_ana.jets),
                             len(self.j_full_ana.parts), len(self.j_ch_ana.parts))
-        self._nev += 1
         n_matched = {}
         for ij, j in enumerate(self.j_full_ana.jets):
             sum_charged_in_full = sum([int(pythia.event[p.user_index()].isCharged()) * p.perp() for p in j.constituents()])
@@ -362,7 +364,7 @@ class JetChargedFullAnalysis(AnalysisBase):
                     continue
                 n_matched[ij] = n_matched.get(ij, 0) + 1
                 pt_ratio = jch.pt() / j.pt()
-                pt_ratio_charged = jch.pt() / sum_charged_in_full 
+                pt_ratio_charged = jch.pt() / sum_charged_in_full
                 # x-check:
                 self._log.debug(f'{self.name}: pt_ratio={pt_ratio}')
                 self._log.debug(f'{self.name}: pt_ratio_charged={pt_ratio_charged}')
@@ -371,8 +373,8 @@ class JetChargedFullAnalysis(AnalysisBase):
                         if p.user_index() not in [x.user_index() for x in j.constituents()]:
                             self._log.error(f'{self.name}: particle {p.user_index()} in ch jet not found in full jet')
                 self.tn_correl.Fill(self._nev, ij, j.pt(), j.eta(), j.phi(), sum_charged_in_full,
-                                    self.j_full_ana.pythia_info.sigmaGen(), self.j_full_ana.pythia_info.weight(), 
-                                    ijch, jch.pt(), jch.eta(), jch.phi(), 
+                                    self.j_full_ana.pythia_info.sigmaGen(), self.j_full_ana.pythia_info.weight(),
+                                    ijch, jch.pt(), jch.eta(), jch.phi(),
                                     pt_ratio, pt_ratio_charged, n_matched[ij])
         if self.cfg.parton_hadron:
             n_matched = {}
@@ -383,8 +385,8 @@ class JetChargedFullAnalysis(AnalysisBase):
                     n_matched[ij] = n_matched.get(ij, 0) + 1
                     pt_ratio = jch.pt() / j.pt()
                     self.tn_correl_parton_full.Fill(self._nev, ij, j.pt(), j.eta(), j.phi(), sum_charged_in_full,
-                                            self.j_full_ana.pythia_info.sigmaGen(), self.j_full_ana.pythia_info.weight(), 
-                                            ijch, jch.pt(), jch.eta(), jch.phi(), 
+                                            self.j_full_ana.pythia_info.sigmaGen(), self.j_full_ana.pythia_info.weight(),
+                                            ijch, jch.pt(), jch.eta(), jch.phi(),
                                             pt_ratio, n_matched[ij])
             n_matched = {}
             for ij, j in enumerate(self.j_parton_ana.jets):
@@ -394,8 +396,8 @@ class JetChargedFullAnalysis(AnalysisBase):
                     n_matched[ij] = n_matched.get(ij, 0) + 1
                     pt_ratio = jch.pt() / j.pt()
                     self.tn_correl_parton_ch.Fill(self._nev, ij, j.pt(), j.eta(), j.phi(), sum_charged_in_full,
-                                            self.j_full_ana.pythia_info.sigmaGen(), self.j_full_ana.pythia_info.weight(), 
-                                            ijch, jch.pt(), jch.eta(), jch.phi(), 
+                                            self.j_full_ana.pythia_info.sigmaGen(), self.j_full_ana.pythia_info.weight(),
+                                            ijch, jch.pt(), jch.eta(), jch.phi(),
                                             pt_ratio, n_matched[ij])
 
         return rv
@@ -445,18 +447,18 @@ def main():
     parser.add_argument('--verbose', help="be verbose", default=False, action='store_true')
     parser.add_argument('--debug', help="write debug things", default=False, action='store_true')
     parser.add_argument('--log', help="write stdout to a log file - output file will be same as -o but .log instead of .root", default=False, action='store_true')
-    parser.add_argument('--jet-pt-min', help="minimum pT jet to accept", default=20., type=float)	
-    parser.add_argument('--jet-pt-max', help="max pT jet to accept", default=-1, type=float)	
-    parser.add_argument('--D0-pt-min', help="minimum pT D0", default=3., type=float)	
-    parser.add_argument('--D0-pt-max', help="max pT D0", default=100, type=float)	
-    parser.add_argument('--jet-abs-eta-max', help="max eta of a jet to accept", default=0.5, type=float)	
-    parser.add_argument('--part-abs-eta-max', help="max eta of a particle to accept", default=1.0, type=float)	
-    parser.add_argument('--jet-R', help="jet R", default=0.4, type=float)	
+    parser.add_argument('--jet-pt-min', help="minimum pT jet to accept", default=20., type=float)
+    parser.add_argument('--jet-pt-max', help="max pT jet to accept", default=-1, type=float)
+    parser.add_argument('--D0-pt-min', help="minimum pT D0", default=3., type=float)
+    parser.add_argument('--D0-pt-max', help="max pT D0", default=100, type=float)
+    parser.add_argument('--jet-abs-eta-max', help="max eta of a jet to accept", default=0.5, type=float)
+    parser.add_argument('--part-abs-eta-max', help="max eta of a particle to accept", default=1.0, type=float)
+    parser.add_argument('--jet-R', help="jet R", default=0.4, type=float)
     parser.add_argument('--parts-select-charged', help="only charged particles", default=False, action='store_true')
     parser.add_argument('--parton-hadron', help="parton then hadron phase", default=False, action='store_true')
     parser.add_argument('--', dest='remainder', nargs=argparse.REMAINDER)
 
-    args = parser.parse_args()	
+    args = parser.parse_args()
 
     if args.remainder:
         log.info(f'[i] remainder: {args.remainder}')
@@ -516,11 +518,11 @@ def main():
     #     jet_parton = JetAnalysis(config, name='jet_parton')
     #     jet_parton.select_parton(True)
     #     analyses.append(jet_parton)
-        
+
     jfch = JetChargedFullAnalysis(config, name='jfch')
     analyses.append(jfch)
 
-    _stop = False 
+    _stop = False
     pbar = tqdm.tqdm(range(config.nev))
     pbar.set_description('[i] events processed')
     pbar_counts = tqdm.tqdm(range(config.ncounts))
