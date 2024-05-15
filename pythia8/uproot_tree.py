@@ -53,37 +53,55 @@ class UprootTree:
         self.groupby_keys.extend(args)
         self.df = None
 
-    def add_cut(self, column, lower_bound, upper_bound):
-        self.min_max_cuts.append((column, lower_bound, upper_bound))
+    def add_cut(self, prefix, column, lower_bound, upper_bound):
+        self.min_max_cuts.append((prefix, column, lower_bound, upper_bound))
         self.df = None
 
-    def add_min_max_cut(self, column, lower_bound, upper_bound):
-        self.min_max_cuts.append((column, lower_bound, upper_bound))
+    def add_min_max_cut(self, prefix, column, lower_bound, upper_bound):
+        self.min_max_cuts.append((prefix, column, lower_bound, upper_bound))
         self.df = None
 
-    def add_cut_function(self, func):
-        self.cut_functions.append(func)
+    def add_cut_function(self, prefix, func):
+        self.cut_functions.append((prefix, func))
         self.df = None
 
     def rename_columns(self):
         for i, df in enumerate(self.dfs):
             df.rename(columns=lambda x: self.df_prefix[i] + '_' + x if x not in self.groupby_keys else x, inplace=True)
 
+    # def execute(self):
+    #     if self.df is None:
+    #         self.rename_columns()
+    #         self.df = reduce(lambda left,right: pd.merge(left,right,on=self.groupby_keys, how='outer'), self.dfs)
+    #         self.df.drop_duplicates(subset=self.groupby_keys, keep='first', inplace=True)
+    #         # self.df.dropna(inplace=True)
+    #     for column, lower_bound, upper_bound in self.min_max_cuts:
+    #         self.df = self.df[(self.df[column] >= lower_bound) & (self.df[column] < upper_bound)]
+    #     for func in self.cut_functions:
+    #         self.df = func(self.df)
+    #     self.df = self.df.groupby(self.groupby_keys)
+    #     self.iterator = self.df.__iter__()
+    #     self.executed = True
+
     def execute(self):
         if self.df is None:
+            for i, _df in enumerate(self.dfs):
+                for _c, _col, _lower_bound, _upper_bound in self.min_max_cuts:
+                    if self.df_prefix[i] == _c or _c == '*':
+                        _df = _df[(_df[_col] >= _lower_bound) & (_df[_col] < _upper_bound)]
+                for _c, _func in self.cut_functions:
+                    if self.df_prefix[i] == _c or _c == '*':
+                        _df = _func(_df)
+                self.dfs[i] = _df
             self.rename_columns()
-            self.df = reduce(lambda left,right: pd.merge(left,right,on=self.groupby_keys, how='outer'), self.dfs)
-            # self.df.dropna(inplace=True)
-        for column, lower_bound, upper_bound in self.min_max_cuts:
-            self.df = self.df[(self.df[column] >= lower_bound) & (self.df[column] < upper_bound)]
-        for func in self.cut_functions:
-            self.df = func(self.df)
-        # self.df.reset_index(drop=True, inplace=True)
-        #self.df = self.df.groupby(self.groupby_keys).apply(lambda x: x).reset_index(drop=True)
-        self.df = self.df.groupby(self.groupby_keys)
+            self.df = reduce(lambda left,right: pd.merge(left,right,on=self.groupby_keys, how='inner'), self.dfs)
+            # self.df.drop_duplicates(subset=self.groupby_keys, keep='first', inplace=True)
+            self.df.drop_duplicates(subset=self.df.columns, keep='first', inplace=True)
+            # self.df.drop_duplicates(subset=self.keys, keep='first', inplace=True)
+            self.df = self.df.groupby(self.groupby_keys)
         self.iterator = self.df.__iter__()
         self.executed = True
-
+    
     def reset_iterator(self):
         self.iterator = self.df.__iter__()
         
