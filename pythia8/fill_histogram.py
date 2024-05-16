@@ -2,8 +2,6 @@
 
 from uproot_tree import UprootTree
 t = UprootTree()
-t.add("inclusive_10_15_jfch.root", "tn_correl_jfch", 'corr')
-# t.add_cut("corr_pt", 0, 1000)
 
 t.add("inclusive_10_15_jfch.root", "tn_events_jfch", 'ev')
 t.add_cut("ev", "njets", 1, 1000)
@@ -11,6 +9,9 @@ t.add_cut("ev", "njets", 1, 1000)
 t.add('inclusive_10_15_jfch_jet_full.root', 'tn_jet_jet_full', 'jet')
 
 # t.add('inclusive_10_15_jfch_jet_full.root', 'tn_parts_jet_full', 'part')
+
+# t.add("inclusive_10_15_jfch.root", "tn_correl_jfch", 'corr')
+# t.add_cut("corr_pt", 0, 1000)
 
 t.add_group_by('nev', 'xsec', 'ev_weight')
 
@@ -57,8 +58,12 @@ try:
 except StopIteration:
     pass
 
+data = np.concatenate(t.get_unique(['jet_pt']).values).tolist()
+print(type(data))
+# print(data)
 # Create a ROOT histogram
 hist = ROOT.TH1F('hist', 'Histogram from pandas DataFrame', 100, min(data), max(data) + 1)
+# hist = ROOT.TH1F('hist', 'Histogram from pandas DataFrame', 100, data.min(), data.max() + 1)
 
 # Convert numpy arrays to C++ compatible arrays
 data_array = array.array('d', data)
@@ -71,7 +76,9 @@ fx = ROOT.TFile('inclusive_10_15_jfch_jet_full.root')
 tx = fx.Get('tn_jet_jet_full')
 hist2 = ROOT.TH1F('hist2', 'Histogram from pandas DataFrame', 100, min(data), max(data) + 1)
 tx.Draw('pt>>hist2')
-print(hist2.GetEntries())
+
+print("compare n entries:", hist.GetEntries())
+print("compare n entries:", hist2.GetEntries())
 
 # Draw the histogram
 canvas = ROOT.TCanvas('c', 'c', 800, 600)

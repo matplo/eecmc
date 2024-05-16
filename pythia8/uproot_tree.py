@@ -102,6 +102,15 @@ class UprootTree:
         self.iterator = self.df.__iter__()
         self.executed = True
     
+    def get_unique(self, columns):
+        if self.df is None:
+            self.execute()
+        cols = self.groupby_keys.copy()
+        _ = [cols.append(x) for x in columns]
+        _df = self.df.apply(lambda x: x[cols].drop_duplicates(cols))
+        _df.reset_index(drop=True, inplace=True)
+        return _df[columns]
+    
     def reset_iterator(self):
         self.iterator = self.df.__iter__()
         
