@@ -430,6 +430,7 @@ class EECAnalysis(AnalysisBase):
         # Generate all pairs from parts, excluding pairs of the same element
         # self.pairs = list(itertools.combinations(parts, 2))
         # Generate all pairs from parts, including pairs of the same element
+        # _pairs = list(itertools.product(_parts_cut, repeat=2))
         for ij, j in enumerate(self.jet_analysis.jets):
             _parts_cut = [p for p in j.constituents() if p.perp() > ptcut]
             _pairs = list(itertools.product(_parts_cut, repeat=2))
