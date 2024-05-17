@@ -202,8 +202,8 @@ class JetAnalysis(AnalysisBase):
         self.open_root_file()
         self.root_file.cd() # done already in the base class but just to be sure
         self.tn_events 	= ROOT.TNtuple(f'tn_events_{self.name}', 	'tn_events', 	'nev:xsec:ev_weight:njets:nparts')
-        self.tn_jet 	= ROOT.TNtuple(f'tn_jet_{self.name}', 		'tn_jet', 		'nev:ij:pt:eta:phi:xsec:ev_weight')
-        self.tn_parts 	= ROOT.TNtuple(f'tn_parts_{self.name}', 	'tn_parts', 	'nev:ij:pt:eta:phi:pid:status:xsec:ev_weight')
+        self.tn_jet 	= ROOT.TNtuple(f'tn_jet_{self.name}', 		'tn_jet', 		'nev:ij:pt:eta:phi:m:xsec:ev_weight')
+        self.tn_parts 	= ROOT.TNtuple(f'tn_parts_{self.name}', 	'tn_parts', 	'nev:idx:ij:pt:eta:phi:m:pid:status:xsec:ev_weight')
         # jet finder
         self.jet_def 			= fj.JetDefinition(fj.antikt_algorithm, self.cfg.jet_R)
         self.jet_selector = fj.SelectorPtMin(self.cfg.jet_pt_min)
@@ -296,7 +296,7 @@ class JetAnalysis(AnalysisBase):
             return False
         self.tn_events.Fill(self._nev, self.xsec, self.ev_weight, len(self.jets), len(self.parts))
         for ij, j in enumerate(self.jets):
-            self.tn_jet.Fill(self._nev, ij, j.pt(), j.eta(), j.phi(), self.xsec, self.ev_weight)
+            self.tn_jet.Fill(self._nev, ij, j.pt(), j.eta(), j.phi(), j.m(), self.xsec, self.ev_weight)
         if self.cfg.write_parts:
             for p, py_p in zip(self.parts, self.py_parts):
                 ijet = [i for i, j in enumerate(self.jets) if p.user_index() in [x.user_index() for x in j.constituents()]]
@@ -304,7 +304,7 @@ class JetAnalysis(AnalysisBase):
                     ijet = -1
                 else:
                     ijet = ijet[0]
-                self.tn_parts.Fill(self._nev, ijet, p.pt(), p.eta(), p.phi(), py_p[2], py_p[3], self.xsec, self.ev_weight)
+                self.tn_parts.Fill(self._nev, p.user_index(), ijet, p.pt(), p.eta(), p.phi(), p.m(), py_p[2], py_p[3], self.xsec, self.ev_weight)
         return True
 
 

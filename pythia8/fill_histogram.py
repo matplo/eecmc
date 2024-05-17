@@ -4,7 +4,7 @@ from uproot_tree import UprootTree
 t = UprootTree()
 
 t.add("inclusive_10_15_jfch.root", "tn_events_jfch", 'ev')
-t.add_cut("ev", "njets", 1, 1000)
+t.add_cut("ev", "ev_njets", 1, 1000)
 
 t.add('inclusive_10_15_jfch_jet_full.root', 'tn_jet_jet_full', 'jet')
 

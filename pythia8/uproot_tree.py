@@ -1,6 +1,7 @@
 import uproot
 import pandas as pd
 from functools import reduce
+import re
 
 # example cut function
 # def cut_func(df):
@@ -21,6 +22,7 @@ class UprootTree:
         self.cut_functions = []
         self.groupby_keys = []
         self.n_entries = None
+        self.counter = 0
 
     def add(self, file_path, tree_name, prefix, branches=None):
         file = uproot.open(file_path)
@@ -96,9 +98,46 @@ class UprootTree:
             self.rename_columns()
             self.df = reduce(lambda left,right: pd.merge(left,right,on=self.groupby_keys, how='inner'), self.dfs)
             # self.df.drop_duplicates(subset=self.groupby_keys, keep='first', inplace=True)
-            self.df.drop_duplicates(subset=self.df.columns, keep='first', inplace=True)
+            # self.df.drop_duplicates(subset=self.df.columns, keep='first', inplace=True)
             # self.df.drop_duplicates(subset=self.keys, keep='first', inplace=True)
             self.df = self.df.groupby(self.groupby_keys)
+        self.iterator = self.df.__iter__()
+        self.executed = True
+
+    def _rebuild(self, df):
+        _d = {}
+        _d['index'] = self.counter
+        for k in df.columns:
+            _d[k] = df[k].values
+        _df = pd.DataFrame(_d)
+        # print('rebuild', self.counter)
+        # print(_df)
+        self.counter += 1
+        return _df
+
+    def execute_test2(self):
+        if self.df is None:
+            self.rename_columns()
+            for i, _df in enumerate(self.dfs):
+                for _c, _col, _lower_bound, _upper_bound in self.min_max_cuts:
+                    if self.df_prefix[i] == _c or _c == '*':
+                        _df = _df[(_df[_col] >= _lower_bound) & (_df[_col] < _upper_bound)]
+                for _c, _func in self.cut_functions:
+                    if self.df_prefix[i] == _c or _c == '*':
+                        _df = _func(_df)
+                if i > 0:
+                    if i == 1:
+                        self.df = pd.merge(self.dfs[0], _df, on=self.groupby_keys, how='outer')
+                        # print('first merge')
+                        # print (self.df)
+                    else:
+                        self.df = pd.merge(self.df, _df, on=self.groupby_keys, how='outer')
+                        # print(f'{i} merge')
+                        # print (self.df)
+            self._gby = self.df.groupby(self.groupby_keys)
+            self.df = self._gby.apply(self._rebuild)
+            # print('after groupby')
+            # print(self.df)
         self.iterator = self.df.__iter__()
         self.executed = True
     
@@ -106,10 +145,19 @@ class UprootTree:
         if self.df is None:
             self.execute()
         cols = self.groupby_keys.copy()
-        _ = [cols.append(x) for x in columns]
+        for x in columns:
+            if x not in self.df.obj.columns:
+                if '*' in x:
+                    _ = [cols.append(c) for c in self.df.obj.columns if re.match(x.replace('*', '.*'), c)]
+                    continue
+                continue
+            cols.append(x)
+        # keep only unique values in cols
+        cols = list(set(cols))
         _df = self.df.apply(lambda x: x[cols].drop_duplicates(cols))
         _df.reset_index(drop=True, inplace=True)
-        return _df[columns]
+        # return _df[columns]
+        return _df
     
     def reset_iterator(self):
         self.iterator = self.df.__iter__()
