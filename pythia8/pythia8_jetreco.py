@@ -260,7 +260,7 @@ class JetAnalysis(AnalysisBase):
             f'{self.name}: particle selection set: self.parts_select_parton={self.cfg.parts_select_parton}'
         )
 
-    def analyze_pythia_event(self, pythia):
+    def select_pythia_particles(self, pythia):
         self.py_parts = []
         self.parts = vector[fj.PseudoJet]()
         if self.cfg.parts_select_parton:
@@ -282,6 +282,9 @@ class JetAnalysis(AnalysisBase):
             self.parts.push_back(_psj)
         if self.part_selector:
             self.parts = self.part_selector(self.parts)
+
+    def analyze_pythia_event(self, pythia):
+        self.select_pythia_particles(pythia)
         if len(self.parts) < 1:
             self._log.debug(f'{self.name}: no particles to analyze len(self.parts)={len(self.parts)}')
             return False
@@ -402,27 +405,32 @@ class JetChargedFullAnalysis(AnalysisBase):
 
         return rv
 
-class EECAnalysis(JetAnalysis):
+class EECAnalysis(AnalysisBase):
 
     def init(self):
         super(EECAnalysis, self).init()
         self.tn_eec = ROOT.TNtuple(f'tn_eec_{self.name}', 'tn_eec', 'nev:ij:dr:pt1:pt2:eec:ptjet:xsec:ev_weight:ptcut')
         self.pt_cuts = [0, 0.15, 1, 2]
+        self.own_jet_analysis = False
+        if self.jet_analysis is None:
+            self.jet_analysis = JetAnalysis(self.cfg, name=f'{self.name}_jet_analysis')
+            self.jet_analysis.select_final(True)
+            self.jet_analysis.select_charged(True)
+            self.own_jet_analysis = True
 
     def analyze_pythia_event(self, pythia):
-        super(EECAnalysis, self).analyze_pythia_event(pythia)
-        # add the EEC analysis here
-        self.pythia_info = Pythia8.getInfo(pythia)
-        self.ev_weight = self.pythia_info.weight()
-        self.xsec = self.pythia_info.sigmaGen()
-        rvs = [self.analyze_eec(pythia, ptcut) for ptcut in self.pt_cuts]
+        if self.own_jet_analysis:
+            rv = self.jet_analysis.analyze_event(pythia=pythia, nev=self._nev)
+            if not rv:
+                return False
+        rvs = [self.analyze_eec(ptcut) for ptcut in self.pt_cuts]
         return any(rvs)
 
     def analyze_eec(self, ptcut):
         # Generate all pairs from parts, excluding pairs of the same element
         # self.pairs = list(itertools.combinations(parts, 2))
         # Generate all pairs from parts, including pairs of the same element
-        for ij, j in enumerate(self.jets):
+        for ij, j in enumerate(self.jet_analysis.jets):
             _parts_cut = [p for p in j.constituents() if p.perp() > ptcut]
             _pairs = list(itertools.product(_parts_cut, repeat=2))
             log.debug(f'{self.name}: number of pairs: {len(_pairs)} with ptcut: {ptcut}')
@@ -431,7 +439,7 @@ class EECAnalysis(JetAnalysis):
             for first, second in _pairs:
                 dr = first.delta_R(second)
                 eec = first.perp() * second.perp() / pow(j.perp(), 2.)
-                self.tn_eec.Fill(self._nev, ij, dr, first.perp(), second.perp(), eec, j.perp(), self.xsec, self.ev_weight, ptcut)
+                self.tn_eec.Fill(self._nev, ij, dr, first.perp(), second.perp(), eec, j.perp(), self.jet_analysis.xsec, self.jet_analysis.ev_weight, ptcut)
         return True
 
 
@@ -456,6 +464,7 @@ def main():
     parser.add_argument('--jet-R', help="jet R", default=0.4, type=float)
     parser.add_argument('--parts-select-charged', help="only charged particles", default=False, action='store_true')
     parser.add_argument('--parton-hadron', help="parton then hadron phase", default=False, action='store_true')
+    parser.add_argument('--enable-eec', help="enable EEC calculation", default=False, action='store_true')
     parser.add_argument('--', dest='remainder', nargs=argparse.REMAINDER)
 
     args = parser.parse_args()
@@ -484,7 +493,7 @@ def main():
     else:
         print("[w] using specified output file:", args.output)
 
-    D0_selector = fj.SelectorAbsEtaMax(0.8) * fj.SelectorPtMin(config.D0_min_pt) * fj.SelectorPtMax(config.D0_max_pt)
+    D0_selector = fj.SelectorAbsEtaMax(0.8) * fj.SelectorPtMin(config.D0_pt_min) * fj.SelectorPtMax(config.D0_pt_max)
     if config.D0mode:
         log.info(f'[i] D0 selector: {D0_selector.description()}')
 
@@ -502,16 +511,6 @@ def main():
 
     # jet_all = JetAnalysis(config, name='jet_all')
     analyses = []
-    eec_all = None
-    eec_ch = None
-    if config.enable_eec:
-        eec_all = EECAnalysis(config, name='eec_all')
-        eec_all.select_final(True)
-        analyses.append(eec_all)
-        eec_ch = EECAnalysis(config, name='eec_ch')
-        eec_ch.select_final(True)
-        eec_ch.select_charged(True)
-        analyses.append(eec_ch)
 
     # jet_parton = None
     # if config.parton_hadron:
@@ -521,6 +520,14 @@ def main():
 
     jfch = JetChargedFullAnalysis(config, name='jfch')
     analyses.append(jfch)
+
+    eec_all = None
+    eec_ch = None
+    if config.enable_eec:
+        eec_all = EECAnalysis(config, name='eec_all', jet_analysis=jfch.j_full_ana)
+        analyses.append(eec_all)
+        eec_ch = EECAnalysis(config, name='eec_ch', jet_analysis=jfch.j_ch_ana)
+        analyses.append(eec_ch)
 
     _stop = False
     pbar = tqdm.tqdm(range(config.nev))
