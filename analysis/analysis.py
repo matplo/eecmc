@@ -141,7 +141,7 @@ class AnalysisBase(GenericObject):
         self._nev = 0
         self.open_root_file()
         self.init()
-        self._log.info(f"{self.name}: initialized - with config {self.cfg.__dict__}")
+        self._log.debug(f"{self.name}: initialized - with config {self.cfg.__dict__}")
 
     def open_root_file(self):
         # open a root file if needed
@@ -251,10 +251,28 @@ class DataSource(AnalysisBase):
 
     def select_hepmc_particles(self, hepmc):
         self.source_parts = []
-        self.parts = vector[fj.PseudoJet]()
-
-        pass
-
+        fjparts = []
+        for i,p in enumerate(hepmc.particles):
+            if p.status == 1 and not p.end_vertex:
+                if self.cfg.parts_select_charged:
+                    _charge = None
+                    try: 
+                        _charge = particle.Particle.from_pdgid(p.pid).charge
+                    except particle.particle.particle.ParticleNotFound as e:
+                        self._log.debug('particle not found:', e)
+                        continue
+                    if _charge == 0:
+                        continue
+                self.source_parts.append((i, p, p.pid, p.status))
+                psj = fj.PseudoJet(p.momentum.px, p.momentum.py, p.momentum.pz, p.momentum.e)
+                psj.set_user_index(i)
+                fjparts.append(psj)
+        self.parts = vector[fj.PseudoJet](fjparts)
+        if self.part_selector:
+            self.parts = self.part_selector(self.parts)
+        if len(self.parts) < 1:
+            return False
+            
     def process_hepmc(self, hepmc):
         self.select_hepmc_particles(hepmc)
         if len(self.parts) < 1:
@@ -286,6 +304,8 @@ class DataSource(AnalysisBase):
             self.parts.push_back(_psj)
         if self.part_selector:
             self.parts = self.part_selector(self.parts)
+        if len(self.parts) < 1:
+            return False
 
     def process_pythia(self, pythia):
         self.select_pythia_particles(pythia)
@@ -470,20 +490,17 @@ class EECAnalysis(AnalysisBase):
 
     def init(self):
         super(EECAnalysis, self).init()
-        self.tn_eec = ROOT.TNtuple(f'tn_eec_{self.name}', 'tn_eec', 'nev:xsec:ev_weight:ij:dr:pt1:pt2:eec:ptjet:ptcut')
         self.pt_cuts = [0, 0.15, 1, 2]
-        self.own_jet_analysis = False
+        self.tn_eec = {}
+        for ptcut in self.pt_cuts:
+            self.tn_eec[ptcut] = ROOT.TNtuple(f'tn_eec_{self.name}_ptcut{ptcut}', 'tn_eec', 'nev:xsec:ev_weight:ij:dr:pt1:pt2:eec:ptjet:ptcut')
         if self.jet_analysis is None:
-            self.jet_analysis = JetAnalysis(self.cfg, name=f'{self.name}_jet_analysis')
-            self.jet_analysis.select_final(True)
-            self.jet_analysis.select_charged(True)
-            self.own_jet_analysis = True
+            raise ValueError(f'{self.name}: jet_analysis not set')
 
-    def analyze_pythia_event(self, pythia):
-        if self.own_jet_analysis:
-            rv = self.jet_analysis.analyze_event(pythia=pythia, nev=self._nev)
-            if not rv:
-                return False
+    def process_event(self, input_object, nev=None):
+        rv = super(EECAnalysis, self).process_event(input_object, nev=nev)
+        if not rv:
+            return False
         rvs = [self.analyze_eec(ptcut) for ptcut in self.pt_cuts]
         return any(rvs)
 
@@ -493,7 +510,7 @@ class EECAnalysis(AnalysisBase):
         # Generate all pairs from parts, including pairs of the same element
         # _pairs = list(itertools.product(_parts_cut, repeat=2))
         for ij, j in enumerate(self.jet_analysis.jets):
-            _parts_cut = [p for p in j.constituents() if p.perp() > ptcut]
+            _parts_cut = [p for p in j.constituents() if p.perp() >= ptcut]
             _pairs = list(itertools.product(_parts_cut, repeat=2))
             log.debug(f'{self.name}: number of pairs: {len(_pairs)} with ptcut: {ptcut}')
             if len(_pairs) < 1:
@@ -501,7 +518,7 @@ class EECAnalysis(AnalysisBase):
             for first, second in _pairs:
                 dr = first.delta_R(second)
                 eec = first.perp() * second.perp() / pow(j.perp(), 2.)
-                self.tn_eec.Fill(self._nev, self.jet_analysis.xsec, self.jet_analysis.ev_weight, ij, dr, first.perp(), second.perp(), eec, j.perp(), ptcut)
+                self.tn_eec[ptcut].Fill(self._nev, self.jet_analysis.data_source.xsec, self.jet_analysis.data_source.ev_weight, ij, dr, first.perp(), second.perp(), eec, j.perp(), ptcut)
         return True
 
 ### PYTHIA CODE FOR D0
@@ -602,6 +619,25 @@ def get_final_except_hepmc(hepmc_event, parts, charged_only=False):
     for i,p in enumerate(hepmc_event.particles):
         if p in parts:
             continue
+        if p.status == 1 and not p.end_vertex:
+            if charged_only:
+                _charge = None
+                try: 
+                    _charge = particle.Particle.from_pdgid(p.pid).charge
+                except particle.particle.particle.ParticleNotFound as e:
+                    print('[w] particle not found:', e)
+                    continue
+                if _charge == 0:
+                    continue
+            psj = fj.PseudoJet(p.momentum.px, p.momentum.py, p.momentum.pz, p.momentum.e)
+            psj.set_user_index(i)
+            fjparts.append(psj)
+    fjparts = vector[fj.PseudoJet](fjparts)
+    return fjparts
+
+def get_final_hepmc(hepmc_event, charged_only=False):
+    fjparts = []
+    for i,p in enumerate(hepmc_event.particles):
         if p.status == 1 and not p.end_vertex:
             if charged_only:
                 _charge = None
