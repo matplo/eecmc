@@ -20,26 +20,20 @@ class UprootTree:
         self.iterator = None
         self.min_max_cuts = []
         self.cut_functions = []
+        self.queries = []
         self.groupby_keys = []
         self.n_entries = None
         self.counter = 0
+        self.containers = []
 
     def add(self, file_path, tree_name, prefix, branches=None):
-        file = uproot.open(file_path)
-        tree = file[tree_name]
-        if branches is None:
-            branches = tree.keys()
-        if self.n_entries is None:
-            df = tree.arrays(branches, library="pd")
-        else:
-            df = tree.arrays(branches, library="pd", entry_stop=self.n_entries)
-        self.dfs.append(df)
-        self.df_prefix.append(prefix)
+        self.containers.append((file_path, tree_name, prefix, branches))
         self.df = None
 
     def reset_cuts(self):
         self.min_max_cuts = []
         self.cut_functions = []
+        self.queries = []
         self.df = None
         
     def reset_group_by(self):
@@ -47,25 +41,33 @@ class UprootTree:
         self.df = None
         
     def reset(self):
+        self.dfs = []
         self.reset_cuts()
         self.reset_group_by()
-        self.df = True
+        self.df = None
         
     def add_group_by(self, *args):
         self.groupby_keys.extend(args)
         self.df = None
 
     def add_cut(self, prefix, column, lower_bound, upper_bound):
+        if column[:len(prefix)+1] != prefix + '_':
+            column = prefix + '_' + column
         self.min_max_cuts.append((prefix, column, lower_bound, upper_bound))
         self.df = None
 
     def add_min_max_cut(self, prefix, column, lower_bound, upper_bound):
+        if column[:len(prefix)+1] != prefix + '_':
+            column = prefix + '_' + column
         self.min_max_cuts.append((prefix, column, lower_bound, upper_bound))
         self.df = None
 
     def add_cut_function(self, prefix, func):
         self.cut_functions.append((prefix, func))
         self.df = None
+
+    def add_query(self, prefix, query):
+        self.queries.append((prefix, query))
 
     def rename_columns(self):
         for i, df in enumerate(self.dfs):
@@ -85,8 +87,23 @@ class UprootTree:
     #     self.iterator = self.df.__iter__()
     #     self.executed = True
 
+    def load_dfs(self):
+        for file_path, tree_name, prefix, branches in self.containers:
+            file = uproot.open(file_path)
+            tree = file[tree_name]
+            if branches is None:
+                branches = tree.keys()
+            if self.n_entries is None:
+                df = tree.arrays(branches, library="pd")
+            else:
+                df = tree.arrays(branches, library="pd", entry_stop=self.n_entries)
+            self.dfs.append(df)
+            self.df_prefix.append(prefix)
+
     def execute(self):
         if self.df is None:
+            self.load_dfs()
+            self.rename_columns()
             for i, _df in enumerate(self.dfs):
                 for _c, _col, _lower_bound, _upper_bound in self.min_max_cuts:
                     if self.df_prefix[i] == _c or _c == '*':
@@ -94,8 +111,10 @@ class UprootTree:
                 for _c, _func in self.cut_functions:
                     if self.df_prefix[i] == _c or _c == '*':
                         _df = _func(_df)
+                for _c, _query in self.queries:
+                    if self.df_prefix[i] == _c or _c == '*':
+                        _df = _df.query(_query)
                 self.dfs[i] = _df
-            self.rename_columns()
             self.df = reduce(lambda left,right: pd.merge(left,right,on=self.groupby_keys, how='inner'), self.dfs)
             # self.df.drop_duplicates(subset=self.groupby_keys, keep='first', inplace=True)
             # self.df.drop_duplicates(subset=self.df.columns, keep='first', inplace=True)
