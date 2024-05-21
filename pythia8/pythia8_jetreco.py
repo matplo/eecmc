@@ -28,7 +28,7 @@ from heppyy.util.logger import Logger
 log = Logger()
 
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, 'analysis'))
-from analysis import ConfigData, JetAnalysis, EECAnalysis, JetChargedFullAnalysis
+from analysis import ConfigData, JetAnalysis, EECAnalysis, JetChargedFullAnalysis, DataSource, SingleRootFile
 
 def logbins(xmin, xmax, nbins):
         lspace = np.logspace(np.log10(xmin), np.log10(xmax), nbins+1)
@@ -121,15 +121,21 @@ def main():
     #     jet_parton.select_parton(True)
     #     analyses.append(jet_parton)
 
-    jfch = JetChargedFullAnalysis(config, name='jfch')
+    rf = SingleRootFile(fname=config.output)
+    
+    data = DataSource(config, name='pythia', source_type='pythia')
+    data.select_final(True)
+    analyses.append(data)
+
+    jfch = JetChargedFullAnalysis(config, name='jfch', data_source=data)
     analyses.append(jfch)
 
     eec_all = None
     eec_ch = None
     if config.enable_eec:
-        eec_all = EECAnalysis(config, name='eec_all', jet_analysis=jfch.j_full_ana)
+        eec_all = EECAnalysis(config, name='eec_all', jet_analysis=jfch.j_full_ana, data_source=data)
         analyses.append(eec_all)
-        eec_ch = EECAnalysis(config, name='eec_ch', jet_analysis=jfch.j_ch_ana)
+        eec_ch = EECAnalysis(config, name='eec_ch', jet_analysis=jfch.j_ch_ana, data_source=data)
         analyses.append(eec_ch)
 
     _stop = False
@@ -147,7 +153,7 @@ def main():
             hepmc_event = None
         rv = True
         for an in analyses:
-            rv = rv and an.analyze_event(pythia=pythia, hepmc=hepmc_event)
+            rv = rv and an.process_event(pythia)
         if not rv:
             continue
         pbar.update(1)
@@ -162,6 +168,8 @@ def main():
     pbar_counts.close()
     pythia.stat()
     del pythia
+    
+    rf.close()
 
 if __name__ == '__main__':
     main()
