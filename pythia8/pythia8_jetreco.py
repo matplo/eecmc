@@ -27,7 +27,8 @@ from heppyy.pythia_util import configuration as pyconf
 from heppyy.util.logger import Logger
 log = Logger()
 
-from analysis import *
+sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, 'analysis'))
+from analysis import ConfigData, JetAnalysis, EECAnalysis, JetChargedFullAnalysis
 
 def logbins(xmin, xmax, nbins):
         lspace = np.logspace(np.log10(xmin), np.log10(xmax), nbins+1)
