@@ -103,20 +103,20 @@ class SingleRootFile(object):
         
     def close(self):
         _rfile = self.root_file
-        log.info(f'root_file is {_rfile}')
+        log.info(f'SingleRootFile: root_file is {_rfile}')
         if _rfile:
             _rfile.cd()
             _ = [o.Write() for o in self.objects]
             _rfile.Write()
             _rfile.Close()
-            log.info(f'wrote {_rfile.GetName()}')
-            log.info(f'purging {_rfile.GetName()}')
+            log.info(f'SingleRootFile: wrote {_rfile.GetName()}')
+            log.info(f'SingleRootFile: purging {_rfile.GetName()}')
             _rfile = ROOT.TFile(self.filename, 'UPDATE')
             _rfile.Purge()
             _rfile.Write()
             _rfile.Close()
         else:
-            log.debug('no root file to write')
+            log.debug('SingleRootFile: no root file to write')
         _rfile = None
         log.info(f'done {self.filename}')
 
@@ -179,6 +179,8 @@ class AnalysisBase(GenericObject):
         self.finalize()
 
     def finalize(self):
+        if self.done:
+            return
         if self.root_file:
             self._log.info(f'{self.name}: writing to {self.root_file.GetName()}')
             self.root_file.Write()
@@ -186,7 +188,7 @@ class AnalysisBase(GenericObject):
                 self._log.info(f'{self.name}: closing {self.root_file.GetName()}')
                 self.root_file.Close()
         else:
-            self._log.debug('no root file to write')
+            self._log.debug(f'{self.name}: no root file to write')
         self.root_file = None
         self.done = True
 
