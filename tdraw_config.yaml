@@ -1,0 +1,42 @@
+eecs_stdm:
+  - output: h_eec.root
+    mode: "recreate"
+  - h_jet_pt:
+      file: sherpa_hf_stdm.root
+      tree: tn_jet_jets
+      xrange: [0, 1000]
+      xnbins: 1000
+      xbins: log
+      var: pt
+      cond: "(pt > 20) && (pt < 40)"
+  - h_eec:
+      file: sherpa_hf_stdm.root
+      tree: tn_eec_eec_all_ptcut0
+      xrange: [0.01, 1]
+      xnbins: 15
+      xbins: log
+      var: dr
+      cond: "(eec) * (ptjet > 20 && ptjet < 40)"
+      scale: 1./h_jet_pt.GetEntries()
+      bw : True
+eecs_lowm:
+  - output: h_eec.root
+    mode: "update"
+  - h_jet_pt:
+      file: sherpa_hf_lowm.root
+      tree: tn_jet_jets
+      xrange: [0, 1000]
+      xnbins: 1000
+      xbins: log
+      var: pt
+      cond: "(pt > 20) && (pt < 40)"
+  - h_eec:
+      file: sherpa_hf_lowm.root
+      tree: tn_eec_eec_all_ptcut0
+      xrange: [0.01, 1]
+      xnbins: 15
+      xbins: log
+      var: dr
+      cond: "(eec) * (ptjet > 20 && ptjet < 40)"
+      scale: 1./h_jet_pt.GetEntries()
+      bw: True
