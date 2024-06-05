@@ -4,6 +4,7 @@ import yaml
 import ROOT
 import numpy as np
 import array
+import sys
 
 def logbins(xmin, xmax, nbins):
     xmin = max(xmin, 1e-10)
@@ -16,7 +17,10 @@ def logbins_from_config(hist_config):
     return logbins(float(hist_config['xrange'][0]), float(hist_config['xrange'][1]), int(hist_config['xnbins']))
 
 # Load the YAML file
-with open('tdraw_config.yaml', 'r') as stream:
+yaml_file = 'tdraw_config.yaml'
+if len(sys.argv) > 1:
+    yaml_file = sys.argv[1]
+with open(yaml_file, 'r') as stream:
     try:
         config = yaml.safe_load(stream)
     except yaml.YAMLError as exc:
@@ -39,6 +43,13 @@ for section in config:
             # Open the ROOT file and get the tree
             root_file = ROOT.TFile.Open(hist_config['file'])
             tree = root_file.Get(hist_config['tree'])
+            print('tree:', type(tree), 'hist_config:', hist_config)
+            if isinstance(tree, ROOT.TNtuple) or isinstance(tree, ROOT.TTree) or isinstance(tree, ROOT.TChain):
+                print(f'type check for {tree} passed')
+                pass
+            else:
+                print('Could not find tree:', hist_config['tree'])
+                continue
 
             # Create the histogram
             output_file.cd()
