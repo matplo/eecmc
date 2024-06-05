@@ -29,7 +29,7 @@ from heppyy.util.logger import Logger
 log = Logger()
 
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, 'analysis'))
-from analysis import ConfigData, JetAnalysis, EECAnalysis, JetChargedFullAnalysis, DataSource, SingleRootFile
+from analysis import ConfigData, JetAnalysis, EECAnalysis, JetChargedFullAnalysis, DataSource, DataSourceD0, SingleRootFile
 import hepmc_count_events
 
 def logbins(xmin, xmax, nbins):
@@ -94,7 +94,7 @@ def main():
 
     source_type = 'hepmc'
     pythia = None
-    hepmc = config.input
+    hepmc_input = config.input
     hepmc_event = None 
     if config.input is None:
         mycfg = []
@@ -129,12 +129,22 @@ def main():
     #     analyses.append(jet_parton)
 
     rf = SingleRootFile(fname=config.output)
+    data = None
+    data_ch = None
     
-    data = DataSource(config, name=f'{source_type}', source_type=source_type)
+    if config.D0mode:
+        data = DataSourceD0(config, name=f'{source_type}', source_type=source_type)
+        data.D0_selector = D0_selector
+    else:
+        data = DataSource(config, name=f'{source_type}', source_type=source_type)
     data.select_final(True)
     analyses.append(data)
 
-    data_ch = DataSource(config, name=f'{source_type}_ch', source_type=source_type)
+    if config.D0mode:
+        data_ch = DataSourceD0(config, name=f'{source_type}_ch', source_type=source_type)
+        data_ch.D0_selector = D0_selector
+    else:
+        data_ch = DataSource(config, name=f'{source_type}_ch', source_type=source_type)
     data_ch.select_final(True)
     data_ch.select_charged(True)
     analyses.append(data_ch)
@@ -164,21 +174,23 @@ def main():
         if pythia:
             if not pythia.next():
                 continue
+            pbar.update(1)
             data_source = pythia
-        if hepmc:
+        if hepmc_input:
             if not input_hepmc.failed():
                 _ = input_hepmc.read_event(hepmc_event)
                 data_source = hepmc_event
+                pbar.update(1)
             else:
                 _stop = True
                 break
         rv = True
         for an in analyses:
-            rv = rv and an.process_event(data_source)
-        if not rv:
-            continue
-        pbar.update(1)
-        pbar_counts.update(1)
+            if rv:
+                _rv = an.process_event(data_source, pbar.n)
+                rv = rv and _rv
+            # if not _rv:
+            #     log.warning(f"[w] analysis {an.name} failed")
         if rv:
             pbar_counts.update(1)
         if pbar.n >= config.nev and config.nev > 0:
