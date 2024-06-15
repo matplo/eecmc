@@ -1,0 +1,22 @@
+#%Module
+
+prereq yasp
+
+setenv EECMC_DIR {{EECMCDIR}}
+setenv EECMC_SRC {{EECMCDIR}}
+setenv EECMC_DEV {{EECMCDIR}}
+setenv EECMC_PREFIX {{EECMCDIR}}
+
+prepend-path PATH {{EECMCDIR}}/analysis
+prepend-path PYTHONPATH {{EECMCDIR}}/analysis
+
+prepend-path PATH {{EECMCDIR}}/hybrid
+prepend-path PYTHONPATH {{EECMCDIR}}/hybrid
+
+prepend-path PATH {{EECMCDIR}}/pythia8
+prepend-path PYTHONPATH {{EECMCDIR}}/pythia8
+
+prepend-path PATH {{EECMCDIR}}/sherpa2x
+prepend-path PYTHONPATH {{EECMCDIR}}/sherpa2x
+
+set-alias EECMC_cd "cd {{EECMCDIR}}"

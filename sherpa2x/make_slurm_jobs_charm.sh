@@ -112,11 +112,11 @@ do
 		ln -sf ${jobs_to_run_shell_submit} ${THISD}/submit_latest_jobs_to_run.sh
 		echo "[i] run submit_latest_jobs_to_run.sh to submit jobs"
 
-		analysis_config=${THISD}/analysis_config_D_jetpt${jetpt}${dirmod}.yaml
-		cp -v ${analysis_config} ./analysis_config.yaml
-		cp -v ${THISD}/heec.py ${dname}/
-		cp -v ${THISD}/hepmc_D_analysis.py ${dname}/
-		cp -v ${THISD}/hepmc_count_events.py ${dname}/
+		# analysis_config=${THISD}/analysis_config_D_jetpt${jetpt}${dirmod}.yaml
+		# cp -v ${analysis_config} ./analysis_config.yaml
+		# cp -v ${THISD}/heec.py ${dname}/
+		# cp -v ${THISD}/hepmc_D_analysis.py ${dname}/
+		# cp -v ${THISD}/hepmc_count_events.py ${dname}/
 		cd ${savedir}
 	fi
 done
