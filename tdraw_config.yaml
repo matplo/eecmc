@@ -17,7 +17,7 @@ eecs_stdm:
       xbins: log
       var: dr
       cond: "(eec) * (ptjet > 20 && ptjet < 40)"
-      scale: 1./h_jet_pt.GetEntries()
+      scale: 1./h_jet_pt.Integral()
       bw : True
 eecs_lowm:
   - output: h_eec.root
@@ -38,5 +38,5 @@ eecs_lowm:
       xbins: log
       var: dr
       cond: "(eec) * (ptjet > 20 && ptjet < 40)"
-      scale: 1./h_jet_pt.GetEntries()
+      scale: 1./h_jet_pt.Integral()
       bw: True
