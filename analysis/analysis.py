@@ -626,7 +626,7 @@ class EECAnalysis(AnalysisBase):
         self.pt_cuts = [0, 0.15, 1, 2]
         self.tn_eec = {}
         for ptcut in self.pt_cuts:
-            self.tn_eec[ptcut] = ROOT.TNtuple(f'tn_eec_{self.name}_ptcut{ptcut}', 'tn_eec', 'nev:xsec:ev_weight:ij:dr:pt1:pt2:eec:ptjet:ptcut:iidx:jidx')
+            self.tn_eec[ptcut] = ROOT.TNtuple(f'tn_eec_{self.name}_ptcut{ptcut}', 'tn_eec', 'nev:xsec:ev_weight:ij:dr:pt1:pt2:eec:ptjet:ptcut:iidx:jidx:ptlead')
         if self.jet_analysis is None:
             raise ValueError(f'{self._nev} {self.name}: jet_analysis not set')
 
@@ -649,6 +649,7 @@ class EECAnalysis(AnalysisBase):
             self._log.debug(f'{self._nev} {self.name}: no jets to analyze len(self.jet_analysis.jets)={len(self.jet_analysis.jets)}')
             return False
         for ij, j in enumerate(self.jet_analysis.jets):
+            ptlead = fj.sorted_by_pt(j.constituents())[0].perp()
             _parts_cut = [p for p in j.constituents() if p.perp() >= ptcut]
             _pairs = list(itertools.product(_parts_cut, repeat=2))
             log.debug(f'{self._nev} {self.name}: number of pairs: {len(_pairs)} with ptcut: {ptcut}')
@@ -657,7 +658,7 @@ class EECAnalysis(AnalysisBase):
             for first, second in _pairs:
                 dr = first.delta_R(second)
                 eec = first.perp() * second.perp() / pow(j.perp(), 2.)
-                self.tn_eec[ptcut].Fill(self._nev, self.jet_analysis.data_source.xsec, self.jet_analysis.data_source.ev_weight, ij, dr, first.perp(), second.perp(), eec, j.perp(), ptcut, first.user_index(), second.user_index())
+                self.tn_eec[ptcut].Fill(self._nev, self.jet_analysis.data_source.xsec, self.jet_analysis.data_source.ev_weight, ij, dr, first.perp(), second.perp(), eec, j.perp(), ptcut, first.user_index(), second.user_index(), ptlead)
         return True
 
 ### PYTHIA CODE FOR D0
