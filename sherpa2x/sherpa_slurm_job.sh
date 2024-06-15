@@ -47,7 +47,7 @@ if [ ! -e ${THIS_DIR}/../eecmc.module ]; then
   echo "Error: eecmc.module not found"
   exit 1
 fi
-module use ${THIS_DIR}/../
+module use {{eecmc_dir}}
 module load eecmc.module
 
 # Run the application
@@ -64,7 +64,7 @@ nev="{{number_of_events}}"
 Sherpa -f Run.dat -e ${nev} 2>&1 | tee sherpa_1.log 
 input_file=$(ls *.hepmc)
 # ./hepmc_D_analysis.py --config analysis_config.yaml --input ${input_file} --output ${input_file}.root --nev ${nev} 2>&1 | tee hepmc_D_analysis.log
-simple_jet_rec.py --enable-eec --ncounts -1 --D0mode 1 --output ${output} --hepmc 3 --input ${input_file} --jet-pt-min 15 --D0-pt-min 5
+simple_jet_rec.py --enable-eec --nevents ${nev} --ncounts -1 --D0mode 1 --output ${output} --hepmc 3 --input ${input_file} --jet-pt-min 15 --D0-pt-min 5
 
 
 # End of file

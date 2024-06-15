@@ -99,6 +99,7 @@ do
 					--define \
 					number_of_events=${nev} \
 					output_dir=${dname} \
+					eecmc_dir=${THISD}/../ \
 					-o ${dname}/sherpa_slurm_job.sh
 		chmod +x sherpa_slurm_job.sh
 		chmod +x ${slurm_script}
