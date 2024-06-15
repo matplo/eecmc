@@ -64,7 +64,10 @@ nev="{{number_of_events}}"
 Sherpa -f Run.dat -e ${nev} 2>&1 | tee sherpa_1.log 
 input_file=$(ls *.hepmc)
 # ./hepmc_D_analysis.py --config analysis_config.yaml --input ${input_file} --output ${input_file}.root --nev ${nev} 2>&1 | tee hepmc_D_analysis.log
-simple_jet_rec.py --enable-eec --nevents ${nev} --ncounts -1 --D0mode 1 --output ${output} --hepmc 3 --input ${input_file} --jet-pt-min 15 --D0-pt-min 5
+output_file=$(basename ${input_file} .hepmc)D.root
+simple_jet_rec.py --enable-eec --nevents ${nev} --ncounts -1 --D0mode 1 --output ${output_fileD} --hepmc 3 --input ${input_file} --jet-pt-min 15 --D0-pt-min 5
+output_file=$(basename ${input_file} .hepmc).root
+simple_jet_rec.py --enable-eec --nevents ${nev} --ncounts -1 --output ${output_file} --hepmc 3 --input ${input_file} --jet-pt-min 15
 
 
 # End of file
