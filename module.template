@@ -7,6 +7,9 @@ setenv EECMC_SRC {{EECMCDIR}}
 setenv EECMC_DEV {{EECMCDIR}}
 setenv EECMC_PREFIX {{EECMCDIR}}
 
+prepend-path PATH {{EECMCDIR}}
+prepend-path PYTHONPATH {{EECMCDIR}}
+
 prepend-path PATH {{EECMCDIR}}/analysis
 prepend-path PYTHONPATH {{EECMCDIR}}/analysis
 
