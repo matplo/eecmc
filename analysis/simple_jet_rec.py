@@ -71,10 +71,6 @@ def main():
     if args.write_config:
         config.write_to_yaml(args.write_config)
         return
-    if config.nev <= 0 and config.ncounts <= 0:
-        config.nev = 10
-        log.info(f"[w] setting nev to {config.nev}")
-    log.info(f"config: {config}")
 
     if args.debug:
         log.set_level(logging.DEBUG)
@@ -118,6 +114,10 @@ def main():
             return
         hepmc_event = pyhepmc.GenEvent()
 
+    if config.nev <= 0 and config.ncounts <= 0:
+        config.nev = 10
+        log.info(f"[w] setting nev to {config.nev}")
+    log.info(f"config: {config}")
 
     # jet_all = JetAnalysis(config, name='jet_all')
     analyses = []

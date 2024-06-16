@@ -460,7 +460,7 @@ class JetAnalysis(AnalysisBase):
         super(JetAnalysis, self).init()
         self.open_root_file()
         self.root_file.cd() # done already in the base class but just to be sure
-        self.tn_jet = ROOT.TNtuple(f'tn_jet_{self.name}', 'tn_jet', 'nev:xsec:ev_weight:nj:ij:pt:eta:phi:m')
+        self.tn_jet = ROOT.TNtuple(f'tn_jet_{self.name}', 'tn_jet', 'nev:xsec:ev_weight:nj:ij:pt:eta:phi:m:ptlead')
         # every jet in the file gets a unique int - nj
         self.njet_count = 0
         # jet finder
@@ -509,7 +509,8 @@ class JetAnalysis(AnalysisBase):
             return False
         for ij, j in enumerate(self.jets):
             j.set_user_index(ij + self.njet_count)
-            self.tn_jet.Fill(self._nev, self.data_source.xsec, self.data_source.ev_weight, self.njet_count + ij, ij, j.pt(), j.eta(), j.phi(), j.m())
+            ptlead = fj.sorted_by_pt(j.constituents())[0].pt()
+            self.tn_jet.Fill(self._nev, self.data_source.xsec, self.data_source.ev_weight, self.njet_count + ij, ij, j.pt(), j.eta(), j.phi(), j.m(), ptlead)
         self.njet_count += len(self.jets)
         return True
 

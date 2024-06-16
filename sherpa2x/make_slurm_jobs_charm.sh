@@ -19,7 +19,7 @@ savedir=${PWD}
 nev=1000
 
 if [ "$1" == '-h' ]; then
-	echo "Usage: $0 [jetpt] [nev] [njobs] [lund]"
+	echo "Usage: $0 [jetpt] [nev] [njobs] [E_beam] [lund]"
 	exit 0
 fi
 
@@ -40,19 +40,17 @@ source ${SYS_YASP_DIR}/venvyasp/bin/activate
 module use ${SYS_YASP_DIR}/software/modules
 module avail
 module load yasp
-module load mysherpa
+module load bundle/hepbase
+module load sherpa/2.2.15
 
 datfile_default=${THISD}/charmRun.dat
 datfile=${datfile_default}
-if [ "$4" == "lund" ]; then
+if [ "$5" == "lund" ]; then
 	datfile="${THISD}/charmRunDISLundTune.dat"
 	dirmod="_lund"
 fi
 
 slurm_script=${THISD}/sherpa_slurm_job.sh
-
-dname_base="/rstorage/ploskon/eec_sherpa_charm"
-mkdir -pv ${dname_base}
 
 jetpt=15
 if [ ! -z $1 ]; then
@@ -67,6 +65,22 @@ njobs=1
 if [ ! -z $3 ]; then
 	njobs=$3
 fi
+
+if [ ! -z $4 ]; then
+	E_beam=$4
+fi
+
+if [ -z ${E_beam} ]; then
+	E_beam=6500
+fi
+E_cm=$((2 * E_beam))
+if [ -z ${E_cm} ]; then
+	echo "Error: E_cm not set"
+	exit 1
+fi
+
+dname_base="/rstorage/ploskon/eec_sherpa_charm/${E_cm}"
+mkdir -pv ${dname_base}
 
 echo "[i] jetpt=${jetpt} nev=${nev} njobs=${njobs} datfile=${datfile}"
 SDATE=$(date +"%Y%m%d%H%M")
@@ -92,7 +106,7 @@ do
 					jet_min_pt="${jetpt}.0" \
 					jet_eta_max=0.5 \
 					jet_R=0.4 \
-					p_beam_energy=2510 \
+					p_beam_energy=${E_beam} \
 					random_seed=${rseed} \
 					-o ${dname}/Run.dat
 		yasprepl -f ${slurm_script} \
@@ -100,6 +114,7 @@ do
 					number_of_events=${nev} \
 					output_dir=${dname} \
 					eecmc_dir=${THISD}/../ \
+					jet_min_pt="${jetpt}.0" \
 					-o ${dname}/sherpa_slurm_job.sh
 		chmod +x sherpa_slurm_job.sh
 		chmod +x ${slurm_script}
