@@ -662,6 +662,8 @@ class EECAnalysis(AnalysisBase):
                 self.tn_eec[ptcut].Fill(self._nev, self.jet_analysis.data_source.xsec, self.jet_analysis.data_source.ev_weight, ij, dr, first.perp(), second.perp(), eec, j.perp(), ptcut, first.user_index(), second.user_index(), ptlead)
         return True
 
+## add EEC analysis for full jets matched with charged jets (or charged part of the full jet)
+
 ### PYTHIA CODE FOR D0
 
 def get_D0s_pythia_old(pythia, skipDstar = True):
