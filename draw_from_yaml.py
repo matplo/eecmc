@@ -74,8 +74,8 @@ def main(args):
 
                 # Draw the variable with the specified condition
                 draw_string = "{}>>{}".format(hist_config['var'], hist_name)
-                print('draw_string:', draw_string, 'w/ cond:', hist_config['cond'], 'entries:', hist.GetEntries())
                 tree.Draw(draw_string, hist_config['cond'])
+                print('draw_string:', draw_string, 'w/ cond:', hist_config['cond'], 'entries:', hist.GetEntries())
 
                 # If 'scale' is specified, scale the histogram
                 if 'scale' in hist_config:

@@ -9,6 +9,14 @@ eec:
       xbins: linear
       var: pt
       cond: "(pt > 15) && (pt < 30)"
+  - h_jet_pt_lead5:
+      file: {{input}}
+      tree: tn_jet_jets_ch
+      xrange: [0, 1000]
+      xnbins: 1000
+      xbins: linear
+      var: pt
+      cond: "(pt > 15) && (pt < 30) && (ptlead>5)"
   - h_jet_m:
       file: {{input}}
       tree: tn_jet_jets_ch
@@ -51,14 +59,14 @@ eec:
       xrange: [0, 1]
       xnbins: 20
       var: pt1/ptjet
-      cond: "((ptjet > 15) && (ptjet < 30) && (leadpt>5))"
-      scale: 1./h_jet_pt.Integral()
+      cond: "((ptjet > 15) && (ptjet < 30) && (pt1==pt2) && (ptlead>5))"
+      scale: 1./h_jet_pt_lead5.Integral()
       bw : False
   - h_eec0:
       file: {{input}}
       tree: tn_eec_eec_ch_ptcut0
       xrange: [0.01, 1]
-      xnbins: 10
+      xnbins: 20
       xbins: log
       var: dr
       cond: "(eec) * (ptjet > 15 && ptjet < 30)"
@@ -68,7 +76,7 @@ eec:
       file: {{input}}
       tree: tn_eec_eec_ch_ptcut1
       xrange: [0.01, 1]
-      xnbins: 10
+      xnbins: 20
       xbins: log
       var: dr
       cond: "(eec) * (ptjet > 15 && ptjet < 30)"
@@ -78,27 +86,27 @@ eec:
       file: {{input}}
       tree: tn_eec_eec_ch_ptcut1
       xrange: [0.01, 1]
-      xnbins: 10
+      xnbins: 20
       xbins: log
       var: dr
-      cond: "(eec) * (ptjet > 15 && ptjet < 30 && (leadpt>5))"
-      scale: 1./h_jet_pt.Integral()
+      cond: "(eec) * (ptjet > 15 && ptjet < 30 && (ptlead>5))"
+      scale: 1./h_jet_pt_lead5.Integral()
       bw : True
   - h_eec1D0:
       file: {{input}}
       tree: tn_eec_eec_ch_ptcut1
       xrange: [0.01, 1]
-      xnbins: 10
+      xnbins: 20
       xbins: log
       var: dr
       cond: "(eec) * (ptjet > 15 && ptjet < 30 && (iidx >= 10000 || jidx >= 10000))"
       scale: 1./h_jet_pt.Integral()
       bw : True
-  - h_eec1nD0:
+  - h_eec1notD0:
       file: {{input}}
       tree: tn_eec_eec_ch_ptcut1
       xrange: [0.01, 1]
-      xnbins: 10
+      xnbins: 20
       xbins: log
       var: dr
       cond: "(eec) * (ptjet > 15 && ptjet < 30 && (iidx < 10000 && jidx < 10000))"
@@ -108,7 +116,7 @@ eec:
       file: {{input}}
       tree: tn_eec_eec_ch_ptcut1
       xrange: [0.01, 1]
-      xnbins: 10
+      xnbins: 20
       xbins: log
       var: dr
       cond: "(ptjet > 15 && ptjet < 30)"
