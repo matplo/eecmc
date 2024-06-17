@@ -76,3 +76,4 @@ tmp_file=$(mktemp)
 lre $template_config --define input=$file_input output=$file_output > $tmp_file
 
 draw_from_yaml.py -c $tmp_file
+exit $?

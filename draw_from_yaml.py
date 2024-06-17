@@ -18,6 +18,22 @@ def logbins(xmin, xmax, nbins):
 def logbins_from_config(hist_config):
     return logbins(float(hist_config['xrange'][0]), float(hist_config['xrange'][1]), int(hist_config['xnbins']))
 
+def get_hist_clone_from_file(hist_config, hist_new_name, output_file):
+    hist_config_split = hist_config.split(':')
+    if len(hist_config_split) != 2:
+        print('Invalid hist_config:', hist_config)
+        sys.exit(1)
+    file_name = hist_config_split[0]
+    hist_name = hist_config_split[1]
+    root_file = ROOT.TFile.Open(file_name)
+    hist = root_file.Get(hist_name)
+    output_file.cd()
+    hist_clone = hist.Clone()
+    hist_clone.SetName(hist_new_name)
+    hist_clone.Reset()
+    hist_clone.Write()
+    return hist_clone
+
 def main(args):
     # Load the YAML file
     yaml_file = 'tdraw_config.yaml'
@@ -61,11 +77,17 @@ def main(args):
 
                 # Create the histogram
                 output_file.cd()
+                hist = None
                 if 'xbins' in hist_config:
+                    print ('xbins:', hist_config['xbins'])
                     if hist_config['xbins'] == 'log':
                         bins = logbins_from_config(hist_config)
                         hist = ROOT.TH1F(hist_name, hist_name, len(bins)-1, bins)
-                    else:
+                    if hist is None and hist_config['xbins'] == 'auto':
+                        hist = ROOT.TH1F(hist_name, hist_name, hist_config['xnbins'], tree.GetMinimum(hist_config['var']), tree.GetMaximum(hist_config['var']))
+                    if hist is None and ':' in hist_config['xbins']:
+                        hist = get_hist_clone_from_file(hist_config['xbins'], hist_name, output_file)
+                    if hist is None and isinstance(hist_config['xnbins'], int):
                         hist = ROOT.TH1F(hist_name, hist_name, hist_config['xnbins'], *hist_config['xrange'])
                 else:
                     hist = ROOT.TH1F(hist_name, hist_name, hist_config['xnbins'], *hist_config['xrange'])
@@ -89,8 +111,12 @@ def main(args):
                             locals[hx[1]] = hx[2]
                             locals_str[hx[1]] = hx[0]
                     scale = 1.
-                    scale = eval(_scale_eval_str, {'__builtins__': None}, locals)
-                    # scale = eval(hist_config['scale'], {'__builtins__': None}, {'h_jet_pt': ROOT.gDirectory.Get(hist_name)})
+                    try:
+                        scale = eval(_scale_eval_str, {'__builtins__': None}, locals)
+                        # scale = eval(hist_config['scale'], {'__builtins__': None}, {'h_jet_pt': ROOT.gDirectory.Get(hist_name)})
+                    except Exception as e:
+                        print('Could not evaluate scale:', e, 'for', _scale_eval_str, 'using', locals_str)
+                        sys.exit(1)
                     print(f'scaling {hist.GetName()} by', scale, 'using', locals_str)
                     hist.Scale(scale)
 
