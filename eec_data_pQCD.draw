@@ -1,0 +1,77 @@
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend 0.199,0.514,0.518,0.871, title=15 < p_{T, h#pm}^{jet} < 30 GeV/c
+#logx 1
+#x R_{L}
+#y d#Sigma_{EEC}/dR_{L}
+#maxy 5
+#xrange 1e-2, 1
+
+## hadded_list__charm_13TeV_jetpt_15_ana_eec.txt_h.root 		:h_eec1_eec :hist l +w5 +l1: title=D^{0}-jet Sherpa Ahadic,,scale=1.0
+## hadded_list__charm_13TeV_lund_jetpt_15_ana_eec.txt_h.root 		:h_eec1_eec :hist l +w5 +l9 -k: title=D^{0}-jet Sherpa Lund,,scale=1.0
+## #hadded_list__charm_13TeV_jetpt_15_ana_eec.txt_h.root 		:h_eec1notD0_eec :hist l +w5: title=h_eec1notD0_eec
+## #hadded_list__charm_13TeV_jetpt_15_ana_eec.txt_h.root 		:h_eec1_lead5_eec :hist l +w5: title=h_eec1_lead5_eec
+
+## # Ahadic
+## hadded_list__inclusive_13TeV_jetpt_15_ana_eec.txt_h.root :h_eec1_lead5_eec :hist l +w5 +l1 +k1: title=Inclusive Sherpa Ahadic p_{T}^{lead}>5 GeV/c,,scale=1.0
+## # hadded_list__inclusive_13TeV_jetpt_15_ana_eec.txt_h.root :h_eec1_eec :hist l +w5 +l2 -k: title=Inclusive Sherpa Ahadic
+
+## # Lund
+## hadded_list__inclusive_13TeV_lund_jetpt_15_ana_eec.txt_h.root :h_eec1_lead5_eec :hist l +w5 +l9 +k1: title=Inclusive Sherpa Lund p_{T}^{lead}>5 GeV/c,,scale=1.0
+## # hadded_list__inclusive_13TeV_lund_jetpt_15_ana_eec.txt_h.root :h_eec1_eec :hist l +w5 +l3 +k1: title=Inclusive Sherpa Lund
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_15_30_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt15-30_Data_central :p +k32 +a75: title=Data 
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_15_30_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt15-30_Data_sys :serror -k noleg +a20: title=Data 15 < p_{T,jet}^{h#pm} < 30, 5 < #it{p}_{T}^{D^{0}} < 30
+
+# /Users/ploskon/devel/eecmc/h_eec_pythia_D0.root 					:h_eec1_pythia_eec_D0 		:hist +w5 +k8 +l1  		: title=D^{0}-jet PYTHIA8
+# /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_15_30_EEC_wPYTHIA_new.root: h_EEC_JetPt_inclusive_R0.4_pt15-30_Pythia :hist l +w5 +k8 +l1  		: title=Inclusive PYTHIA8
+
+# theory
+# /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph15_30 :l +l1 +a50 +k38 +w0: title=jet p_{T} 15-30 FULL E-SCALE,,scale=1.0
+# /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph15_30 :p +w0 +l1 +a20 -k serror noleg: title=15-30,,scale=1.0
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph15_30_scaled :p EX0 +l1 +a50 +k9 +w0: title=pQCD (TBC),,scale=0.6
+# /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph15_30_scaled :l EX0 +l1 +a50 +k9 +w0: title=pQCD (TBC),,scale=0.6
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph15_30_scaled :p +w0 +l1 +a20 -k serror noleg: title=15-30,,scale=0.6
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend 0.199,0.514,0.518,0.871, title=10 < p_{T, h#pm}^{jet} < 15 GeV/c
+#logx 1
+#x R_{L}
+#y d#Sigma_{EEC}/dR_{L}
+#maxy 5
+#xrange 1e-2, 1
+
+## hadded_list__charm_13TeV_jetpt_10_ana_eec.txt_h.root 		:h_eec1_eec :hist l +w5 +l1: title=D^{0}-jet Sherpa Ahadic,,scale=1.0
+## hadded_list__charm_13TeV_lund_jetpt_10_ana_eec.txt_h.root 		:h_eec1_eec :hist l +w5 +l9 -k: title=D^{0}-jet Sherpa Lund,,scale=1.0
+## #hadded_list__charm_13TeV_jetpt_10_ana_eec.txt_h.root 		:h_eec1notD0_eec :hist l +w5: title=h_eec1notD0_eec
+## #hadded_list__charm_13TeV_jetpt_10_ana_eec.txt_h.root 		:h_eec1_lead5_eec :hist l +w5: title=h_eec1_lead5_eec
+
+## # Ahadic
+## hadded_list__inclusive_13TeV_jetpt_10_ana_eec.txt_h.root :h_eec1_lead5_eec :hist l +w5 +l1 +k1: title=Inclusive Sherpa Ahadic p_{T}^{lead}>5 GeV/c,,scale=1.0
+## # hadded_list__inclusive_13TeV_jetpt_10_ana_eec.txt_h.root :h_eec1_eec :hist l +w5 +l2 -k: title=Inclusive Sherpa Ahadic
+
+## # Lund
+## hadded_list__inclusive_13TeV_lund_jetpt_10_ana_eec.txt_h.root :h_eec1_lead5_eec :hist l +w5 +l9 +k1: title=Inclusive Sherpa Lund p_{T}^{lead}>5 GeV/c,,scale=1.0
+## # hadded_list__inclusive_13TeV_lund_jetpt_10_ana_eec.txt_h.root :h_eec1_eec :hist l +w5 +l3 +k1: title=Inclusive Sherpa Lund
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p +k32 +a75: title=Data 
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_sys :serror -k noleg +a20: title=Data 10 < p_{T,jet}^{h#pm} < 15, 5 < #it{p}_{T}^{D^{0}} < 15
+
+# /Users/ploskon/devel/eecmc/h_eec_pythia_D0.root 					:h_eec1_pythia_eec_D0 		:hist +w5 +k8 +l1  		: title=D^{0}-jet PYTHIA8
+# /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root: h_EEC_JetPt_inclusive_R0.4_pt15-15_Pythia :hist l +w5 +k8 +l1  		: title=Inclusive PYTHIA8
+
+#/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph10_15 :l EX0 +l1 +a50 +k38 +w0: title=jet p_{T} 10-15 FULL E-SCALE,,scale=1.0
+#/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph10_15 :p +w0 +l1 +a20 -k serror noleg : title=10-15,,scale=1.0
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph10_15_scaled :p EX0 +l1 +a50 +k9 +w0: title=pQCD (TBC),,scale=0.6
+
+# /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph10_15_scaled :l EX0 +l1 +a50 +k9 +w0: title=pQCD (TBC),,scale=0.6
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph10_15_scaled :p +w0 +l1 +a20 -k serror noleg: title=15-30,,scale=0.6

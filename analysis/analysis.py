@@ -514,6 +514,28 @@ class JetAnalysis(AnalysisBase):
         self.njet_count += len(self.jets)
         return True
 
+class JetEEC(object):
+    def __init__(self, j, ptcut):
+        ptlead = fj.sorted_by_pt(j.constituents())[0].perp()
+        _parts_cut = [p for p in j.constituents() if p.perp() >= ptcut]
+        _pairs = list(itertools.product(_parts_cut, repeat=2))
+        self.eec = []
+        self.dr = []
+        self.pt1 = []
+        self.pt2 = []
+        self.uidx1 = []
+        self.uidx2 = []
+        self.npairs = len(_pairs)
+        if len(_pairs) > 0:
+            for first, second in _pairs:
+                dr = first.delta_R(second)
+                eec = first.perp() * second.perp() / pow(j.perp(), 2.)
+                self.dr.append(dr)
+                self.eec.append(eec)
+                self.pt1.append(first.perp())
+                self.pt2.append(second.perp())
+                self.uidx1.append(first.user_index())
+                self.uidx2.append(second.user_index())
 
 class JetChargedFullAnalysis(AnalysisBase):
 
@@ -525,18 +547,25 @@ class JetChargedFullAnalysis(AnalysisBase):
         self.tn_correl = ROOT.TNtuple(
             f"tn_correl_{self.name}",
             "tn_correl",
-            "nev:ij:pt:eta:phi:pt_ch_in_full:xsec:ev_weight:ij_ch:pt_ch:eta_ch:phi_ch:pt_ratio:pt_ratio_ch:n_matched",
+            "nev:ij:pt:eta:phi:pt_ch_in_full:xsec:ev_weight:ij_ch:pt_ch:eta_ch:phi_ch:pt_ratio:pt_ratio_ch:n_matched"
         )
         self.tn_correl_parton_full = ROOT.TNtuple(
             f"tn_correl_parton_full_{self.name}",
             "tn_correl_parton_full",
-            "nev:nj:ij:pt:eta:phi:pt_h2p:xsec:ev_weight:ij_h:pt_h:eta_h:phi_h:pt_ratio:n_matched",
+            "nev:nj:ij:pt:eta:phi:pt_h2p:xsec:ev_weight:ij_h:pt_h:eta_h:phi_h:pt_ratio:n_matched"
         )
         self.tn_correl_parton_ch = ROOT.TNtuple(
             f"tn_correl_parton_ch_{self.name}",
             "tn_correl_parton_ch",
-            "nev:nj:ij:pt:eta:phi:pt_h2p:xsec:ev_weight:ij_h:pt_h:eta_h:phi_h:pt_ratio:n_matched",
+            "nev:nj:ij:pt:eta:phi:pt_h2p:xsec:ev_weight:ij_h:pt_h:eta_h:phi_h:pt_ratio:n_matched"
         )
+        if self.enable_eec_ch_full:
+            self.eec_pt_cuts = [0, 0.15, 1, 2]
+            self.tn_eec_ch_full = ROOT.TNtuple(
+            f"tn_eec_ch_full_{self.name}",
+            "tn_eec_ch_full",
+            "nev:pt_ch_in_full:dr:eec:ptjet:ptcut:iidx:jidx:ptlead:dr_ch:eec_ch:ptjet_ch:ptlead_ch"
+            )
         # note the pt cut on jets will be applied to charged jets - the it is somewhat effectively lower for full jets
         self.to_exec = []        
         self.data_source_full = DataSource(self.cfg, name=f"{self.name}_full", source_type=self.data_source.source_type)
@@ -594,6 +623,34 @@ class JetChargedFullAnalysis(AnalysisBase):
                                     self.data_source_full.xsec, self.data_source_full.ev_weight,
                                     ijch, jch.pt(), jch.eta(), jch.phi(),
                                     pt_ratio, pt_ratio_charged, n_matched[ij])
+                if self.enable_eec_ch_full:
+                    for ptcut in self.eec_pt_cuts:
+                        j_eec = JetEEC(j, ptcut)
+                        j_eec_ch = JetEEC(jch, ptcut)
+                        for idx_j in range(j_eec.npairs):
+                            ptlead = fj.sorted_by_pt(j.constituents())[0].perp()
+                            for idx_jch in range(j_eec_ch.npairs):
+                                ptlead_ch = fj.sorted_by_pt(jch.constituents())[0].perp()
+                                if (j_eec.uidx1[idx_j] == j_eec_ch.uidx1[idx_jch]) and (j_eec.uidx2[idx_j] == j_eec_ch.uidx2[idx_jch]):
+                                    # "nev:pt_ch_in_full:dr:pt1:pt2:eec:ptjet:ptcut:iidx:jidx:ptlead:dr_ch:eec_ch:ptjet_ch:ptlead_ch"
+                                    self.tn_eec_ch_full.Fill(nev,
+                                                             sum_charged_in_full, 
+                                                             j_eec.dr[idx_j], j_eec.eec[idx_j], j.perp(), 
+                                                             ptcut, j_eec.uidx1[idx_j], j_eec.uidx2[idx_j], ptlead,
+                                                             j_eec_ch.dr[idx_jch], j_eec_ch.eec[idx_jch], jch.perp(), 
+                                                             j_eec_ch.uidx1[idx_jch], j_eec_ch.uidx2[idx_jch], ptlead_ch
+                                                             )
+                                else:
+                                    # this should be filled as a miss in the response matrix
+                                    self.tn_eec_ch_full.Fill(nev,
+                                                             -1, 
+                                                             j_eec.dr[idx_j], j_eec.eec[idx_j], j.perp(), 
+                                                             ptcut, j_eec.uidx1[idx_j], j_eec.uidx2[idx_j], ptlead,
+                                                             j_eec_ch.dr[idx_jch], j_eec_ch.eec[idx_jch], jch.perp(), 
+                                                             j_eec_ch.uidx1[idx_jch], j_eec_ch.uidx2[idx_jch], ptlead_ch
+                                                             )
+                                    
+                
         if self.cfg.parton_hadron:
             n_matched = {}
             for ij, j in enumerate(self.j_parton_ana.jets):
@@ -663,6 +720,75 @@ class EECAnalysis(AnalysisBase):
         return True
 
 ## add EEC analysis for full jets matched with charged jets (or charged part of the full jet)
+
+class EECAnalysisCorrel(AnalysisBase):
+
+    def init(self):
+        super(EECAnalysisCorrel, self).init()
+        self.pt_cuts = [0, 0.15, 1, 2]
+        self.tn_eec = {}
+        self.tn_eec_match = {}
+        for ptcut in self.pt_cuts:
+            self.tn_eec[ptcut] = ROOT.TNtuple(f'tn_eec_c1{self.name}_ptcut{ptcut}', 'tn_eec_c1', 'nev:xsec:ev_weight:ij:dr:pt1:pt2:eec:ptjet:ptcut:iidx:jidx:ptlead')
+            self.tn_eec_match[ptcut] = ROOT.TNtuple(f'tn_eec_match_{self.name}_ptcut{ptcut}', 'tn_eec_match', 'nev:xsec:ev_weight:ij:dr:eec:ptjet:ptcut:ptlead:ij2:dr2:eec2:ptjet2:ptlead2')
+        if self.jet_analysis is None:
+            raise ValueError(f'{self._nev} {self.name}: jet_analysis not set')
+        if self.jet_analysis2 is None:
+            raise ValueError(f'{self._nev} {self.name}: jet_analysis2 not set')
+
+    def process_event(self, input_object, nev=None):
+        rv = super(EECAnalysisCorrel, self).process_event(input_object, nev=nev)
+        if not rv:
+            return False
+        rvs = [self.analyze_eec(ptcut) for ptcut in self.pt_cuts]
+        return any(rvs)
+
+    def analyze_eec(self, ptcut):
+        # Generate all pairs from parts, excluding pairs of the same element
+        # self.pairs = list(itertools.combinations(parts, 2))
+        # Generate all pairs from parts, including pairs of the same element
+        # _pairs = list(itertools.product(_parts_cut, repeat=2))
+        if self.jet_analysis.jets is None:
+            self._log.debug(f'{self._nev} {self.name}: no jets to analyze self.jet_analysis.jets={self.jet_analysis.jets}')
+            return False
+        if self.jet_analysis2.jets is None:
+            self._log.debug(f'{self._nev} {self.name}: no jets to analyze self.jet_analysis2.jets={self.jet_analysis2.jets}')
+            return False
+        if len(self.jet_analysis.jets) < 1:
+            self._log.debug(f'{self._nev} {self.name}: no jets to analyze len(self.jet_analysis.jets)={len(self.jet_analysis.jets)}')
+            return False
+        if len(self.jet_analysis2.jets) < 1:
+            self._log.debug(f'{self._nev} {self.name}: no jets to analyze len(self.jet_analysis2.jets)={len(self.jet_analysis2.jets)}')
+            return False
+        for ij, j in enumerate(self.jet_analysis.jets):
+            ptlead = fj.sorted_by_pt(j.constituents())[0].perp()
+            _parts_cut = [p for p in j.constituents() if p.perp() >= ptcut]
+            _pairs = list(itertools.product(_parts_cut, repeat=2))
+            log.debug(f'{self._nev} {self.name}: number of pairs: {len(_pairs)} with ptcut: {ptcut}')
+            if len(_pairs) < 1:
+                continue
+            for first, second in _pairs:
+                dr = first.delta_R(second)
+                eec = first.perp() * second.perp() / pow(j.perp(), 2.)
+                self.tn_eec[ptcut].Fill(self._nev, self.jet_analysis.data_source.xsec, self.jet_analysis.data_source.ev_weight, ij, dr, first.perp(), second.perp(), eec, j.perp(), ptcut, first.user_index(), second.user_index(), ptlead)
+            for ij2, j2 in enumerate(self.jet_analysis2.jets):
+                if j.delta_R(j2) > self.jet_analysis.cfg.jet_R / 2.0:
+                    continue                
+                ptlead2 = fj.sorted_by_pt(j2.constituents())[0].perp()
+                _parts_cut2 = [p for p in j2.constituents() if p.perp() >= ptcut]
+                _pairs2 = list(itertools.product(_parts_cut2, repeat=2))
+                log.debug(f'{self._nev} {self.name}: number of pairs2: {len(_pairs2)} with ptcut: {ptcut}')
+                if len(_pairs2) < 1:
+                    continue
+                for first, second in _pairs2:
+                    dr2 = first.delta_R(second)
+                    eec2 = first.perp() * second.perp() / pow(j2.perp(), 2.)
+                    # self.tn_eec_match[ptcut] = ROOT.TNtuple(f'tn_eec_match_{self.name}_ptcut{ptcut}', 'tn_eec_match', 'nev:xsec:ev_weight:ij:dr:eec:ptjet:ptcut:ptlead:ij2:dr2:eec2:ptjet2:ptlead2')
+                    self.tn_eec_match[ptcut].Fill(self._nev, self.jet_analysis2.data_source.xsec, self.jet_analysis2.data_source.ev_weight, 
+                                                  ij, dr, eec, j.perp(), ptcut, ptlead,
+                                                  ij2, dr2, eec2, j2.perp(), ptlead2)
+                
+        return True
 
 ### PYTHIA CODE FOR D0
 

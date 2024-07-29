@@ -29,7 +29,7 @@ from heppyy.util.logger import Logger
 log = Logger()
 
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, 'analysis'))
-from analysis import ConfigData, JetAnalysis, EECAnalysis, JetChargedFullAnalysis, DataSource, DataSourceD0, SingleRootFile
+from analysis import ConfigData, JetAnalysis, EECAnalysis, EECAnalysisCorrel, JetChargedFullAnalysis, DataSource, DataSourceD0, SingleRootFile
 import hepmc_count_events
 
 def logbins(xmin, xmax, nbins):
@@ -162,6 +162,11 @@ def main():
         analyses.append(eec_all)
         eec_ch = EECAnalysis(config, name='eec_ch', jet_analysis=jet_an_ch, data_source=data_ch)
         analyses.append(eec_ch)
+        eec_correl = EECAnalysisCorrel(config, name='eec_correl', 
+                                       jet_analysis=jet_an, 
+                                       jet_analysis2=jet_an_ch, 
+                                       data_source=data)
+        analyses.append(eec_correl)
 
     _stop = False
     pbar = tqdm.tqdm(range(config.nev))
