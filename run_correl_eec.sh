@@ -18,8 +18,12 @@ ncounts=5000
 
 for mode in 0 1 2 3 4
 do
-	./eec_correl.py --enable-eec --ncounts ${ncounts} --nev -1 --D0mode ${mode} --py-hardQCDcharm --py-pthatmin 10 --jet-pt-min 10 --jet-pt-max 15 --D0-pt-min 5 --D0-pt-max 15 --py-ecm 13000 --py-monash --output pythia_eec_charm_correl_10_D${mode}.root &
-	./eec_correl.py --enable-eec --ncounts ${ncounts} --nev -1 --D0mode ${mode} --py-hardQCDcharm --py-pthatmin 15 --jet-pt-min 15 --jet-pt-max 30 --D0-pt-min 5 --D0-pt-max 30 --py-ecm 13000 --py-monash --output pythia_eec_charm_correl_15_D${mode}.root &
+	dstaropt=""
+	if [ ${mode} -eq 3 ] || [ ${mode} -eq 4 ]; then
+		dstaropt="--vetoDstar"
+	fi
+	./eec_correl.py --enable-eec --ncounts ${ncounts} --nev -1 --D0mode ${mode} ${dstaropt} --py-hardQCDcharm --py-pthatmin 10 --jet-pt-min 10 --jet-pt-max 15 --D0-pt-min 5 --D0-pt-max 15 --py-ecm 13000 --py-monash --output pythia_eec_charm_correl_10_D${mode}.root &
+	./eec_correl.py --enable-eec --ncounts ${ncounts} --nev -1 --D0mode ${mode} ${dstaropt} --py-hardQCDcharm --py-pthatmin 15 --jet-pt-min 15 --jet-pt-max 30 --D0-pt-min 5 --D0-pt-max 30 --py-ecm 13000 --py-monash --output pythia_eec_charm_correl_15_D${mode}.root &
 done
 
 #D0 mode 2 is selecting events with D0 AND replacing the two daughters with D0
