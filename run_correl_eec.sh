@@ -16,7 +16,8 @@ ncounts=20000
 
 ncounts=5000
 
-for mode in 0 1 2 3 4
+#for mode in 0 1 2 3 4
+for mode in 4
 do
 	dstaropt=""
 	if [ ${mode} -eq 3 ] || [ ${mode} -eq 4 ]; then

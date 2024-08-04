@@ -71,6 +71,13 @@ def is_Dstar_daughter(p, event):
       return event[m]
   return False
 
+def is_D0_daughter(p, event):
+  mothers = p.motherList()
+  for m in mothers:
+    if abs(event[m].id()) == 421:
+      return event[m]
+  return False
+
 # D0 modes:
 # 0 - no D0 selection
 # 1 - D0 selection
@@ -80,6 +87,156 @@ def is_Dstar_daughter(p, event):
 
 # important switch: veto D* daughters --vetoDstar
 
+# class that operates on pythia8 events
+# find jets on parton level
+# find jets on hadron level using only charged visible hadrons
+# match the hadron and parton jets via _deltaR(R) criterion
+# calculate EEC for both parton and hadron jets
+# calculate EEC for charged particles in the hadron jets
+# write the results to a root file as ntuple
+# the ntuple has the following structure:
+# ptjet, ptjetch, ptlead, ptleadch, dr, eec
+# ptjet - pT of the jet
+# ptjetch - pT of the charged jet
+# ptlead - pT of the leading particle in the jet
+# ptleadch - pT of the leading charged particle in the jet
+# dr - delta R between the particles
+# eec - EEC value
+# the ntuple is filled for each jet in the event
+# the event is selected if at least one jet is found
+
+class Pythia8JetEECAnalysisCorrel(object):
+  def __init__(self, name, config):
+    self.config = config
+
+    self.D0_selector = fj.SelectorAbsRapMax(self.config.D0_abs_eta_max) * fj.SelectorPtMin(self.config.D0_pt_min) * fj.SelectorPtMax(self.config.D0_pt_max)
+    self.ch_hadron_selector = fj.SelectorPtMin(self.config.part_pt_min) * fj.SelectorAbsEtaMax(self.config.part_abs_eta_max)
+
+    self.rf = SingleRootFile(fname=config.output)
+    self.rf.root_file.cd()
+    stn = f'tn_{self.name}'
+    self.tn_jet = ROOT.TNtuple(f'{stn}_jet', 'tn_jet', 'ptjet:ptjetch:ptlead:ptleadch')
+    self.tn_eec = ROOT.TNtuple(f'{stn}_eec', 'tn_eec', 'ptjet:ptjetch:ptlead:ptleadch:dr:eec')
+    self.tn_eec_ch = ROOT.TNtuple(f'{stn}_eec_ch', 'tn_eec_ch', 'ptjet:ptjetch:ptlead:ptleadch:dr:eec')
+    
+  def get_charged_particles_D0(self, event, ignore_Dstar = True):
+    D0_list = []
+    D0_list_idx = []
+    plist = []
+    for ip, p in enumerate([_p for _p in event if _p.isFinal() and _p.isVisible() and _p.isCharged()]):
+      if not self.ch_hadron_selector(p):
+        continue
+      # if p is a charged pion or a charged kaon check if it is a daughter of a D0
+      if abs(p.id()) == 211 or abs(p.id()) == 321:
+        D0 = is_D0_daughter(p, event)
+        if D0:
+          if ignore_Dstar:
+            if is_Dstar_daughter(D0, event):
+              continue
+          if not self.D0_selector(D0):
+            continue
+          if D0.index() in D0_list_idx:
+            continue
+          D0_list_idx.append(D0.index())
+          D0_list.append(D0)
+          plist.append(D0)
+        else:
+          plist.append(p)
+      else:
+        plist.append(p)
+    if len(D0_list) == 0:
+      return False
+    _h = vector[fj.PseudoJet]()
+    for p in plist:
+      psj = fj.PseudoJet(p.px(), p.py(), p.pz(), p.e())
+      if abs(p.id()) == 421:
+        psj.set_user_index(2)
+      psj.set_user_index(1)
+      _h.push_back(psj)
+    h_selected = self.ch_hadron_selector(plist)
+    if len(h_selected) == 0:
+      return False
+    idxs = [psj.user_index() for psj in h_selected]
+    if 2 not in idxs:
+      return False
+    return h_selected
+
+  def analyze(self, pythia, rf):
+      # get partons in the last stage before hadronization
+      partons = vector[fj.PseudoJet]([fj.PseudoJet(p.px(), p.py(), p.pz(), p.e()) for p in pythia.event if (p.isParton() and (p.isFinal() or (71 <= abs(p.status()) <= 79)))])
+      # get hadrons
+      hadrons = vector[fj.PseudoJet]([fj.PseudoJet(p.px(), p.py(), p.pz(), p.e()) for p in pythia.event if p.isFinal() and p.isVisible()])
+      ch_hadrons = vector[fj.PseudoJet]([fj.PseudoJet(p.px(), p.py(), p.pz(), p.e()) for p in pythia.event if p.isFinal() and p.isVisible() and p.isCharged()])
+      # get ch hadrons with daughters of the D0 replaced by the D0
+      ch_hadrons_D0 = self.get_charged_particles_D0(pythia.event)
+      if ch_hadrons_D0 is False:
+        return False
+      
+      # now run the jet finders
+      jet_def_parton = fj.JetDefinition(fj.antikt_algorithm, self.config.jet_R0)
+      jet_def_hadron = fj.JetDefinition(fj.antikt_algorithm, self.config.jet_R0)
+      jet_selector = fj.SelectorPtMin(self.config.jet_pt_min) * fj.SelectorAbsEtaMax(self.config.jet_abs_eta_max)
+
+      jets_hadron_D0 = fj.sorted_by_pt(self.jet_selector(self.jet_def_hadron(ch_hadrons_D0)))
+      if len(jets_hadron_D0) == 0:
+        return False
+      
+      D0_jets = []
+      for j in jets_hadron_D0:
+        c_idxs = [p.user_index() for p in j.constituents()]
+        if 2 not in c_idxs:
+          continue
+        D0_jets.append(j)
+        
+      if len(D0_jets) == 0:
+        return False
+      
+      # find jets on parton level
+      jets_parton = fj.sorted_by_pt(jet_selector(jet_def_parton(partons)))
+      
+      # fill things for matched jets
+      # self.tn_jet = ROOT.TNtuple(f'{stn}_jet', 'tn_jet', 'ptjet:ptjetch:ptlead:ptleadch')
+      # self.tn_eec = ROOT.TNtuple(f'{stn}_eec', 'tn_eec', 'ptjet:ptjetch:ptlead:ptleadch:dr:eec')
+      # self.tn_eec_ch = ROOT.TNtuple(f'{stn}_eec_ch', 'tn_eec_ch', 'ptjet:ptjetch:ptlead:ptleadch:dr:eec')
+
+      jet_pairs = []
+      for j in jets_parton:
+        for jD0 in D0_jets:
+          dr = j.delta_R(jD0)
+          if dr < self.config.jet_R0:
+            jet_pairs.append([j, jD0])
+
+      if len(jet_pairs) == 0:
+        return False
+      
+      # fill the ntuples
+      for j, jD0 in jet_pairs:
+        ptlead = fj.sorted_by_pt(j.constituents())[0].perp()
+        ptleadch = fj.sorted_by_pt(jD0.constituents())[0].perp()
+        self.tn_jet.Fill(j.perp(), jD0.perp(), ptlead, ptleadch)
+        # calculate EEC for parton jet
+        dr, eec = self.calc_eec(j)
+        for d, e in zip(dr, eec):
+          self.tn_eec.Fill(j.perp(), jD0.perp(), ptlead, ptleadch, d, e)
+        # calculate EEC for particles in the hadron jet
+        dr, eec = self.calc_eec(jD0)
+        for d, e in zip(dr, eec):
+          self.tn_eec_ch.Fill(j.perp(), jD0.perp(), ptlead, ptleadch, d, e)
+          
+      return len(jet_pairs)
+        
+  def calc_eec(self, j, ptcut=1.0):
+    _parts_cut = [p for p in j.constituents() if p.perp() >= ptcut]
+    _pairs = list(itertools.product(_parts_cut, repeat=2))
+    dr = []
+    eec = []
+    for first, second in _pairs:
+      dr.append(first.delta_R(second))
+      eec.append(first.perp() * second.perp() / pow(j.perp(), 2.)
+    return dr, eec
+
+      
+    
 def main():
     parser = argparse.ArgumentParser(description='read hepmc and analyze eecs', prog=os.path.basename(__file__))
     pyconf.add_standard_pythia_args(parser)
