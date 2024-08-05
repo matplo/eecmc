@@ -1,0 +1,113 @@
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#logx 1
+#y d#Sigma_{EEC}/dR_{L}
+#x R_{L}
+
+analysis_results_h_tn_jet_parton.root 		:h_eec1_eec :p  : title=h_eec1_eec
+analysis_results_h_tn_jet_parton.root 		:h_eec1_ptlead5_eec :p  : title=h_eec1_ptlead5_eec
+analysis_results_h_tn_jet_parton.root 		:h_eec1_chsel_eec :p  : title=h_eec1_chsel_eec
+analysis_results_h_tn_jet_parton.root 		:h_eec1_ptlead5_chsel_eec :p  : title=h_eec1_ptlead5_chsel_eec
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title selected on full jet pT
+#legend pos=ul
+#logx 1
+#y d#Sigma_{EEC}/dR_{L}
+#x R_{L}
+
+#xrange 1e-2, 1
+#maxy 2.1
+
+analysis_results_h_tn_jet_parton.root			:h_eec1_eec :p  : title=parton
+analysis_results_h_tn_jet_hadron.root			:h_eec1_eec :p  : title=hadron
+analysis_results_h_tn_jet_charged.root		:h_eec1_eec :p  : title=h #pm
+analysis_results_h_tn_jet_D0.root					:h_eec1_eec :p  : title=h D^{0}
+analysis_results_h_tn_jet_D0Kpi.root			:h_eec1_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+}
+
+## this is DATA
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p +k32 +a75: title=Data 
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_sys :serror -k noleg +a20: title=Data 10 < p_{T,jet}^{h#pm} < 15, 5 < #it{p}_{T}^{D^{0}} < 15
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title charge E-scale selected
+#legend pos=ul
+#logx 1
+#y d#Sigma_{EEC}/dR_{L}
+#x R_{L}
+
+#xrange 1e-2, 1
+#maxy 2.1
+
+analysis_results_h_tn_jet_parton.root			:h_eec1_chsel_eec :p  : title=parton
+analysis_results_h_tn_jet_hadron.root			:h_eec1_chsel_eec :p  : title=hadron
+analysis_results_h_tn_jet_charged.root		:h_eec1_chsel_eec :p  : title=h #pm
+analysis_results_h_tn_jet_D0.root					:h_eec1_chsel_eec :p  : title=h D^{0}
+analysis_results_h_tn_jet_D0Kpi.root			:h_eec1_chsel_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+}
+
+## this is DATA
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p +k32 +a75: title=Data 
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_sys :serror -k noleg +a20: title=Data 10 < p_{T,jet}^{h#pm} < 15, 5 < #it{p}_{T}^{D^{0}} < 15
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title charge E-scale selected p_{T}^{lead} > 5 GeV
+#legend pos=ul
+#logx 1
+#y d#Sigma_{EEC}/dR_{L}
+#x R_{L}
+
+#xrange 1e-2, 1
+#maxy 2.1
+
+analysis_results_h_tn_jet_parton.root			:h_eec1_ptlead5_chsel_eec :p  : title=parton
+analysis_results_h_tn_jet_hadron.root			:h_eec1_ptlead5_chsel_eec :p  : title=hadron
+analysis_results_h_tn_jet_charged.root		:h_eec1_ptlead5_chsel_eec :p  : title=h #pm
+analysis_results_h_tn_jet_D0.root					:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0}
+analysis_results_h_tn_jet_D0Kpi.root			:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+}
+
+## this is DATA
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p +k32 +a75: title=Data 
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_sys :serror -k noleg +a20: title=Data 10 < p_{T,jet}^{h#pm} < 15, 5 < #it{p}_{T}^{D^{0}} < 15
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title charge E-scale selected p_{T}^{lead} > 5 GeV
+#legend pos=ul title=scale=0.75
+#logx 1
+#y d#Sigma_{EEC}/dR_{L}
+#x R_{L}
+
+#xrange 1e-2, 1
+#maxy 2.1
+
+# analysis_results_h_tn_jet_parton.root			:h_eec1_ptlead5_chsel_eec :p  : title=parton,,scale=0.75
+analysis_results_h_tn_jet_hadron.root			:h_eec1_ptlead5_chsel_eec :p  : title=hadron,,scale=0.75
+analysis_results_h_tn_jet_charged.root		:h_eec1_ptlead5_chsel_eec :p  : title=h #pm,,scale=0.75
+analysis_results_h_tn_jet_D0.root					:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0},,scale=0.75
+analysis_results_h_tn_jet_D0Kpi.root			:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+},,scale=0.75
+
+## this is DATA
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p +k32 +a75: title=Data 
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_sys :serror -k noleg +a20: title=Data 10 < p_{T,jet}^{h#pm} < 15, 5 < #it{p}_{T}^{D^{0}} < 15
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p +k32 +a75: title=Data 
+
+## pQCD from Kyle
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root                :graph10_15 :l +l1 +a80 x0: title=jet p_{T} 10-15 FULL E-SCALE,,scale=1.0
+

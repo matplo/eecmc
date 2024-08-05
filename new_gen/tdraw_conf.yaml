@@ -1,0 +1,86 @@
+eec:
+  - output: {{output}}
+    mode: "recreate"
+  - h_jet_pt:
+      file: {{input}}
+      tree: {{tn_jet}}
+      xrange: [0, 50]
+      xnbins: 50
+      xbins: linear
+      var: ptjet
+      cond: "( ptjet > {{jet_min_pt}} && ptjet < {{jet_max_pt}} && abs(etajet) < 0.5 )"
+  - h_jet_pt_lead5:
+      file: {{input}}
+      tree: {{tn_jet}}
+      xrange: [0, 50]
+      xnbins: 50
+      xbins: linear
+      var: ptjet
+      cond: "( ptjet > {{jet_min_pt}} && ptjet < {{jet_max_pt}} && (ptlead>5) && abs(etajet) < 0.5 )"
+
+  - h_jet_pt_chsel:
+      file: {{input}}
+      tree: {{tn_jet}}
+      xrange: [0, 50]
+      xnbins: 50
+      xbins: linear
+      var: ptjet
+      cond: "( ptjetch > {{jet_min_pt}} && ptjetch < {{jet_max_pt}} && abs(etajet) < 0.5 )"
+  - h_jet_pt_lead5_chsel:
+      file: {{input}}
+      tree: {{tn_jet}}
+      xrange: [0, 50]
+      xnbins: 50
+      xbins: linear
+      var: ptjet
+      cond: "( ptjetch > {{jet_min_pt}} && ptjetch < {{jet_max_pt}} && (ptlead>5) && abs(etajet) < 0.5 )"
+
+  - h_eec1:
+      file: {{input}}
+      tree: {{tn_jet}}_eec
+      xrange: [0.01, 1]
+      xnbins: 25
+      xbins: log
+      # xbins: /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root:h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central
+      xbins: log
+      var: dr
+      cond: "(eec) * ( ptjet > {{jet_min_pt}} && ptjet < {{jet_max_pt}} && abs(etajet) < 0.5 )"
+      scale: 1./h_jet_pt.Integral()
+      bw : True
+  - h_eec1_ptlead5:
+      file: {{input}}
+      tree: {{tn_jet}}_eec
+      xrange: [0.01, 1]
+      xnbins: 25
+      xbins: log
+      # xbins: /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root:h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central
+      xbins: log
+      var: dr
+      cond: "(eec) * ( ptjet > {{jet_min_pt}} && ptjet < {{jet_max_pt}} && ptlead>5 && abs(etajet) < 0.5)"
+      scale: 1./h_jet_pt_lead5.Integral()
+      bw : True
+
+  - h_eec1_chsel:
+      file: {{input}}
+      tree: {{tn_jet}}_eec
+      xrange: [0.01, 1]
+      xnbins: 25
+      xbins: log
+      # xbins: /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root:h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central
+      xbins: log
+      var: dr
+      cond: "(eec) * ( ptjetch > {{jet_min_pt}} && ptjetch < {{jet_max_pt}} && abs(etajet) < 0.5 )"
+      scale: 1./h_jet_pt_chsel.Integral()
+      bw : True
+  - h_eec1_ptlead5_chsel:
+      file: {{input}}
+      tree: {{tn_jet}}_eec
+      xrange: [0.01, 1]
+      xnbins: 25
+      xbins: log
+      # xbins: /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root:h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central
+      xbins: log
+      var: dr
+      cond: "(eec) * ( ptjetch > {{jet_min_pt}} && ptjetch < {{jet_max_pt}} && ptlead>5 && abs(etajet) < 0.5)"
+      scale: 1./h_jet_pt_lead5_chsel.Integral()
+      bw : True
