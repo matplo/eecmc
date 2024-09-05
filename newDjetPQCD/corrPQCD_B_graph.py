@@ -47,53 +47,74 @@ def create_graph(filename, hcorrection=None):
 
     return graph
 
+import array
+
+
+def add_x_errors(graph):
+    # Get the number of points in the graph
+    n = graph.GetN()
+
+    # Loop over the points in the graph
+    for i in range(n):
+        # Get the x and y values of the current point
+        x, y = array.array("d", [0.0]), array.array("d", [0.0])
+        graph.GetPoint(i, x, y)
+
+        # Calculate the x error
+        if i < n - 1:
+            # Get the x value of the next point
+            x_next, y_next = array.array("d", [0.0]), array.array("d", [0.0])
+            graph.GetPoint(i + 1, x_next, y_next)
+
+            # Calculate the difference between the x values
+            dx = x_next[0] - x[0]
+
+            # Set the x error to 10% of the difference
+            x_error = 0.3 * dx
+            # x_error = 0.5 * dx
+        else:
+            # For the last point, use the same x error as for the previous point
+            x_error = graph.GetErrorX(i - 1)
+
+        # Set the x error
+        graph.SetPointError(
+            i, x_error, x_error, graph.GetErrorYlow(i), graph.GetErrorYhigh(i)
+        )
+
+    return graph
+
 import os
 fname_10_15 = "/Users/ploskon/devel/eecmc/pQCD/fromKyle/10to15.txt"
 fname_15_30 = "/Users/ploskon/devel/eecmc/pQCD/fromKyle/15to30.txt"
 graph10_15 = create_graph(fname_10_15)
 graph15_30 = create_graph(fname_15_30)
 
-# Open the ROOT files
-file1 = ROOT.TFile.Open("/Users/ploskon/devel/eecmc/unfold/EEC_DKyle.root")
-file2 = ROOT.TFile.Open("AnalysisResultsFinal_D0_charmNOdecays_comparison.root")
-
+# Open the ROOT file
+file_corr = ROOT.TFile.Open("AnalysisResultsFinal_D0_charmNOdecays_comparison.root")
 # Retrieve the histograms
-hist_numerator = file1.Get("h_10_15_logx")
-hist_denominator = file2.Get("hratio_pt10-15_R0.4_D0_charmNOdecays_comparison")
+hist_corr_10_15 = file_corr.Get("hratio_pt10-15_R0.4_D0_charmNOdecays_comparison")
+hist_corr_15_30 = file_corr.Get("hratio_pt15-30_R0.4_D0_charmNOdecays_comparison")
 
-graph10_15_corr = create_graph(fname_10_15, hist_denominator)
-graph15_30_corr = create_graph(fname_15_30, hist_denominator)
-
-# Create a new histogram for the ratio
-hist_ratio = hist_numerator.Clone("hist_ratio")
-hist_ratio.Reset()
-
-# Loop over the bins of the numerator histogram
-for bin in range(1, hist_numerator.GetNbinsX() + 1):
-    num_content = hist_numerator.GetBinContent(bin)
-    x = hist_numerator.GetBinCenter(bin)
-    dbin = hist_denominator.FindBin(x)
-    denom_content = hist_denominator.GetBinContent(dbin)
-
-    # Avoid division by zero
-    if denom_content != 0:
-        # ratio = num_content / denom_content
-        ratio = num_content * denom_content
-    else:
-        ratio = 0
-
-    print('x:', x, 'dbin: ', dbin, 'bin: ', bin, 'num_content: ', num_content, 'denom_content: ', denom_content, 'ratio: ', ratio)
-    hist_ratio.SetBinContent(bin, ratio)
+graph10_15_corr = create_graph(fname_10_15, hist_corr_10_15)
+graph15_30_corr = create_graph(fname_15_30, hist_corr_15_30)
 
 # Save the new histogram to a file
-output_file = ROOT.TFile.Open("hist_ratio_output.root", "RECREATE")
-hist_ratio.Write()
+output_file = ROOT.TFile.Open("pQCD_Djet_corrected.root", "RECREATE")
 graph10_15.SetName('pQCD_10to15')
+graph10_15.SetTitle("pQCD_10to15")
 graph10_15.Write()
 graph10_15_corr.SetName("pQCD_10to15_corr")
+graph10_15_corr.SetTitle("pQCD_10to15_corr")
 graph10_15_corr.Write()
+
+graph15_30.SetName("pQCD_15to30")
+graph15_30.SetTitle("pQCD_15to30")
+graph15_30.Write()
+graph15_30_corr.SetName("pQCD_15to30_corr")
+graph15_30_corr.SetTitle("pQCD_15to30_corr")
+graph15_30_corr.Write()
+
 output_file.Close()
 
 # Close the input files
-file1.Close()
-file2.Close()
+file_corr.Close()
