@@ -1,0 +1,73 @@
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#logx 1
+#maxy 3
+
+#legend 0.199,0.671,0.466,0.871, tx_size= 0.035 title=D-jets by Kyle Lee
+
+#x R_{L}
+#y d#Sigma_{EEC}
+#xrange 1e-2, 1
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p  : title=D-jet Data 10 < p_{T,jet} < 15, 5 < #it{p}_{T}^{D^{0}} < 6
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_sys :serror -k noleg +a20  : title=D-jet Data 10 < p_{T,jet} < 15, 5 < #it{p}_{T}^{D^{0}} < 6
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph10_15 :l +l1 +a80: title=jet p_{T} 10-15 FULL E-SCALE
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph10_15 :p +l1 +a20 -k serror noleg : title=10-15
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_15_30_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt15-30_Data_central :p  : title=D-jet Data 15 < p_{T,jet}^{h#pm} < 30, 5 < #it{p}_{T}^{D^{0}} < 30
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_15_30_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt15-30_Data_sys :serror -k noleg +a20  : title=D-jet Data 15 < p_{T,jet}^{h#pm} < 30, 5 < #it{p}_{T}^{D^{0}} < 30
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph15_30 :l +l1 +a80: title=jet p_{T} 15-30 FULL E-SCALE
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph15_30 :p +l1 +a20 -k serror noleg: title=15-30
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#logx 1
+#maxy 3
+
+#legend 0.199,0.671,0.466,0.871, tx_size= 0.035 title=D-jets by Kyle Lee
+
+#x R_{L}
+#y d#Sigma_{EEC}
+#xrange 1e-2, 1
+
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p  : title=D-jet Data 10 < p_{T,jet} < 15, 5 < #it{p}_{T}^{D^{0}} < 6
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_sys :serror -k noleg +a20  : title=D-jet Data 10 < p_{T,jet} < 15, 5 < #it{p}_{T}^{D^{0}} < 6
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph10_15 :l +l1 +a80: title=jet p_{T} 10-15 FULL E-SCALE,,scale=1.0
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph10_15 :p +l1 +a20 -k serror noleg : title=10-15,,scale=1.0
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph10_15_scaled :l +l1 +a80: title=jet p_{T} 10-15 CH E-SCALE,,scale=0.6
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph10_15_scaled :p +l1 +a20 -k serror noleg : title=10-15,,scale=0.6
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#logx 1
+#maxy 3
+
+#legend 0.199,0.671,0.466,0.871, tx_size= 0.035 title=D-jets by Kyle Lee
+
+#x R_{L}
+#y d#Sigma_{EEC}
+#xrange 1e-2, 1
+
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_15_30_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt15-30_Data_central :p  : title=D-jet Data 15 < p_{T,jet}^{h#pm} < 30, 5 < #it{p}_{T}^{D^{0}} < 30
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_15_30_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt15-30_Data_sys :serror -k noleg +a20  : title=D-jet Data 15 < p_{T,jet}^{h#pm} < 30, 5 < #it{p}_{T}^{D^{0}} < 30
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph15_30 :l +l1 +a80: title=jet p_{T} 15-30 FULL E-SCALE,,scale=1.0
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph15_30 :p +l1 +a20 -k serror noleg: title=15-30,,scale=1.0
+
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph15_30_scaled :l +l1 +a80: title=jet p_{T} 15-30 CH E-SCALE,,scale=0.6
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root 		:graph15_30_scaled :p +l1 +a20 -k serror noleg: title=15-30,,scale=0.6

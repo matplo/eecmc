@@ -1,0 +1,3 @@
+The first to fourth columns represent, in order: RL, minimum theory value, central theory value, and maximum theory value. The three theory values provide the uncertainties from scale variation. Please note that no normalization has been applied. You should
+ normalize the central curve as we discussed and use the same normalization factor for the minimum and maximum curves.
+ 
