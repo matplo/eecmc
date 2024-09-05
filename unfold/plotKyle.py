@@ -138,7 +138,8 @@ def make_histogram_from_graph_extrapolate(graph, hname, nbins = -1, logx=False):
     return hist
 
 import os  
-dname = "/Users/ploskon/Library/CloudStorage/Dropbox/2024/EECs/fromKyle/"
+# dname = "/Users/ploskon/Library/CloudStorage/Dropbox/2024/EECs/fromKyle/"
+dname = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../pQCD/fromKyle/')
 fname_10_15 = os.path.join(dname, "10to15.txt")
 fname_15_30 = os.path.join(dname, "15to30.txt")
 graph10_15 = add_x_errors(create_graph(fname_10_15))
