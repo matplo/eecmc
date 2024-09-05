@@ -1,0 +1,37 @@
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ur
+#maxy 3.1
+#logx 1
+/Users/ploskon/devel/eecmc/unfold/EEC_DKyle.root 		:h_10_15_logx :hist +w3 : title=HfromG logx
+/Users/ploskon/devel/eecmc/unfold/EEC_DKyle.root 		:h_10_15 :hist +w3 : title=HfromG 
+/Users/ploskon/devel/eecmc/unfold/EEC_DKyle.root 		:graph10_15 :p +a20 : title=Graph
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ur
+#maxy 3.1
+#logx 1
+/Users/ploskon/devel/eecmc/unfold/EEC_DKyle.root 		:graph15_30 :p +a20 : title=Graph
+/Users/ploskon/devel/eecmc/unfold/EEC_DKyle.root 		:h_15_30_logx :hist  +w3  : title=HfromG logx
+/Users/ploskon/devel/eecmc/unfold/EEC_DKyle.root 		:h_15_30 :hist +w3  : title=HfromG 
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#maxy 3.1
+#logx 0
+/Users/ploskon/devel/eecmc/unfold/EEC_DKyle.root 		:graph10_15 :p +a20 : title=Graph
+/Users/ploskon/devel/eecmc/unfold/EEC_DKyle.root 		:h_10_15_logx :hist +w3 -k: title=HfromG logx
+
+/Users/ploskon/devel/eecmc/unfold/EEC_DKyle.root 		:graph15_30 :p +a20 : title=Graph
+/Users/ploskon/devel/eecmc/unfold/EEC_DKyle.root 		:h_15_30_logx :hist  +w3  -k: title=HfromG logx
