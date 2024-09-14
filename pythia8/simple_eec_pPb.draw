@@ -4,23 +4,45 @@
 #date
 #title: smart group
 #legend pos=ur
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_jet_pt_eec :p  : title=h_jet_pt_eec
-#-----------------------
-#figure
-#geom 500x500
-#date
-#title: smart group
-#legend pos=ur
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_eec0_eec :p  : title=h_eec0_eec
+#xrange 10, 50
+#logy 1
+#x p_{T}^{jet}
+#y counts
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_jet_pt_eec :p +k1 : title=pp w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_nPDF_output_h.root 		:h_jet_pt_eec :hist +l1 -k  : title=pp w/ nPDF
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_output_h.root 		:h_jet_pt_eec :p +k2 : title=p-Pb with nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_jet_pt_eec :hist +l1 +k4 : title=p-Pb w/o nPDF
 
 #-----------------------
 #figure
 #geom 500x500
 #date
 #title: smart group
-#legend pos=ul
+#legend pos=ul title=20 < p_{T}^{jet} < 40 GeV/c        p_{T}^{part} > 0.15 GeV/c
 #logx 1
 #maxy 4
+#x R_{L}
+#y #Sigma_{EEC}
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_eec0_eec :p +k1 : title=pp w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_nPDF_output_h.root 		:h_eec0_eec :hist +l1 -k  : title=pp w/ nPDF
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_output_h.root 		:h_eec0_eec :p +k2 : title=p-Pb with nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_eec0_eec :hist +l1 +k4 : title=p-Pb w/o nPDF
+
+#scale index=0 fout=simple_eec_pPb_ratios_015.root
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul title=20 < p_{T}^{jet} < 40 GeV/c        p_{T}^{part} > 1 GeV/c
+#logx 1
+#maxy 4
+#x R_{L}
+#y #Sigma_{EEC}
 
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_eec1_eec :p +k1 : title=pp w/o nPDF
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_nPDF_output_h.root 		:h_eec1_eec :hist +l1 -k  : title=pp w/ nPDF
@@ -29,3 +51,37 @@
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_eec1_eec :hist +l1 +k4 : title=p-Pb w/o nPDF
 
 #scale index=0 fout=simple_eec_pPb_ratios.root
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend 0.199,0.488,0.52,0.871, title=20 < p_{T}^{jet} < 40 GeV/c        p_{T}^{part} > 0.15 GeV/c
+#y ratio
+#x R_{L}
+#logx 1
+#maxy 2
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_0 :p  : title=#frac{ pp w/ nPDF }{ pp w/o nPDF }
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_1 :p  : title=#frac{ p-Pb with nPDF }{ pp w/o nPDF }
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_2 :p  : title=#frac{ p-Pb w/o nPDF }{ pp w/o nPDF }
+
+#line 1e-2,1,1.,1,1,9,1
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend 0.199,0.488,0.52,0.871,  title=20 < p_{T}^{jet} < 40 GeV/c        p_{T}^{part} > 1 GeV/c
+#y ratio
+#x R_{L}
+#logx 1
+#maxy 2
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_0 :p  : title=#frac{ pp w/ nPDF }{ pp w/o nPDF }
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_1 :p  : title=#frac{ p-Pb with nPDF }{ pp w/o nPDF }
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_2 :p  : title=#frac{ p-Pb w/o nPDF }{ pp w/o nPDF }
+
+#line 1e-2,1,1.,1,1,9,1

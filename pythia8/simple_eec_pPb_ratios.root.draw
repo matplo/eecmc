@@ -9,6 +9,23 @@
 #logx 1
 #maxy 2
 
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_0 :p  : title=pp w/ nPDF / pp w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_1 :p  : title=p-Pb with nPDF / pp w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_2 :p  : title=p-Pb w/o nPDF / pp w/o nPDF
+
+#line 1e-2,1,1.,1,1,9,1
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ur
+#y ratio
+#x R_{L}
+#logx 1
+#maxy 2
+
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_0 :p  : title=pp w/ nPDF / pp w/o nPDF
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_1 :p  : title=p-Pb with nPDF / pp w/o nPDF
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_2 :p  : title=p-Pb w/o nPDF / pp w/o nPDF
