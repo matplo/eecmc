@@ -3,6 +3,7 @@
 # for pPb collisions
 # sqrt(s_NN) = sqrt(Z1*Z2 / A1 / A2) * E_p
 # Z for Pb is 82
+# https://inspirehep.net/literature/1469938
 
 # Beam settings for asymmetric collisions
 Beams:idA = 2212              # Beam A is a proton (p) with PDG ID 2212
