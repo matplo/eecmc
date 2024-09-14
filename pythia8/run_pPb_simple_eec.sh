@@ -16,7 +16,7 @@ run_pythia() {
 
 export -f run_pythia
 
-nev=10000
+nev=20000
 charged="--charged"
 
 #    "pythia_pPb_8TeV.cmnd"
@@ -37,4 +37,5 @@ for cmnd_file in "${cmnd_files[@]}"; do
 done
 
 # Run the commands in parallel with a progress bar
+# parallel --dry-run --bar ::: "${commands[@]}"
 parallel --bar ::: "${commands[@]}"

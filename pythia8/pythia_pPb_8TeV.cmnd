@@ -25,7 +25,10 @@ PhaseSpace:pThatMin = 20.0    # Minimum transverse momentum for hard subprocesse
 
 # Parton distribution functions (PDFs)
 PDF:pSet = LHAPDF6:CT14nlo    # Use the CT14nlo PDF set from LHAPDF (adjust based on your available PDF sets)
-PDF:beamB = LHAPDF6:EPPS16nlo_CT14nlo_Pb208
+# Set the PDF for beam A (proton)
+# PDF:beamA = LHAPDF6:CT14nlo
+# Set the nPDF for beam B (lead)
+PDF:pSetB = LHAPDF6:EPPS21nlo_CT18Anlo_Pb208
 
 # Optional: Enable soft QCD processes as well
 # SoftQCD:all = on              # Enable soft QCD processes (non-diffractive, elastic, single- and double-diffractive)
