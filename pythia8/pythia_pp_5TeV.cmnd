@@ -24,7 +24,8 @@ HardQCD:all = on              # Enable hard QCD processes (gg -> gg, qg -> qg, e
 PhaseSpace:pThatMin = 20.0    # Minimum transverse momentum for hard subprocesses (in GeV)
 
 # Parton distribution functions (PDFs)
-# PDF:pSet = LHAPDF6:CT14nlo    # Use the CT14nlo PDF set from LHAPDF (adjust based on your available PDF sets)
+PDF:pSet = LHAPDF6:CT14nlo    # Use the CT14nlo PDF set from LHAPDF (adjust based on your available PDF sets)
+# PDF:beamB = LHAPDF6:EPPS16nlo_CT14nlo_Pb208
 
 # Optional: Enable soft QCD processes as well
 # SoftQCD:all = on              # Enable soft QCD processes (non-diffractive, elastic, single- and double-diffractive)
