@@ -5,7 +5,7 @@ Beams:idA = 2212              # Beam A is a proton (p) with PDG ID 2212
 Beams:eA = 6500.0            # Proton beam energy = 6.5 TeV
 
 # Beams:idB = 1000822080        # Beam B is lead (Pb) with 208 nucleons
-Beams:idB = 2212        # Beam B is lead (Pb) with 208 nucleons
+Beams:idB = 2212        # Beam B
 Beams:eB = 2500.0             # B part beam energy
 
 # Center-of-mass frame setup for asymmetric energies
