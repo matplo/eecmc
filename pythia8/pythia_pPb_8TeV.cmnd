@@ -1,4 +1,4 @@
-# Proton-Lead (pPb) Collision at sqrt(sNN) = 8.06 TeV
+# Proton-Lead (pPb) Collision 
 
 # Beam settings for asymmetric collisions
 Beams:idA = 2212              # Beam A is a proton (p) with PDG ID 2212
