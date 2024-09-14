@@ -1,0 +1,31 @@
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ur
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_jet_pt_eec :p  : title=h_jet_pt_eec
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ur
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_eec0_eec :p  : title=h_eec0_eec
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#logx 1
+#maxy 4
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_eec1_eec :p +k1 : title=pp w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_nPDF_output_h.root 		:h_eec1_eec :hist +l1 -k  : title=pp w/ nPDF
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_output_h.root 		:h_eec1_eec :p +k2 : title=p-Pb with nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_eec1_eec :hist +l1 +k4 : title=p-Pb w/o nPDF
+
+#scale index=0 fout=simple_eec_pPb_ratios.root
