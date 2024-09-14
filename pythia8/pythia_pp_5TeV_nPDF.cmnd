@@ -31,8 +31,8 @@ PDF:pSet = LHAPDF6:CT14nlo    # Use the CT14nlo PDF set from LHAPDF (adjust base
 PDF:pSetB = LHAPDF6:EPPS21nlo_CT18Anlo_Pb208
 
 # Optional: Enable soft QCD processes as well
-# SoftQCD:all = on              # Enable soft QCD processes (non-diffractive, elastic, single- and double-diffractive)
-SoftQCD:all = off							# Disable soft QCD processes (non-diffractive, elastic, single- and double-diffractive)
+SoftQCD:all = on              # Enable soft QCD processes (non-diffractive, elastic, single- and double-diffractive)
+# SoftQCD:all = off							# Disable soft QCD processes (non-diffractive, elastic, single- and double-diffractive)
 
 # Multiparton interactions (MPI)
 MultipartonInteractions:ecmPow = 0.03344  # MPI settings for pPb collisions

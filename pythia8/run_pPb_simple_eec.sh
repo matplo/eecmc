@@ -18,6 +18,7 @@ export -f run_pythia
 
 nev=20000
 charged="--charged"
+charged=""
 
 #    "pythia_pPb_8TeV.cmnd"
 
@@ -25,6 +26,7 @@ charged="--charged"
 cmnd_files=(
     "pythia_pPb_5TeV.cmnd"
     "pythia_pPb_5TeV_nPDF.cmnd"
+	"pythia_pPb_5TeV_nPDF_argantyr.cmnd"
 )
 
 # Create a list of commands to run in parallel
