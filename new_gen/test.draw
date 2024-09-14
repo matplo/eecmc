@@ -8,10 +8,16 @@
 #y d#Sigma_{EEC}/dR_{L}
 #x R_{L}
 
-analysis_results_h_tn_jet_parton.root 		:h_eec1_eec :p  : title=h_eec1_eec
-analysis_results_h_tn_jet_parton.root 		:h_eec1_ptlead5_eec :p  : title=h_eec1_ptlead5_eec
-analysis_results_h_tn_jet_parton.root 		:h_eec1_chsel_eec :p  : title=h_eec1_chsel_eec
-analysis_results_h_tn_jet_parton.root 		:h_eec1_ptlead5_chsel_eec :p  : title=h_eec1_ptlead5_chsel_eec
+#xrange 1e-2, 1
+#maxy 2.1
+
+test_10_100k_h_tn_jet_parton.root 		:h_eec1_eec :p  : title=h_eec1_eec
+test_10_100k_h_tn_jet_parton.root 		:h_eec1_ptlead5_eec :p  : title=h_eec1_ptlead5_eec
+test_10_100k_h_tn_jet_parton.root 		:h_eec1_chsel_eec :p  : title=h_eec1_chsel_eec
+test_10_100k_h_tn_jet_parton.root 		:h_eec1_ptlead5_chsel_eec :p  : title=h_eec1_ptlead5_chsel_eec
+
+## pQCD from Kyle
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root                :graph10_15 :l +l1 +a80 x0: title=jet p_{T} 10-15 FULL E-SCALE,,scale=1.0
 
 #-----------------------
 #figure
@@ -26,15 +32,18 @@ analysis_results_h_tn_jet_parton.root 		:h_eec1_ptlead5_chsel_eec :p  : title=h_
 #xrange 1e-2, 1
 #maxy 2.1
 
-analysis_results_h_tn_jet_parton.root			:h_eec1_eec :p  : title=parton
-analysis_results_h_tn_jet_hadron.root			:h_eec1_eec :p  : title=hadron
-analysis_results_h_tn_jet_charged.root		:h_eec1_eec :p  : title=h #pm
-analysis_results_h_tn_jet_D0.root					:h_eec1_eec :p  : title=h D^{0}
-analysis_results_h_tn_jet_D0Kpi.root			:h_eec1_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+}
+test_10_100k_h_tn_jet_parton.root			:h_eec1_eec :p  : title=parton
+test_10_100k_h_tn_jet_hadron.root			:h_eec1_eec :p  : title=hadron
+test_10_100k_h_tn_jet_charged.root		:h_eec1_eec :p  : title=h #pm
+test_10_100k_h_tn_jet_D0.root					:h_eec1_eec :p  : title=h D^{0}
+test_10_100k_h_tn_jet_D0Kpi.root			:h_eec1_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+}
 
 ## this is DATA
 /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p +k32 +a75: title=Data 
 /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_sys :serror -k noleg +a20: title=Data 10 < p_{T,jet}^{h#pm} < 15, 5 < #it{p}_{T}^{D^{0}} < 15
+
+## pQCD from Kyle
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root                :graph10_15 :l +l1 +a80 x0: title=jet p_{T} 10-15 FULL E-SCALE,,scale=1.0
 
 #-----------------------
 #figure
@@ -49,15 +58,18 @@ analysis_results_h_tn_jet_D0Kpi.root			:h_eec1_eec :p  : title=h D^{0} #rightarr
 #xrange 1e-2, 1
 #maxy 2.1
 
-analysis_results_h_tn_jet_parton.root			:h_eec1_chsel_eec :p  : title=parton
-analysis_results_h_tn_jet_hadron.root			:h_eec1_chsel_eec :p  : title=hadron
-analysis_results_h_tn_jet_charged.root		:h_eec1_chsel_eec :p  : title=h #pm
-analysis_results_h_tn_jet_D0.root					:h_eec1_chsel_eec :p  : title=h D^{0}
-analysis_results_h_tn_jet_D0Kpi.root			:h_eec1_chsel_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+}
+test_10_100k_h_tn_jet_parton.root			:h_eec1_chsel_eec :p  : title=parton
+test_10_100k_h_tn_jet_hadron.root			:h_eec1_chsel_eec :p  : title=hadron
+test_10_100k_h_tn_jet_charged.root		:h_eec1_chsel_eec :p  : title=h #pm
+test_10_100k_h_tn_jet_D0.root					:h_eec1_chsel_eec :p  : title=h D^{0}
+test_10_100k_h_tn_jet_D0Kpi.root			:h_eec1_chsel_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+}
 
 ## this is DATA
 /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p +k32 +a75: title=Data 
 /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_sys :serror -k noleg +a20: title=Data 10 < p_{T,jet}^{h#pm} < 15, 5 < #it{p}_{T}^{D^{0}} < 15
+
+## pQCD from Kyle
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root                :graph10_15 :l +l1 +a80 x0: title=jet p_{T} 10-15 FULL E-SCALE,,scale=1.0
 
 #-----------------------
 #figure
@@ -72,15 +84,18 @@ analysis_results_h_tn_jet_D0Kpi.root			:h_eec1_chsel_eec :p  : title=h D^{0} #ri
 #xrange 1e-2, 1
 #maxy 2.1
 
-analysis_results_h_tn_jet_parton.root			:h_eec1_ptlead5_chsel_eec :p  : title=parton
-analysis_results_h_tn_jet_hadron.root			:h_eec1_ptlead5_chsel_eec :p  : title=hadron
-analysis_results_h_tn_jet_charged.root		:h_eec1_ptlead5_chsel_eec :p  : title=h #pm
-analysis_results_h_tn_jet_D0.root					:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0}
-analysis_results_h_tn_jet_D0Kpi.root			:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+}
+test_10_100k_h_tn_jet_parton.root			:h_eec1_ptlead5_chsel_eec :p  : title=parton
+test_10_100k_h_tn_jet_hadron.root			:h_eec1_ptlead5_chsel_eec :p  : title=hadron
+test_10_100k_h_tn_jet_charged.root		:h_eec1_ptlead5_chsel_eec :p  : title=h #pm
+test_10_100k_h_tn_jet_D0.root					:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0}
+test_10_100k_h_tn_jet_D0Kpi.root			:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+}
 
 ## this is DATA
 /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p +k32 +a75: title=Data 
 /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_sys :serror -k noleg +a20: title=Data 10 < p_{T,jet}^{h#pm} < 15, 5 < #it{p}_{T}^{D^{0}} < 15
+
+## pQCD from Kyle
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root                :graph10_15 :l +l1 +a80 x0: title=jet p_{T} 10-15 FULL E-SCALE,,scale=1.0
 
 #-----------------------
 #figure
@@ -95,11 +110,11 @@ analysis_results_h_tn_jet_D0Kpi.root			:h_eec1_ptlead5_chsel_eec :p  : title=h D
 #xrange 1e-2, 1
 #maxy 2.1
 
-# analysis_results_h_tn_jet_parton.root			:h_eec1_ptlead5_chsel_eec :p  : title=parton,,scale=0.75
-analysis_results_h_tn_jet_hadron.root			:h_eec1_ptlead5_chsel_eec :p  : title=hadron,,scale=0.75
-analysis_results_h_tn_jet_charged.root		:h_eec1_ptlead5_chsel_eec :p  : title=h #pm,,scale=0.75
-analysis_results_h_tn_jet_D0.root					:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0},,scale=0.75
-analysis_results_h_tn_jet_D0Kpi.root			:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+},,scale=0.75
+# test_10_100k_h_tn_jet_parton.root			:h_eec1_ptlead5_chsel_eec :p  : title=parton,,scale=0.75
+test_10_100k_h_tn_jet_hadron.root			:h_eec1_ptlead5_chsel_eec :p  : title=hadron,,scale=0.75
+test_10_100k_h_tn_jet_charged.root		:h_eec1_ptlead5_chsel_eec :p  : title=h #pm,,scale=0.75
+test_10_100k_h_tn_jet_D0.root					:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0},,scale=0.75
+test_10_100k_h_tn_jet_D0Kpi.root			:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+},,scale=0.75
 
 ## this is DATA
 /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p +k32 +a75: title=Data 
@@ -108,6 +123,54 @@ analysis_results_h_tn_jet_D0Kpi.root			:h_eec1_ptlead5_chsel_eec :p  : title=h D
 /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p +k32 +a75: title=Data 
 
 ## pQCD from Kyle
-
 /Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root                :graph10_15 :l +l1 +a80 x0: title=jet p_{T} 10-15 FULL E-SCALE,,scale=1.0
 
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title charge E-scale selected p_{T}^{lead} > 5 GeV
+#legend pos=ul title=scale=0.75
+#logx 1
+#y d#Sigma_{EEC}/dR_{L}
+#x R_{L}
+
+#xrange 1e-2, 1
+#maxy 2.1
+
+test_10_100k_h_tn_jet_parton.root			:h_eec1_ptlead5_chsel_eec :p  : title=parton
+/Users/ploskon/devel/eecmc/newFromB/file_EEC_charmvsD0_PYTHIA.root 		:h_EEC_charm_JetPt_10_15 :hist l -k +w8  : title=B's 10-15 parton
+
+test_10_100k_h_tn_jet_D0.root					:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0},,scale=0.75
+test_10_100k_h_tn_jet_D0Kpi.root			:h_eec1_ptlead5_chsel_eec :p  : title=h D^{0} #rightarrow K^{-} #pi^{+},,scale=0.75
+
+/Users/ploskon/devel/eecmc/newFromB/file_EEC_charmvsD0_PYTHIA.root 		:h_EEC_D0_JetPt_10_15_no_Dpt :hist l -k +w8  : title=B's 10-15 h-lvl any D0 pT
+/Users/ploskon/devel/eecmc/newFromB/file_EEC_charmvsD0_PYTHIA.root 		:h_EEC_D0_JetPt_10_15_Dpt_5_15 :hist l -k +w8  : title=B's 10-15 h-lvl D0 pT > 5
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+##title charge E-scale selected p_{T}^{lead} > 5 GeV
+#title 10-15 jet pT - debug MC vs. pQCD
+#legend pos=ul title=scale=1.0
+#logx 1
+#y d#Sigma_{EEC}/dR_{L}
+#x R_{L}
+
+#xrange 1e-2, 1
+#maxy 3.1
+
+/Users/ploskon/devel/eecmc/newFromB/file_EEC_charmvsD0_PYTHIA.root 		:h_EEC_charm_JetPt_10_15 :p : title=Beatrice's 10-15 PARTON LEVEL
+/Users/ploskon/devel/eecmc/newFromB/file_EEC_charmvsD0_PYTHIA.root 		:h_EEC_D0_JetPt_10_15_no_Dpt :hist l -k +w8  : title=B's 10-15 HADRON LEVEL (charged)
+/Users/ploskon/devel/eecmc/newFromB/file_EEC_charmvsD0_PYTHIA.root 		:h_EEC_D0_JetPt_10_15_Dpt_5_15 :hist l -k +w8  : title=B's 10-15 HADRON LEVEL (charged) D0 pT > 5
+
+## pQCD from Kyle
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/EEC_DKyle.root                :graph10_15 :l +l1 +a80 x0 +w5: title=Kyle's pQCD (errors suppressed)
+
+## this is DATA
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_central :p +k32 +a75: title=Preeti's Data 
+/Users/ploskon/Library/CloudStorage/Dropbox/2023/EEC/plottingOct3/D0jet_10_15_EEC_wPYTHIA_new.root          :h_EEC_JetPt_Djet_R0.4_pt10-15_Data_sys :serror -k noleg +a20: title=Data 10 < p_{T,jet}^{h#pm} < 15, 5 < #it{p}_{T}^{D^{0}} < 15
+
+## MP's study
+test_10_100k_h_tn_jet_hadron.root			:h_eec1_ptlead5_chsel_eec :p  : title=MP's HADRON LEVEL (selected on charged E-scale)

@@ -31,6 +31,10 @@ for tn_jet in tn_jet_parton tn_jet_hadron tn_jet_charged tn_jet_D0 tn_jet_D0Kpi
 do
 	foutput=${file_output%.*}_${tn_jet}.root
 	yaml_file=${foutput%.*}_tdraw_conf.yaml
-	lre tdraw_conf.yaml --define input="$file_input" output="$foutput" jet_min_pt=10 jet_max_pt=15 tn_jet=${tn_jet} > ${yaml_file}
+	if [[ $file_input == *"_10_"* ]]; then
+			lre tdraw_conf.yaml --define input="$file_input" output="$foutput" jet_min_pt=10 jet_max_pt=15 tn_jet=${tn_jet} > ${yaml_file}
+	else
+		lre tdraw_conf.yaml --define input="$file_input" output="$foutput" jet_min_pt=15 jet_max_pt=30 tn_jet=${tn_jet} > ${yaml_file}
+	fi
 	../draw_from_yaml.py -c ${yaml_file}
 done
