@@ -16,9 +16,9 @@ run_pythia() {
 
 export -f run_pythia
 
-nev=20000
+nev=40000
 charged="--charged"
-charged=""
+# charged=""
 
 #    "pythia_pPb_8TeV.cmnd"
 
@@ -26,6 +26,7 @@ charged=""
 cmnd_files=(
     "pythia_pPb_5TeV.cmnd"
     "pythia_pPb_5TeV_nPDF.cmnd"
+    "pythia_pPb_5TeV_argantyr.cmnd"
 	"pythia_pPb_5TeV_nPDF_argantyr.cmnd"
 )
 

@@ -14,7 +14,10 @@
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_output_h.root 		:h_jet_pt_eec :p +k2 : title=p-Pb with nPDF
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_jet_pt_eec :hist +l1 +k4 : title=p-Pb w/o nPDF
 
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_argantyr_output_h.root 		:h_jet_pt_eec :p +k6 : title=p-Pb Argantyr w/o nPDF
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_h.root 		:h_jet_pt_eec :p +k6 : title=p-Pb Argantyr with nPDF
+
+#comment 0.0656,0.207,0.667,0.308, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 
 #-----------------------
 #figure
@@ -34,9 +37,12 @@
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_output_h.root 		:h_eec0_eec :p +k2 : title=p-Pb with nPDF
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_eec0_eec :hist +l1 +k4 : title=p-Pb w/o nPDF
 
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_argantyr_output_h.root 		:h_eec0_eec :p +k6 : title=p-Pb Argantyr w/o nPDF
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_h.root 		:h_eec0_eec :p +k6 : title=p-Pb Argantyr with nPDF
 
 #scale index=0 fout=simple_eec_pPb_ratios_015.root
+
+#comment 0.0656,0.207,0.667,0.308, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 
 #-----------------------
 #figure
@@ -56,44 +62,10 @@
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_output_h.root 		:h_eec1_eec :p +k2 : title=p-Pb with nPDF
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_eec1_eec :hist +l1 +k4 : title=p-Pb w/o nPDF
 
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_argantyr_output_h.root 		:h_eec1_eec :p +k6 : title=p-Pb Argantyr w/o nPDF
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_h.root 		:h_eec1_eec :p +k6 : title=p-Pb Argantyr with nPDF
 
 #scale index=0 fout=simple_eec_pPb_ratios.root
 
-#-----------------------
-#figure
-#geom 500x500
-#date
-#title: smart group
-#legend 0.199,0.488,0.52,0.871, title=20 < p_{T}^{jet} < 40 GeV/c        p_{T}^{part} > 0.15 GeV/c
-#y ratio
-#x R_{L}
-#logx 1
-#miny 0.6
-#maxy 2
+#comment 0.0656,0.207,0.667,0.308, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_0 :p  : title=#frac{ pp w/ nPDF }{ pp w/o nPDF }
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_1 :p  : title=#frac{ p-Pb with nPDF }{ pp w/o nPDF }
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_2 :p  : title=#frac{ p-Pb w/o nPDF }{ pp w/o nPDF }
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root     :o_3 :p  : title=#frac{ p-Pb Argantyr with nPDF }{ pp w/o nPDF }
-
-#line 1e-2,1,1.,1,1,9,1
-
-#-----------------------
-#figure
-#geom 500x500
-#date
-#title: smart group
-#legend 0.199,0.488,0.52,0.871,  title=20 < p_{T}^{jet} < 40 GeV/c        p_{T}^{part} > 1 GeV/c
-#y ratio
-#x R_{L}
-#logx 1
-#miny 0.6
-#maxy 2
-
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_0 :p  : title=#frac{ pp w/ nPDF }{ pp w/o nPDF }
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_1 :p  : title=#frac{ p-Pb with nPDF }{ pp w/o nPDF }
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_2 :p  : title=#frac{ p-Pb w/o nPDF }{ pp w/o nPDF }
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root     :o_3 :p  : title=#frac{ p-Pb Argantyr with nPDF }{ pp w/o nPDF }
-
-#line 1e-2,1,1.,1,1,9,1

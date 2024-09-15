@@ -1,0 +1,19 @@
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul title=p-Pb Argantyr events with 20 < p_{T}^{jet} < 40 GeV/c
+#comment 0.0656,0.207,0.667,0.308, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
+#y R_{pPb}
+#x p_{T} GeV/c
+#logx 1
+# p-Pb Argantyr w/ nPDF / p-Pb Argantyr w/o nPDF
+#xrange 0.1,30
+#miny 0.5
+#maxy 1.5
+/Users/ploskon/devel/eecmc/pythia8/pich_RpPb_forward_argantyr.root 		:o_0 :p +k4 : title=2 < #eta < 4
+/Users/ploskon/devel/eecmc/pythia8/pich_RpPb_central_argantyr.root 		:o_0 :p +k2 : title=|#eta| < 1
+/Users/ploskon/devel/eecmc/pythia8/pich_RpPb_backward_argantyr.root 		:o_0 :p +k1 : title=-4 < #eta < -2
+
+#line 1e-1,1,40.,1,1,9,1

@@ -1,0 +1,19 @@
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#xrange -5,5
+/Users/ploskon/devel/eecmc/pythia8/gaus_shift.root 		:g1 :l  : title=Gaus(x, #mu=0.0)
+/Users/ploskon/devel/eecmc/pythia8/gaus_shift.root 		:g2 :l  : title=Gaus(x, #mu=0.1)
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#xrange -5,5
+/Users/ploskon/devel/eecmc/pythia8/gaus_shift.root 		:hratio :p  : title=hratio
+/Users/ploskon/devel/eecmc/pythia8/gaus_shift.root 		:fpol2 :l +k4 +w10 : title=pol2
+

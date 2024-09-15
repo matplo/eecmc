@@ -7,6 +7,7 @@ files=(
 		"simple_eec_pythia_pp_5TeV_nPDF_output.root"
 		"simple_eec_pythia_pPb_5TeV_output.root"
 		"simple_eec_pythia_pPb_5TeV_nPDF_output.root"
+		"simple_eec_pythia_pPb_5TeV_argantyr_output.root"
 		"simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output.root"
 )
 

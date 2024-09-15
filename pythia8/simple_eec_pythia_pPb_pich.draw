@@ -1,0 +1,127 @@
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#logy 1
+#miny 100
+#x counts
+#x #sigma (mb)
+#xrange 0.164, 0.175
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_nev_xsec_eec : hist +f1001 +a50: title=pp w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_nPDF_output_h.root 		:h_nev_xsec_eec : hist +f1001 +a50: title=pp w/ nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_nev_xsec_eec : hist +f1001 +a50: title=p-Pb w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_output_h.root 		:h_nev_xsec_eec : hist +f1001 +a50: title=p-Pb with nPDF
+# /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_h.root 		:h_nev_xsec_eec : hist +f1001 +a50: title=p-Pb Argantyr w/ nPDF
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#logy 1
+#miny 100
+#x counts
+#x #sigma (mb)
+#xrange 20., 40.
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_h.root 		:h_nev_xsec_eec : hist +f1001 +a50 +k42 : title=p-Pb Argantyr w/ nPDF
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title charged pions |#eta| < 1
+#legend pos=ur
+#logx 1
+#logy 1
+#/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_pich_central_eec :p  : title=h_pich_central_eec
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_pich_central_yield_eec : hist +a50: title=pp w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_nPDF_output_h.root 		:h_pich_central_yield_eec : hist +a50: title=pp w/ nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_pich_central_yield_eec : hist +a50: title=p-Pb w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_output_h.root 		:h_pich_central_yield_eec : hist +a50: title=p-Pb with nPDF
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title charged pions |#eta| < 1
+#legend pos=ur
+#logx 1
+#logy 1
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_argantyr_output_h.root 		:h_pich_central_yield_eec : hist +a50 +k1 : title=p-Pb Argantyr w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_h.root 		:h_pich_central_yield_eec : hist +a50 +k42 +f1001: title=p-Pb Argantyr w/ nPDF
+
+#scale index=0 fout=pich_RpPb_central_argantyr.root
+
+## ,,scale=0.004985507246
+#RAA scale = 0.172/34.5 = 0.004985507246
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title charged pions 2 < #eta < 4
+#legend pos=ur
+#logx 1
+#logy 1
+#/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_pich_forward_yield_eec :p  : title=h_pich_forward_yield_eec
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_pich_forward_yield_eec : hist +a50: title=pp w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_nPDF_output_h.root 		:h_pich_forward_yield_eec : hist +a50: title=pp w/ nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_pich_forward_yield_eec : hist +a50: title=p-Pb w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_output_h.root 		:h_pich_forward_yield_eec : hist +a50: title=p-Pb with nPDF
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title charged pions 2 < #eta < 4
+#legend pos=ur
+#logx 1
+#logy 1
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_argantyr_output_h.root 		:h_pich_forward_yield_eec : hist +a50 +k1 : title=p-Pb Argantyr w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_h.root 		:h_pich_forward_yield_eec : hist +a50 +k42 +f1001: title=p-Pb Argantyr w/ nPDF
+
+#scale index=0 fout=pich_RpPb_forward_argantyr.root
+
+##,,scale=0.004985507246
+#RAA scale = 0.172/34.5 = 0.004985507246
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title charged pions -4 < #eta < -2
+#legend pos=ur
+#logx 1
+#logy 1
+#/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_pich_backward_yield_eec :p  : title=h_pich_backward_yield_eec
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_pich_backward_yield_eec : hist +a50: title=pp w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_nPDF_output_h.root 		:h_pich_backward_yield_eec : hist +a50: title=pp w/ nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_pich_backward_yield_eec : hist +a50: title=p-Pb w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_output_h.root 		:h_pich_backward_yield_eec : hist +a50: title=p-Pb with nPDF
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title charged pions -4 < #eta < -2
+#legend pos=ur
+#logx 1
+#logy 1
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_argantyr_output_h.root 		:h_pich_backward_yield_eec : hist +a50 +k1 : title=p-Pb Argantyr w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_h.root 		:h_pich_backward_yield_eec : hist +a50 +k42 +f1001: title=p-Pb Argantyr w/ nPDF
+
+#scale index=0 fout=pich_RpPb_backward_argantyr.root
+
+##,,scale=0.004985507246
+#RAA scale = 0.172/34.5 = 0.004985507246
