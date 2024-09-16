@@ -11,10 +11,12 @@
 #maxy 2
 #xrange 0.01, 0.8
 
+/Users/ploskon/devel/eecmc/pythia8/ppb_final_trk10.root 		:ratio_E2C_jetR4_2040_trk10 :p  : title=Data for p_{T}^{part} > 1 GeV/c
+
 # /Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_0 :p  : title=#frac{ pp w/ nPDF }{ pp w/o nPDF }
 # /Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_1 :p  : title=#frac{ p-Pb with nPDF }{ pp w/o nPDF }
 # /Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_2 :p  : title=#frac{ p-Pb w/o nPDF }{ pp w/o nPDF }
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root     :o_4 :p  : title=#frac{ p-Pb Argantyr with nPDF }{ pp w/o nPDF }
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root     :o_4 :hist l -k +w2 +l1  : title=#frac{ p-Pb Argantyr with nPDF }{ pp w/o nPDF }
 
 #line 1e-2,1,1.,1,1,9,1
 
@@ -33,10 +35,12 @@
 #maxy 2
 #xrange 0.01, 0.8
 
+/Users/ploskon/devel/eecmc/pythia8/ppb_final_trk2.root 		:ratio_E2C_jetR4_2040_trk2 :p  : title=Data for p_{T}^{part} > 0.15 GeV/c
+
 # /Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_0 :p  : title=#frac{ pp w/ nPDF }{ pp w/o nPDF }
 # /Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_1 :p  : title=#frac{ p-Pb with nPDF }{ pp w/o nPDF }
 # /Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_2 :p  : title=#frac{ p-Pb w/o nPDF }{ pp w/o nPDF }
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root     :o_4 :p  : title=#frac{ p-Pb Argantyr with nPDF }{ pp w/o nPDF }
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root     :o_4 :hist l -k +w2 +l1  : title=#frac{ p-Pb Argantyr with nPDF }{ pp w/o nPDF }
 
 #line 1e-2,1,1.,1,1,9,1
 
@@ -62,8 +66,8 @@
 # /Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root     :o_3 :p  : title=#frac{ p-Pb Argantyr w/o nPDF }{ pp w/o nPDF }
 # /Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root     :o_3 :p  : title=#frac{ p-Pb Argantyr w/o nPDF }{ pp w/o nPDF }
 
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root     :o_4 :p  : title=#frac{ p-Pb Argantyr with nPDF }{ pp w/o nPDF } for p_{T}^{part} > 0.15 GeV/c
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root     :o_4 :p  : title=#frac{ p-Pb Argantyr with nPDF }{ pp w/o nPDF } for p_{T}^{part} > 1 GeV/c
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root     :o_4 :hist l +w2 +l1  : title=#frac{ p-Pb Argantyr with nPDF }{ pp w/o nPDF } for p_{T}^{part} > 0.15 GeV/c
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root     :o_4 :hist l +w2 +l1  : title=#frac{ p-Pb Argantyr with nPDF }{ pp w/o nPDF } for p_{T}^{part} > 1 GeV/c
 
 #line 1e-2,1,1.,1,1,9,1
 
@@ -89,35 +93,37 @@
 #comment 0.0656,0.207,0.667,0.308, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 
 /Users/ploskon/devel/eecmc/pythia8/ppb_final_trk10.root 		:ratio_E2C_jetR4_2040_trk10 :p  : title=Data for p_{T}^{part} > 1 GeV/c
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root     :o_4 :hist l -k +w5 : title=Pythia8 for p_{T}^{part} > 1 GeV/c - Argantyr(p-Pb) with nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root     :o_4 :hist l +l1 -k +w2 : title=Pythia8 for p_{T}^{part} > 1 GeV/c - Argantyr(p-Pb) with nPDF
 
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root     :o_4 :hist l +w5 : title=Pythia8 for p_{T}^{part} > 0.15 GeV/c - Argantyr(p-Pb)
+/Users/ploskon/devel/eecmc/pythia8/ppb_final_trk2.root 		:ratio_E2C_jetR4_2040_trk2 :p  : title=Data for p_{T}^{part} > 0.15 GeV/c
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root     :o_4 :hist l +l1 -k +w2 : title=Pythia8 for p_{T}^{part} > 0.15 GeV/c - Argantyr(p-Pb)
 
 #-----------------------
 #figure
 #geom 500x500
 #date
 #title: smart group
-#legend 0.2,0.6,0.52,0.873,  title=Ratio of #Sigma_{EEC} for 20 < p_{T,ch}^{jet} < 40 GeV/c
+#legend 0.199,0.549,0.52,0.873,  title=Ratio of #Sigma_{EEC} for 20 < p_{T,ch}^{jet} < 40 GeV/c
 #y p-Pb/pp
 #x R_{L}
 #logx 1
 #miny 0.71
-#maxy 1.29
+#maxy 1.79
 #xrange 0.01, 0.85
 
 #line 1e-2,1,0.85,1,1,9,1
-#line 0.4,0.71,0.4,1.29,1,9,1
+#line 0.4,0.71,0.4,1.79,1,9,1
 #comment 0.768,0.143,0.883,0.211, tx_size=0.03 item=R_{L}=0.4
 
 #comment 0.0656,0.207,0.667,0.308, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 
 /Users/ploskon/devel/eecmc/pythia8/ppb_final_trk10.root 		:ratio_E2C_jetR4_2040_trk10 :p  : title=Data for p_{T}^{part} > 1 GeV/c
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root     :o_4 :hist l -k +w5 +l1: title=Pythia8 for p_{T}^{part} > 1 GeV/c - Argantyr(p-Pb) with nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root     :o_4 :hist l -k +w2 +l1: title=Pythia8 for p_{T}^{part} > 1 GeV/c - Argantyr(p-Pb) with nPDF
 
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_1 :hist l -k +w5  +l2: title=Pythia8 p_{T}^{part} > 1 GeV/c
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_3 :hist l -k +w5  +l9: title=Pythia8 for p_{T}^{part} > 1 GeV/c - Argantyr(p-Pb) w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_1 :hist l -k +w2  +l2: title=Pythia8 p_{T}^{part} > 1 GeV/c
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios.root 		:o_3 :hist l -k +w2  +l9: title=Pythia8 for p_{T}^{part} > 1 GeV/c - Argantyr(p-Pb) w/o nPDF
 
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root     :o_4 :hist l +w5 +l1: title=Pythia8 for p_{T}^{part} > 0.15 GeV/c - Argantyr(p-Pb) with nPDF
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_1 :hist l -k +w5 +l2 : title=Pythia8 p_{T}^{part} > 0.15 GeV/c
-/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_3 :hist l -k +w5 +l9 : title=Pythia8 for p_{T}^{part} > 0.15 GeV/c - Argantyr(p-Pb) w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/ppb_final_trk2.root 		:ratio_E2C_jetR4_2040_trk2 :p  : title=Data for p_{T}^{part} > 0.15 GeV/c
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root     :o_4 :hist l -k +w2 +l1: title=Pythia8 for p_{T}^{part} > 0.15 GeV/c - Argantyr(p-Pb) with nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_1 :hist l -k +w2 +l2 : title=Pythia8 p_{T}^{part} > 0.15 GeV/c
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pPb_ratios_015.root 		:o_3 :hist l -k +w2 +l9 : title=Pythia8 for p_{T}^{part} > 0.15 GeV/c - Argantyr(p-Pb) w/o nPDF

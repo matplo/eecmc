@@ -16,7 +16,7 @@ run_pythia() {
 
 export -f run_pythia
 
-nev=40000
+nev=100000
 charged="--charged"
 # charged=""
 
