@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ./utils.sh
+. ./util.sh
 
 files=(
 		"simple_eec_pythia_pp_5TeV_output.root"

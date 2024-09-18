@@ -17,7 +17,7 @@
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_argantyr_output_h.root 		:h_jet_pt_eec :p +k6 : title=p-Pb Argantyr w/o nPDF
 /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_h.root 		:h_jet_pt_eec :p +k6 : title=p-Pb Argantyr with nPDF
 
-#comment 0.0656,0.207,0.667,0.308, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
+#comment 0.0621,0.263,0.665,0.364, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 
 #-----------------------
 #figure
@@ -42,7 +42,7 @@
 
 #scale index=0 fout=simple_eec_pPb_ratios_015.root
 
-#comment 0.0656,0.207,0.667,0.308, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
+#comment 0.0621,0.263,0.665,0.364, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 
 #-----------------------
 #figure
@@ -67,5 +67,5 @@
 
 #scale index=0 fout=simple_eec_pPb_ratios.root
 
-#comment 0.0656,0.207,0.667,0.308, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
+#comment 0.0621,0.263,0.665,0.364, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 
