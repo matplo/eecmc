@@ -1,0 +1,111 @@
+eec:
+  - output: {{output}}
+    mode: "recreate"
+  - h_jet_pt:
+      file: {{input}}
+      tree: tn_jet
+      xrange: [0, 1000]
+      xnbins: 1000
+      xbins: linear
+      var: pt
+      cond: "(pt > 20) && (pt < 40)"
+  - h_nev_xsec:
+      file: {{input}}
+      tree: tn_events
+      xbins: auto
+      xnbins: 1000
+      var: xsec
+      cond: ""
+  - h_nev_ncoll:
+      file: {{input}}
+      tree: tn_events
+      xbins: auto
+      xnbins: 1000
+      var: ncoll
+      cond: ""
+      scale: 1./h_nev_xsec.GetEntries()
+      bw : True
+  - h_eec0:
+      file: {{input}}
+      tree: tn_eec_ptcut0.15
+      # xrange: [1e-4, 1]
+      # xnbins: 50
+      xrange: [1e-2, 1]
+      xnbins: 10
+      xbins: log
+      var: dr
+      cond: "(eec) * (ptjet > 20 && ptjet < 40)"
+      scale: 1./h_jet_pt.Integral()
+      bw : True
+  - h_eec1:
+      file: {{input}}
+      tree: tn_eec_ptcut1.0
+      # xrange: [1e-4, 1]
+      # xnbins: 50
+      xrange: [1e-2, 1]
+      xnbins: 10
+      xbins: log
+      var: dr
+      cond: "(eec) * (ptjet > 20 && ptjet < 40)"
+      scale: 1./h_jet_pt.Integral()
+      bw : True
+  - h_pich_central:
+      file: {{input}}
+      tree: tn_pich_jev
+      xrange: [0.1, 40]
+      xnbins: 20
+      xbins: log
+      var: pt
+      cond: "(pt > 0.15 && abs(eta) < 1)"
+      scale: 1./h_nev_xsec.GetEntries() * h_nev_xsec.GetMean()
+      bw : True
+  - h_pich_forward:
+      file: {{input}}
+      tree: tn_pich_jev
+      xrange: [0.1, 40]
+      xnbins: 20
+      xbins: log
+      var: pt
+      cond: "(pt > 0.15 && eta > 2 && eta < 4)"
+      scale: 1./h_nev_xsec.GetEntries() * h_nev_xsec.GetMean()
+      bw : True
+  - h_pich_backward:
+      file: {{input}}
+      tree: tn_pich_jev
+      xrange: [0.1, 40]
+      xnbins: 20
+      xbins: log
+      var: pt
+      cond: "(pt > 0.15 && eta < -2 && eta > -4)"
+      scale: 1./h_nev_xsec.GetEntries() * h_nev_xsec.GetMean()
+      bw : True
+  - h_pich_central_yield:
+      file: {{input}}
+      tree: tn_pich_jev
+      xrange: [0.1, 40]
+      xnbins: 20
+      xbins: log
+      var: pt
+      cond: "(pt > 0.15 && abs(eta) < 1)"
+      scale: 1./h_nev_xsec.GetEntries()
+      bw : True
+  - h_pich_forward_yield:
+      file: {{input}}
+      tree: tn_pich_jev
+      xrange: [0.1, 40]
+      xnbins: 20
+      xbins: log
+      var: pt
+      cond: "(pt > 0.15 && eta > 2 && eta < 4)"
+      scale: 1./h_nev_xsec.GetEntries()
+      bw : True
+  - h_pich_backward_yield:
+      file: {{input}}
+      tree: tn_pich_jev
+      xrange: [0.1, 40]
+      xnbins: 20
+      xbins: log
+      var: pt
+      cond: "(pt > 0.15 && eta < -2 && eta > -4)"
+      scale: 1./h_nev_xsec.GetEntries()
+      bw : True

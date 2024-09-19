@@ -42,6 +42,10 @@ run_pythia() {
 		# for reproducibility ...
 		local pythia_seed=123456
 
+		if [ -f ${output_file} ]; then
+				echo "File ${output_file} already exists. Skipping."
+				return
+		fi
     ./pythia8_simple_eec.py --py-cmnd ${cmnd_file} --nev ${nev} --jet-pt-min 20. ${charged} --py-pthatmin 20. --py-seed ${pythia_seed} -o ${output_file} 2>&1 | tee ${output_file%.root}.log
 }
 export -f run_pythia

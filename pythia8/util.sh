@@ -250,25 +250,20 @@ function check_flag()
 }
 export -f check_flag
 
-# Function to check if a specific flag is within $@
+# Function to check if a specific flag is within $@ and return its value
 function get_arg() 
 {
     local flag="$1"
     shift
-		this=false
     for arg in "$@"; do
-        if [ "$arg" == "$flag" ]; then
-            echo $flag
-						this=true
+        if [[ "$arg" == "$flag="* ]]; then
+            echo "${arg#*=}"
+            return
         fi
-				if [ "$this" == "true" ]; then
-					echo $arg
-					break
-				fi
     done
     echo ""
 }
-export -f check_flag
+export -f get_arg
 
 # Example usage of the function
 # force_flag=$(check_flag "--force" "$@")
