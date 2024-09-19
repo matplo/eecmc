@@ -46,8 +46,8 @@ module load eecmc.module
 module list
 
 # this was just a setup...
-nev=20000
-./run_pPb_nPDF_uncert.sh --cmnd=pythia_pPb_5TeV_nPDF.cmnd --nev=${nev} --nproc=24
-# ./run_pPb_nPDF_uncert.sh --cmnd=pythia_pPb_5TeV_nPDF_argantyr.cmnd --nev=${nev} --nproc=24
+nev=100000
+./run_pPb_nPDF_uncert.sh --cmnd=pythia_pPb_5TeV_nPDF.cmnd --nev=${nev} --nproc=48
+./run_pPb_nPDF_uncert.sh --cmnd=pythia_pPb_5TeV_nPDF_argantyr.cmnd --nev=${nev} --nproc=48
 
 cd ${savedir}

@@ -127,10 +127,13 @@ def main():
         rf.add(h0_central)
         rf.add(h0_plus)
         rf.add(h0_minus)
-        g0 = ROOT.TGraphAsymmErrors(h0)
+        # g0 = ROOT.TGraphAsymmErrors(h0)
+        g0 = ROOT.TGraphAsymmErrors(h0.GetNbinsX())
         g0.SetName(f'{h0.GetName()}_band_graph')
-        for ib in range(h0.GetNbinsX()):
-            # g0.SetPoint(ib, h0.GetBinCenter(ib), h0.GetBinContent(ib))
+        for ib in range(1, h0.GetNbinsX() + 1):
+            g0.SetPoint(ib, h0.GetBinCenter(ib), h0.GetBinContent(ib))
+            g0.SetPointEXlow(ib, h0.GetBinWidth(ib) / 2)
+            g0.SetPointEXhigh(ib, h0.GetBinWidth(ib) / 2)
             g0.SetPointEYhigh(ib, h0_plus.GetBinContent(ib))
             g0.SetPointEYlow(ib, h0_minus.GetBinContent(ib))
         rf.add(g0)
