@@ -1,0 +1,33 @@
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ur
+#logx 1
+#maxy 4
+/Users/ploskon/devel/eecmc/pythia8/pythia_std_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root 		:h_eec0_eec_band_graph :p  : title=h_eec0_eec
+/Users/ploskon/devel/eecmc/pythia8/pythia_std_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root 		:h_eec1_eec_band_graph :p  : title=h_eec1_eec
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#logx 1
+#maxy 4
+/Users/ploskon/devel/eecmc/pythia8/pythia_std_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root 		:h_eec0_eec_central 		:hist l : title=central
+/Users/ploskon/devel/eecmc/pythia8/pythia_std_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root 		:h_eec0_eec_band_graph 	:serror noleg +f1001: title=h_eec0_eec
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#logx 1
+#maxy 4
+
+/Users/ploskon/devel/eecmc/pythia8/pythia_std_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root 		:h_eec1_eec_central 		:hist l : title=central
+/Users/ploskon/devel/eecmc/pythia8/pythia_std_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root 		:h_eec1_eec_band_graph 	:l +l1 e4 +f1001 +a75 +k42: title=h_eec1_eec

@@ -69,3 +69,52 @@
 
 #comment 0.0621,0.263,0.665,0.364, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul title=20 < p_{T}^{jet} < 40 GeV/c        p_{T}^{part} > 1 GeV/c
+#logx 1
+#miny 0
+#maxy 4
+#x R_{L}
+#y #Sigma_{EEC}
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_eec1_eec :p +k1 : title=pp w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_nPDF_output_h.root 		:h_eec1_eec :hist +l1 -k  : title=pp w/ nPDF
+
+#/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_output_h.root 		:h_eec1_eec :p +k2 : title=p-Pb with nPDF
+#/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_output_h.root 		:h_eec1_eec :hist +l1 +k4 : title=p-Pb w/o nPDF
+
+#/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_argantyr_output_h.root 		:h_eec1_eec :p +k6 : title=p-Pb Argantyr w/o nPDF
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_h.root 		:h_eec1_eec :p +k6 : title=p-Pb Argantyr with nPDF
+
+# pythia_argantyr_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root: h_eec0_eec_band_graph : a5 : title=errors
+
+#scale index=0 fout=simple_eec_pPb_ratios.root
+
+#comment 0.0621,0.263,0.665,0.364, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul title=20 < p_{T}^{jet} < 40 GeV/c        p_{T}^{part} > 1 GeV/c
+#logx 1
+#miny 0
+#maxy 4
+#x R_{L}
+#y #Sigma_{EEC}
+
+#comment 0.0621,0.263,0.665,0.364, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
+
+# /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_h.root 		:h_eec1_eec :p +k6 : title=p-Pb Argantyr with nPDF
+
+# /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_output_h.root 		:h_eec1_eec :p +k1 : title=pp w/o nPDF
+# /Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pp_5TeV_nPDF_output_h.root 		:h_eec1_eec :hist +l1 -k  : title=pp w/ nPDF
+
+/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_smallnbin_h.root 		:h_eec0_eec :p +k6 : title=p-Pb Argantyr with nPDF
+# pythia_argantyr_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root: h_eec0_eec_band_graph :p : title=errors
+pythia_argantyr_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root: h_eec0_eec_band_graph :serror +f1001 -k : title=errors
