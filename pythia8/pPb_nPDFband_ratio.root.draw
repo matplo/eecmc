@@ -25,6 +25,8 @@
 #comment 0.394,0.692,0.996,0.793, tx_size=0.035 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 #comment 0.798,0.138,0.913,0.207, tx_size=0.03 item=R_{L}=0.4
 
+#line 1e-2,1,0.7,1,1,9,1
+
 #-----------------------
 #figure
 #geom 500x500
@@ -50,3 +52,85 @@
 
 #comment 0.394,0.692,0.996,0.793, tx_size=0.035 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 #comment 0.798,0.138,0.913,0.207, tx_size=0.03 item=R_{L}=0.4
+
+#line 1e-2,1,0.7,1,1,9,1
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Pythia 8.310
+#legend pos=ul title=20 < p_{T, ch}^{jet} < 40 GeV/c        p_{T}^{part} > 0.15 GeV/c
+#logx 1
+#miny 0.8
+#maxy 1.5
+#miny 0.5
+#maxy 2.3
+#y pPb/pp
+#x R_{L}
+#xrange 1e-2, 0.7
+
+/Users/ploskon/devel/eecmc/pythia8/ppb_final_trk2.root             :ratio_E2C_jetR4_2040_trk2 :p +k2 : title=ALICE Data 
+#for p_{T}^{part} > 0.15 GeV/c
+
+/Users/ploskon/devel/eecmc/pythia8/pPb_nPDFband_ratio.root 		:h_eec0_eec_eec_ratio_argantyr :l +l1 ex0 +k9 noleg: title=pPb nPDF Argantyr
+/Users/ploskon/devel/eecmc/pythia8/pPb_nPDFband_ratio.root 		:h_eec0_eec_eec_nPDFband_ratio_argantyr :E5 +f1001 +a20 -k: title=pPb nPDF Argantyr
+
+/Users/ploskon/devel/eecmc/pythia8/pPb_nPDFband_ratio.root 		:h_eec0_eec_eec_ratio :l +l1 ex0 +k1 noleg: title=pPb nPDF
+/Users/ploskon/devel/eecmc/pythia8/pPb_nPDFband_ratio.root 		:h_eec0_eec_eec_nPDFband_ratio :E5 +f1001 +a20 -k : title=pPb nPDF
+
+#comment 0.394,0.692,0.996,0.793, tx_size=0.035 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
+#comment 0.798,0.138,0.913,0.207, tx_size=0.03 item=R_{L}=0.4
+
+#line 1e-2,1,0.7,1,1,9,1
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Pythia 8.310
+#legend pos=ul title=20 < p_{T, ch}^{jet} < 40 GeV/c        p_{T}^{part} > 1 GeV/c
+#logx 1
+#miny 0.8
+#maxy 1.5
+#miny 0.5
+#maxy 2.3
+#y pPb/pp
+#x R_{L}
+#xrange 1e-2, 0.7
+
+/Users/ploskon/devel/eecmc/pythia8/ppb_final_trk10.root            :ratio_E2C_jetR4_2040_trk10 :p +k2 : title=ALICE Data
+
+/Users/ploskon/devel/eecmc/pythia8/pPb_nPDFband_ratio.root 		:h_eec1_eec_eec_ratio_argantyr :l +l1 ex0 +k9 noleg: title=pPb nPDF Argantyr
+/Users/ploskon/devel/eecmc/pythia8/pPb_nPDFband_ratio.root 		:h_eec1_eec_eec_nPDFband_ratio_argantyr :E5 +f1001 +a20 -k: title=pPb nPDF Argantyr
+
+/Users/ploskon/devel/eecmc/pythia8/pPb_nPDFband_ratio.root 		:h_eec1_eec_eec_ratio :l +l1 ex0 +k1 noleg: title=pPb nPDF
+/Users/ploskon/devel/eecmc/pythia8/pPb_nPDFband_ratio.root 		:h_eec1_eec_eec_nPDFband_ratio :E5 +f1001 +a20 -k : title=pPb nPDF
+
+#comment 0.394,0.692,0.996,0.793, tx_size=0.035 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
+#comment 0.798,0.138,0.913,0.207, tx_size=0.03 item=R_{L}=0.4
+
+#line 1e-2,1,0.7,1,1,9,1
+
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title ALICE Data
+#legend pos=ul title=20 < p_{T, ch}^{jet} < 40 GeV/c 
+#logx 1
+#miny 0.8
+#maxy 1.5
+#miny 0.5
+#maxy 2.3
+#y pPb/pp
+#x R_{L}
+#xrange 1e-2, 0.7
+
+/Users/ploskon/devel/eecmc/pythia8/ppb_final_trk10.root            :ratio_E2C_jetR4_2040_trk10 :p +k2 : title=ALICE Data p_{T}^{part} > 1 GeV/c
+/Users/ploskon/devel/eecmc/pythia8/ppb_final_trk2.root             :ratio_E2C_jetR4_2040_trk2 :p +k2 : title=ALICE Data p_{T}^{part} > 0.15 GeV/c
+
+#comment 0.798,0.138,0.913,0.207, tx_size=0.03 item=R_{L}=0.4
+
+#line 1e-2,1,0.7,1,1,9,1

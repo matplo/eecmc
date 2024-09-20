@@ -7,6 +7,13 @@ pPb_files=[ 'pythia_std_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root',
 
 pp_file='simple_eec_pythia_pp_5TeV_output_smallnbin_h.root'
 
+pPb_files=[ 'pythia_std_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root', 
+            'pythia_argantyr_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root',
+            '/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_output_h.root',
+            '/Users/ploskon/devel/eecmc/pythia8/simple_eec_pythia_pPb_5TeV_nPDF_argantyr_output_h.root']
+
+pp_file='simple_eec_pythia_pp_5TeV_output_h.root'
+
 import os
 import sys
 import ROOT
