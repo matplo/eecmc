@@ -1,0 +1,70 @@
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#logx 1
+#logy 1
+#maxy 99
+#miny 1e-3
+
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pp_h.root 		:h_eec0_eec :p  : title=p_{T, part} > 0.15 GeV/c -- pp
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pp_h.root 		:h_eec0_pconebg_eec :hist -k +f1001 +a20 : title=perp. cone background
+
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_h.root 		:h_eec0_eec :p  : title=p_{T, part} > 0.15 GeV/c -- pPb Argantyr
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_h.root 		:h_eec0_pconebg_eec :hist -k +f1001 +a20 : title=perp. cone background
+
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#logx 1
+#logy 1
+#maxy 99
+#miny 1e-3
+
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pp_h.root 		:h_eec1_eec :p  : title=p_{T, part} > 1.0 GeV/c -- pp
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pp_h.root 		:h_eec1_pconebg_eec :hist -k +f1001 +a20: title=perp. cone background
+
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_h.root 		:h_eec1_eec :p  : title=p_{T, part} > 1.0 GeV/c -- pPb Argantyr
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_h.root 		:h_eec1_pconebg_eec :hist -k +f1001 +a20: title=perp. cone background
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#logx 1
+#logy 1
+#maxy 99
+#miny 1e-3
+
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pp_smallnbin_h.root 		:h_eec0_eec :p  : title=p_{T, part} > 0.15 GeV/c -- pp
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pp_smallnbin_h.root 		:h_eec0_pconebg_eec :hist -k +f1001 +a20 : title=perp. cone background
+
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_smallnbin_h.root 		:h_eec0_eec :p  : title=p_{T, part} > 0.15 GeV/c -- pPb Argantyr
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_smallnbin_h.root 		:h_eec0_pconebg_eec :hist -k +f1001 +a20 : title=perp. cone background
+
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title: smart group
+#legend pos=ul
+#logx 1
+#logy 1
+#maxy 99
+#miny 1e-3
+
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pp_smallnbin_h.root 		:h_eec1_eec :p  : title=p_{T, part} > 1.0 GeV/c -- pp
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pp_smallnbin_h.root 		:h_eec1_pconebg_eec :hist -k +f1001 +a20: title=perp. cone background
+
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_smallnbin_h.root 		:h_eec1_eec :p  : title=p_{T, part} > 1.0 GeV/c -- pPb Argantyr
+/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_smallnbin_h.root 		:h_eec1_pconebg_eec :hist -k +f1001 +a20: title=perp. cone background
+
