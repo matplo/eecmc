@@ -48,6 +48,7 @@ def main(args):
         except yaml.YAMLError as exc:
             print(exc)
 
+    print('config:', config)
     # Loop over all sections in the config
     for section in config:
         # Get the output file and mode from the first item in the current section

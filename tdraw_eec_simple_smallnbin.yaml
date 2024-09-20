@@ -49,6 +49,30 @@ eec:
       cond: "(eec) * (ptjet > 20 && ptjet < 40)"
       scale: 1./h_jet_pt.Integral()
       bw : True
+  - h_eec0_pconebg:
+      file: {{input}}
+      tree: tn_eec_pcone_ptcut0.15
+      # xrange: [1e-4, 1]
+      # xnbins: 50
+      xrange: [1e-2, 1]
+      xnbins: 10
+      xbins: log
+      var: dr
+      cond: "(eec) * (ptjet > 20 && ptjet < 40)"
+      scale: 1./h_jet_pt.Integral()/2.
+      bw : True
+  - h_eec1_pconebg:
+      file: {{input}}
+      tree: tn_eec_pcone_ptcut1.0
+      # xrange: [1e-4, 1]
+      # xnbins: 50
+      xrange: [1e-2, 1]
+      xnbins: 10
+      xbins: log
+      var: dr
+      cond: "(eec) * (ptjet > 20 && ptjet < 40)"
+      scale: 1./h_jet_pt.Integral()/2.
+      bw : True
   - h_pich_central:
       file: {{input}}
       tree: tn_pich_jev
