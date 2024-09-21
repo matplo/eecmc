@@ -20,7 +20,7 @@ pPb_files = [
 "/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_h.root 		:h_eec1_pconebg_eec :hist -k +f1001 +a20: title=perp. cone background"]
 
 file_modif = None
-file_modif = ['_h.root', '_smallnbin_h.root']
+# file_modif = ['_h.root', '_smallnbin_h.root']
               
 def get_hist(s, syst=''):
     fin = s.split(":")[0].strip()

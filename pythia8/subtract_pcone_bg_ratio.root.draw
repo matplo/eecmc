@@ -35,6 +35,7 @@
 
 /Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root 		:h_eec1_eec_pp :hist +l1 : title=p_{T}^{part} > 1.0 GeV/c -- pp
 /Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root 		:h_eec1_eec_pp_bgsub :p -k : title=PC bg subtracted
+
 #-----------------------
 #figure
 #geom 500x500
@@ -49,8 +50,10 @@
 #xrange 1e-2,0.62
 /Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root 		:h_eec0_eec_pPb_div_h_eec0_eec_pp :hist +l1: title=p_{T}^{part} > 0.15 GeV/c raw
 /Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root 		:h_eec0_eec_pPb_bgsub_div_h_eec0_eec_pp_bgsub :p -k : title=PC bg subtracted
-#line 1e-2,1,0.62,1,1,9,1
 
+/Users/ploskon/devel/eecmc/pythia8/ppb_final_trk2.root             :ratio_E2C_jetR4_2040_trk2 :p  : title=Data for p_{T}^{part} > 0.15 GeV/c
+
+#line 1e-2,1,0.62,1,1,9,1
 #comment 0.394,0.547,0.996,0.648, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 
 #-----------------------
@@ -67,6 +70,48 @@
 #xrange 1e-2,0.62
 /Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root 		:h_eec1_eec_pPb_div_h_eec1_eec_pp :hist +l1: title=p_{T}^{part} > 1 GeV/c raw
 /Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root 		:h_eec1_eec_pPb_bgsub_div_h_eec1_eec_pp_bgsub :p -k : title=PC bg subtracted
-#line 1e-2,1,0.62,1,1,9,1
 
+/Users/ploskon/devel/eecmc/pythia8/ppb_final_trk10.root            :ratio_E2C_jetR4_2040_trk10 :p  : title=Data for p_{T}^{part} > 1 GeV/c
+
+#line 1e-2,1,0.62,1,1,9,1
 #comment 0.394,0.547,0.996,0.648, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Pythia8: #frac{pPb Argantyr}{pp} [with perp. cone subtr.] tx_size=0.04
+#legend pos=ul
+#x R_{L}
+#y #Sigma_{EEC} pPb/pp
+#maxy 1.29
+#miny 0.71
+#logx 1
+#xrange 1.19e-2,0.41
+/Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root 		:h_eec0_eec_pPb_div_h_eec0_eec_pp :hist +l1: title=p_{T}^{part} > 0.15 GeV/c raw
+/Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root 		:h_eec0_eec_pPb_bgsub_div_h_eec0_eec_pp_bgsub :p -k : title=PC bg subtracted
+
+/Users/ploskon/devel/eecmc/pythia8/ppb_final_trk2.root             :ratio_E2C_jetR4_2040_trk2 :p  : title=Data for p_{T}^{part} > 0.15 GeV/c
+
+#line 1e-2,1,0.41,1,1,9,1
+#comment 0.554,0.27,0.856,0.371, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
+
+#-----------------------
+#figure
+#geom 500x500
+#date
+#title Pythia8: #frac{pPb Argantyr}{pp} [with perp. cone subtr.] tx_size=0.04
+#legend pos=ul
+#x R_{L}
+#y #Sigma_{EEC} pPb/pp
+#maxy 1.29
+#miny 0.71
+#logx 1
+#xrange 1.19e-2,0.41
+/Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root 		:h_eec1_eec_pPb_div_h_eec1_eec_pp :hist +l1: title=p_{T}^{part} > 1 GeV/c raw
+/Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root 		:h_eec1_eec_pPb_bgsub_div_h_eec1_eec_pp_bgsub :p -k : title=PC bg subtracted
+
+/Users/ploskon/devel/eecmc/pythia8/ppb_final_trk10.root            :ratio_E2C_jetR4_2040_trk10 :p  : title=Data for p_{T}^{part} > 1 GeV/c
+
+#line 1e-2,1,0.41,1,1,9,1
+#comment 0.554,0.27,0.856,0.371, tx_size=0.03 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
