@@ -29,13 +29,14 @@ for fn in $files; do
 	else
 		separator "$fn"
 		# ../exec_tdraw_file.sh $PWD/../tdraw_eec_simple.yaml $fn
+		commands+=("../exec_tdraw_file.sh $PWD/../tdraw_eec_simple_smallnbin.yaml $fn ${fn%.*}_smallnbin_h.root")
 		commands+=("../exec_tdraw_file.sh $PWD/../tdraw_eec_simple.yaml $fn")
 	fi
 done
 
 nproc=$(get_arg "--nproc" $@)
 if [ -z "${nproc}" ]; then
-		nproc=5
+		nproc=$(n_cores)
 		echo_note "Number of processes not specified. Using default: ${nproc}"
 else
 		echo_note "Number of processes: ${nproc}"

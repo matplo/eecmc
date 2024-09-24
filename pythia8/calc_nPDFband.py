@@ -67,14 +67,27 @@ def main():
     parser.add_argument('input_dir', help='input directory with root files')
     parser.add_argument('output_file', help='output directory')
     parser.add_argument('--filter', help='filter for the root files', default='*_h.root')
+    parser.add_argument('--nbins', help='flag for small or std nbins', type=int, default=0) # 1 is smallnbin
 
     args = parser.parse_args()
- 
-    files = find_files(args.input_dir, args.filter)
+    print(args)
+
+    files = []
+    _files = find_files(args.input_dir, args.filter)
+    for fn in _files:
+        if args.nbins == 0:
+            if '_smallnbin_' in fn:
+                continue
+            files.append(fn)
+        else:
+            if '_smallnbin_' in fn:
+                files.append(fn)
+            
     print(files)
+    print('number of files', len(files))
  
     # get the file with _0_h.root ending
-    f0arr = [f for f in files if '_0_h.root' in f]
+    f0arr = [f for f in files if '_0_' in f]
     f0 = f0arr[0]
     print(f0arr)
     print(f0)

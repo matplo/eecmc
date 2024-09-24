@@ -1,2 +1,5 @@
-./calc_nPDFband.py nPDFgen/pythia_pPb_5TeV_nPDF.cmnd-EPPS21nlo_CT18Anlo_Pb208 pythia_std_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root
+./calc_nPDFband.py nPDFgen/pythia_pPb_5TeV_nPDF.cmnd-EPPS21nlo_CT18Anlo_Pb208 pythia_std_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root 
 ./calc_nPDFband.py nPDFgen/pythia_pPb_5TeV_nPDF_argantyr.cmnd-EPPS21nlo_CT18Anlo_Pb208 pythia_argantyr_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208.root
+
+./calc_nPDFband.py nPDFgen/pythia_pPb_5TeV_nPDF.cmnd-EPPS21nlo_CT18Anlo_Pb208 pythia_std_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208_smallnbin.root --nbins 1
+./calc_nPDFband.py nPDFgen/pythia_pPb_5TeV_nPDF_argantyr.cmnd-EPPS21nlo_CT18Anlo_Pb208 pythia_argantyr_pPb_5TeV_nPDF_EPPS21nlo_CT18Anlo_Pb208_smallnbin.root --nbins 1
