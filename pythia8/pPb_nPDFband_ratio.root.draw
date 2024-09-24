@@ -79,6 +79,9 @@
 /Users/ploskon/devel/eecmc/pythia8/pPb_nPDFband_ratio.root 		:h_eec0_eec_eec_ratio :l +l1 ex0 +k1 noleg: title=pPb nPDF
 /Users/ploskon/devel/eecmc/pythia8/pPb_nPDFband_ratio.root 		:h_eec0_eec_eec_nPDFband_ratio :E5 +f1001 +a20 -k : title=pPb nPDF
 
+/Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root               :h_eec0_eec_pPb_div_h_eec0_eec_pp :hist +l1: title=p_{T}^{part} > 0.15 GeV/c raw
+/Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root               :h_eec0_eec_pPb_bgsub_div_h_eec0_eec_pp_bgsub :p -k : title=PC bg subtracted
+
 #comment 0.394,0.692,0.996,0.793, tx_size=0.035 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 #comment 0.798,0.138,0.913,0.207, tx_size=0.03 item=R_{L}=0.4
 
@@ -106,6 +109,9 @@
 
 /Users/ploskon/devel/eecmc/pythia8/pPb_nPDFband_ratio.root 		:h_eec1_eec_eec_ratio :l +l1 ex0 +k1 noleg: title=pPb nPDF
 /Users/ploskon/devel/eecmc/pythia8/pPb_nPDFband_ratio.root 		:h_eec1_eec_eec_nPDFband_ratio :E5 +f1001 +a20 -k : title=pPb nPDF
+
+/Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root               :h_eec1_eec_pPb_div_h_eec1_eec_pp :hist +l1: title=p_{T}^{part} > 1 GeV/c raw
+/Users/ploskon/devel/eecmc/pythia8/subtract_pcone_bg_ratio.root               :h_eec1_eec_pPb_bgsub_div_h_eec1_eec_pp_bgsub :p -k : title=PC bg subtracted
 
 #comment 0.394,0.692,0.996,0.793, tx_size=0.035 item=nPDF: EPPS21nlo_CT18Anlo item=pPDF: CT14nlo
 #comment 0.798,0.138,0.913,0.207, tx_size=0.03 item=R_{L}=0.4

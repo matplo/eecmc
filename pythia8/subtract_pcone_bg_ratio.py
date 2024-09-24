@@ -17,10 +17,17 @@ pPb_files = [
 "/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_h.root 		:h_eec0_eec :p  : title=p_{T, part} > 0.15 GeV/c -- pPb Argantyr",
 "/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_h.root 		:h_eec0_pconebg_eec :hist -k +f1001 +a20 : title=perp. cone background",
 "/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_h.root 		:h_eec1_eec :p  : title=p_{T, part} > 1.0 GeV/c -- pPb Argantyr",
-"/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_h.root 		:h_eec1_pconebg_eec :hist -k +f1001 +a20: title=perp. cone background"]
+"/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_argantyr_h.root 		:h_eec1_pconebg_eec :hist -k +f1001 +a20: title=perp. cone background",
+
+"/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_h.root 		:h_eec0_eec :p  : title=p_{T, part} > 0.15 GeV/c -- pPb pythia",
+"/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_h.root 		:h_eec0_pconebg_eec :hist -k +f1001 +a20 : title=perp. cone background",
+"/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_h.root 		:h_eec1_eec :p  : title=p_{T, part} > 1.0 GeV/c -- pPb pythia",
+"/Users/ploskon/devel/eecmc/pythia8/pcone_bg_pPb_h.root 		:h_eec1_pconebg_eec :hist -k +f1001 +a20: title=perp. cone background"]
 
 file_modif = None
-# file_modif = ['_h.root', '_smallnbin_h.root']
+if len(sys.argv) > 1:
+  if sys.argv[1] == 'smallnbin':
+    file_modif = ['_h.root', '_smallnbin_h.root']
               
 def get_hist(s, syst=''):
     fin = s.split(":")[0].strip()
@@ -52,7 +59,10 @@ def main():
     ROOT.gStyle.SetOptStat(0)
     ROOT.gStyle.SetOptTitle(0)
     
-    fout = SingleRootFile("subtract_pcone_bg_ratio.root")
+    foutname = "subtract_pcone_bg_ratio.root"
+    if file_modif:
+      foutname = foutname.replace('.root', f'_smallbin.root')
+    fout = SingleRootFile(foutname)
     fout.root_file.cd()
     
     # first subtract the background
