@@ -300,7 +300,8 @@ def main():
 			_stop = True
 
 	print('[i] number of jets:', njets)
-	stdout_file.close()
+	if stdout_file:
+		stdout_file.close()
 
 if __name__ == '__main__':
 	main()
