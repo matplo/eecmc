@@ -86,10 +86,12 @@ class EEC2file:
 		self.h['eec2_pt_0.0'] = EEChistogram(name='eec2_pt0')
 		self.h['eec2_pt_0.15'] = EEChistogram(name='eec2_pt0.15')
 		self.h['eec2_pt_1.0'] = EEChistogram(name='eec2_pt1')
+		self.h['eec2_pt_2.0'] = EEChistogram(name='eec2_pt2')
 
 		self.h['eec2_pt_0.0_ew'] = EEChistogram(name='eec2_pt0_ew')
 		self.h['eec2_pt_0.15_ew'] = EEChistogram(name='eec2_pt0.15_ew')
 		self.h['eec2_pt_1.0_ew'] = EEChistogram(name='eec2_pt1_ew')
+		self.h['eec2_pt_2.0_ew'] = EEChistogram(name='eec2_pt2_ew')
 
 	def fill(self, parts, pTweight, event_weight):
 		self.h['counts'].Fill(pTweight)
@@ -111,6 +113,10 @@ class EEC2file:
 		_parts = [p for p in parts if p.perp() > 1.0]
 		self.h['eec2_pt_1.0'].fill(_parts, weight=1./_pTweight2)
 		self.h['eec2_pt_1.0_ew'].fill(_parts, weight=1./_pTweight2 * event_weight)
+
+		_parts = [p for p in parts if p.perp() > 2.0]
+		self.h['eec2_pt_2.0'].fill(_parts, weight=1./_pTweight2)
+		self.h['eec2_pt_2.0_ew'].fill(_parts, weight=1./_pTweight2 * event_weight)
 
 	def __del__(self):
 		fname = self.fout.GetName()

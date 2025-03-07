@@ -55,7 +55,7 @@ class EEChistograms(yasp.GenericObject):
 		return self.histograms[ptcut]
 
 	# scale is the jet pt
-	def fill_jet(self, j, parts, scale, pt_cuts=[0.15, 1.], sigmaGen=1., weight=1.):
+	def fill_jet(self, j, parts, scale, pt_cuts=[0.15, 1., 2.], sigmaGen=1., weight=1.):
 		self.tnjet.Fill(j.perp(), j.eta(), j.phi(), len(j.constituents()), sigmaGen, weight)
 		_ = [self.tnjetFF.Fill(j.perp(), j.eta(), j.phi(), len(j.constituents()), _p.perp()/j.perp(), _p.phi(), _p.eta(), _p.perp()) for _p in j.constituents()]
 		for pt_cut in pt_cuts:
